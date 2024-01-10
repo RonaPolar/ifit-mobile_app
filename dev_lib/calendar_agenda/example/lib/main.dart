@@ -6,13 +6,15 @@ import 'package:calendar_agenda/calendar_agenda.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Demo',
       home: ExamplePage(),
     );
@@ -27,15 +29,15 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
-  CalendarAgendaController _calendarAgendaControllerAppBar =
+  final CalendarAgendaController _calendarAgendaControllerAppBar =
       CalendarAgendaController();
-  CalendarAgendaController _calendarAgendaControllerNotAppBar =
+  final CalendarAgendaController _calendarAgendaControllerNotAppBar =
       CalendarAgendaController();
 
   late DateTime _selectedDateAppBBar;
   late DateTime _selectedDateNotAppBBar;
 
-  Random random = new Random();
+  Random random = Random();
 
   @override
   void initState() {
@@ -52,7 +54,7 @@ class _ExamplePageState extends State<ExamplePage> {
         appbar: true,
         selectedDayPosition: SelectedDayPosition.center,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new,
             color: Colors.white,
           ),
@@ -71,8 +73,8 @@ class _ExamplePageState extends State<ExamplePage> {
         locale: 'en',
         initialDate: DateTime.now(),
         calendarEventColor: Colors.green,
-        firstDate: DateTime.now().subtract(Duration(days: 140)),
-        lastDate: DateTime.now().add(Duration(days: 60)),
+        firstDate: DateTime.now().subtract(const Duration(days: 140)),
+        lastDate: DateTime.now().add(const Duration(days: 60)),
         events: List.generate(
             100,
             (index) => DateTime.now()
@@ -100,10 +102,10 @@ class _ExamplePageState extends State<ExamplePage> {
               onPressed: () {
                 _calendarAgendaControllerAppBar.goToDay(DateTime.now());
               },
-              child: Text("Today, appbar = true"),
+              child: const Text("Today, appbar = true"),
             ),
             Text('Selected date is $_selectedDateAppBBar'),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
           ],
