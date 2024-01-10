@@ -53,6 +53,7 @@ dependencies:
   calendar_agenda: # Indentation should be correct
     path: dev_lib/calendar_agenda/
   intl: ^0.18.1
+  http: ^1.1.0
 
 dependency_overrides:
   intl: ^0.18.1

@@ -7,6 +7,7 @@ import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/screens/account-login&reg/password/pass_recovery.dart';
 import 'package:ifit/screens/account-login&reg/register/register.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
+import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -17,7 +18,27 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   bool _isPasswordVisible = false; // Track password visibility
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
+  void sendHttpRequest() async {
+    final response = await http.post(
+      Uri.parse('https://ifit-api.onrender.com/login'),
+      body: {
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      print('Response data: ${response.body}');
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print("user not found");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +54,7 @@ class _LogInState extends State<LogIn> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
                           Text(
@@ -46,21 +66,17 @@ class _LogInState extends State<LogIn> {
                             style: Styles.headline25,
                           ),
                           const Gap(30),
-                          const TextfieldContainer(
-                            hitText: 'Email',
-                            icon: FluentSystemIcons.ic_fluent_mail_regular,
-                            obscureText: false,
-                          ),
+                          TextfieldContainer(
+                              hitText: 'Email', icon: FluentSystemIcons.ic_fluent_mail_regular, obscureText: false, controller: emailController),
                           const Gap(15),
                           TextfieldContainer(
                             //password eye icon
                             hitText: 'Password',
+                            controller: passwordController,
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
                             obscureText: !_isPasswordVisible,
                             rightIcon: IconButton(
-                              icon: _isPasswordVisible
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off),
+                              icon: _isPasswordVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                               onPressed: () {
                                 setState(() {
                                   _isPasswordVisible = !_isPasswordVisible;
@@ -80,12 +96,13 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           const Gap(10),
-                          TextButton(onPressed: (){
-                            Navigator.of(context).push( 
-                              MaterialPageRoute(builder: (context) => const PasswordRecovery()));}, 
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PasswordRecovery()));
+                            },
                             child: Text(
-                            'Forgot your password?',
-                            style: Styles.text15bold.copyWith(
+                              'Forgot your password?',
+                              style: Styles.text15bold.copyWith(
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -97,19 +114,19 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(
-                    right: 20, left: 20, bottom: 5, top: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5, top: 20),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Login',
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeNavBar(),
-                          ),
-                        );
+                        sendHttpRequest();
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const HomeNavBar(),
+                        //   ),
+                        // );
                       },
                     ),
                     const Gap(10),
@@ -136,11 +153,12 @@ class _LogInState extends State<LogIn> {
                     TextButton(
                       onPressed: () {
                         // Navigate to the login screen here
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const Register(),
-                          ),
-                        );
+                        sendHttpRequest();
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const Register(),
+                        //   ),
+                        // );
                       },
                       child: RichText(
                         text: TextSpan(
