@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/screens/account-login&reg/password/pass_recovery.dart';
 import 'package:ifit/screens/account-login&reg/register/register.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {
@@ -21,27 +25,34 @@ class _LogInState extends State<LogIn> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void sendHttpRequest() async {
-    final response = await http.post(
-      Uri.parse('https://ifit-api.onrender.com/login'),
-      body: {
-        'email': emailController.text,
-        'password': passwordController.text,
-      },
-    );
+  final ApiConnect apiConnect = Get.find();
 
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
-      print('Response data: ${response.body}');
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      print("user not found");
-    }
-  }
-
+  bool _isInvalidCredentials = false;
   @override
   Widget build(BuildContext context) {
+    void loginUser() async {
+      var userData = {
+        'email': emailController.text,
+        'password': passwordController.text,
+      };
+      var res = await apiConnect.loginUser(userData);
+
+      if (res.statusCode == 200) {
+        // userfound
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeNavBar(),
+          ),
+        );
+      } else {
+        // user not found
+        setState(() {
+          _isInvalidCredentials = true;
+        });
+      }
+    }
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       body: SingleChildScrollView(
@@ -85,28 +96,18 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           const Gap(5),
-                          Align(
-                            //make a condition that make if any of it wasnt filled it will display "Enter _____"
-                            alignment: Alignment.bottomLeft,
-                            child: Text(
-                              'Wrong Password',
-                              style: Styles.text15normal.copyWith(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          const Gap(10),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PasswordRecovery()));
-                            },
-                            child: Text(
-                              'Forgot your password?',
-                              style: Styles.text15bold.copyWith(
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
+                          (_isInvalidCredentials
+                              ? Align(
+                                  //make a condition that make if any of it wasnt filled it will display "Enter _____"
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    'Invalid Credentials',
+                                    style: Styles.text15normal.copyWith(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox())
                         ],
                       ),
                     ),
@@ -120,13 +121,7 @@ class _LogInState extends State<LogIn> {
                     MainButton(
                       title: 'Login',
                       onPressed: () {
-                        sendHttpRequest();
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const HomeNavBar(),
-                        //   ),
-                        // );
+                        loginUser();
                       },
                     ),
                     const Gap(10),
@@ -152,13 +147,11 @@ class _LogInState extends State<LogIn> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // Navigate to the login screen here
-                        sendHttpRequest();
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const Register(),
-                        //   ),
-                        // );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const Register(),
+                          ),
+                        );
                       },
                       child: RichText(
                         text: TextSpan(
