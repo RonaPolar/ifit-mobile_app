@@ -18,6 +18,7 @@ import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_pro
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ifit/screens/welcome/onboarding_screen.dart';
 import 'package:ifit/screens/account-login&reg/register/register.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ void main() async {
   } else {
     homeScreen = const Register(); //Registration
   }
-
+  await GetStorage.init();
   runApp(MyApp(homeScreen: homeScreen));
 }
 

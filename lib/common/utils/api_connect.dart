@@ -11,4 +11,22 @@ class ApiConnect extends GetConnect {
 
     return res;
   }
+
+  Future<Response> registerUser(Map<String, dynamic> data) {
+    var res = post(
+      'https://ifit-api.onrender.com/registration/',
+      jsonEncode(data),
+    );
+
+    return res;
+  }
+
+  Future<Response> sendEmailToUser(Map<String, dynamic> data) {
+    var res = post(
+      'https://ifit-api.onrender.com/users/emailauser',
+      jsonEncode(data),
+    );
+
+    return res;
+  }
 }

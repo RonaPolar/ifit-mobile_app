@@ -2,6 +2,8 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/verification_text_box.dart';
@@ -10,6 +12,7 @@ import 'package:ifit/screens/account-login&reg/register/client_registration/regi
 import 'package:ifit/screens/account-login&reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/screens/account-login&reg/register/popup_privacy_terms.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -23,6 +26,13 @@ class _RegisterState extends State<Register> {
   bool _isCheck = false; // Track check box
   String? selectedValue;
   String? destinationScreen;
+  String validatorError = "";
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  final ApiConnect apiConnect = Get.find();
 
   // Function to show the Privacy Policy dialog
   void _showPrivacyPolicyDialog() {
@@ -40,7 +50,57 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final box = GetStorage();
+    bool isValidEmail(String email) {
+      // Regular expression for a simple email validation
+      // This regex might not cover all possible valid email formats
+      // For a more comprehensive solution, consider using a package like 'email_validator'
+      RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+      return emailRegex.hasMatch(email);
+    }
+
+    // returns true if all fields are filled and valid
+    Future<bool> registerUser() async {
+      if (emailController.text == "" ||
+          passwordController.text == "" ||
+          firstNameController.text == "" ||
+          lastNameController.text == "" ||
+          selectedValue == null) {
+        print("on register user");
+        setState(() {
+          validatorError = "Please fill all the fields";
+        });
+        return false;
+      } else if (isValidEmail(emailController.text) == false) {
+        print("Invalid email");
+        setState(() {
+          validatorError = "Please enter a valid email";
+        });
+
+        return false;
+      } else {
+        print("Sending email to user");
+        var userEmail = {
+          'email': emailController.text,
+        };
+
+        var res = await apiConnect.sendEmailToUser(userEmail);
+
+        if (res.statusCode != 200) {
+          setState(() {
+            validatorError = "Invalid email, please try again";
+          });
+          return false;
+        }
+
+        box.write('Remail', emailController.text);
+        box.write('Rpassword', passwordController.text);
+        box.write('Rfirst_name', firstNameController.text);
+        box.write('Rlast_name', lastNameController.text);
+
+        return true;
+      }
+    }
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -54,8 +114,7 @@ class _RegisterState extends State<Register> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
                           Text(
@@ -68,33 +127,36 @@ class _RegisterState extends State<Register> {
                           ),
                           const Gap(30),
                           // this is where the modification of it --> /common/widgets/textfield_container.dart';
-                          const TextfieldContainer(
+                          TextfieldContainer(
                             hitText: 'First Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
+                            controller: firstNameController,
                           ),
                           const Gap(15),
-                          const TextfieldContainer(
+                          TextfieldContainer(
                             hitText: 'Last Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
+                            controller: lastNameController,
                           ),
                           const Gap(15),
-                          const TextfieldContainer(
+                          TextfieldContainer(
                             hitText: 'Email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             obscureText: false,
+                            controller: emailController,
                           ),
                           const Gap(15),
                           TextfieldContainer(
                             //password eye icon
                             hitText: 'Password',
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
+                            controller: passwordController,
+
                             obscureText: !_isPasswordVisible,
                             rightIcon: IconButton(
-                              icon: _isPasswordVisible
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off),
+                              icon: _isPasswordVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                               onPressed: () {
                                 setState(() {
                                   _isPasswordVisible = !_isPasswordVisible;
@@ -142,28 +204,29 @@ class _RegisterState extends State<Register> {
                             onChanged: (value) {
                               setState(() {
                                 selectedValue = value;
-
+                                box.write('Rtype', value);
                                 if (value == "Client") {
-                                destinationScreen = "ClientRegistration";
+                                  destinationScreen = "ClientRegistration";
                                 } else if (value == "Expert") {
                                   destinationScreen = "ExpertRegistration";
-                                } 
-                                
-                              });                              
+                                }
+                              });
                             },
                             selectedValue: selectedValue,
                           ),
                           const Gap(5),
-                          Align(
-                            //make a condition that make if any of it wasnt filled it will display "Enter _____"
-                            alignment: Alignment.bottomLeft,
-                            child: Text(
-                              'Password must contain at least 8 characters',
-                              style: Styles.text15normal.copyWith(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
+                          (validatorError == ""
+                              ? const SizedBox()
+                              : Align(
+                                  //make a condition that make if any of it wasnt filled it will display "Enter _____"
+                                  alignment: Alignment.bottomLeft,
+                                  child: Text(
+                                    validatorError,
+                                    style: Styles.text15normal.copyWith(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                )),
                           const Gap(10),
                           Row(
                             children: [
@@ -174,10 +237,8 @@ class _RegisterState extends State<Register> {
                                   });
                                 },
                                 icon: _isCheck
-                                    ? const Icon(FluentSystemIcons
-                                        .ic_fluent_checkbox_checked_regular)
-                                    : const Icon(FluentSystemIcons
-                                        .ic_fluent_checkbox_unchecked_regular),
+                                    ? const Icon(FluentSystemIcons.ic_fluent_checkbox_checked_regular)
+                                    : const Icon(FluentSystemIcons.ic_fluent_checkbox_unchecked_regular),
                                 color: Styles.fadeTextColor,
                               ),
                               Expanded(
@@ -223,27 +284,34 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(
-                    right: 20, left: 20, bottom: 5, top: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5, top: 20),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Register',
-                      onPressed: () {
-                          Navigator.push(context,
+                      onPressed: () async {
+                        if (await registerUser()) {
+                          Navigator.push(
+                            context,
                             MaterialPageRoute(
-                              builder: (context) => VerificationCodeScreen(onConfirmPressed: (){
+                              builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
+                                // check if all fields are filled and valid
+
                                 if (destinationScreen == "ClientRegistration") {
-                                  Navigator.pushReplacement(context,MaterialPageRoute(
-                                    builder: (context) => const RegisterPart2()),);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const RegisterPart2()),
+                                  );
                                 } else if (destinationScreen == "ExpertRegistration") {
-                                  Navigator.pushReplacement(context,MaterialPageRoute(
-                                    builder: (context) => const ExpertRegistration1()),);
-                                } 
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const ExpertRegistration1()),
+                                  );
+                                }
                               }),
                             ),
                           );
-                        
+                        }
                       },
                     ),
                     const Gap(10),
