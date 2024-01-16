@@ -12,11 +12,19 @@ class RegisterPart3 extends StatefulWidget {
 }
 
 class _RegisterPart3State extends State<RegisterPart3> {
-String? selectedValue;
-  List<bool> isCheckedList = [false, false, false];
+  String? selectedValue;
+  List<bool> list1 = [false, false, false];
+  List<bool> list2 = [false, false, false];
+  List<bool> list3 = [false, false, false, false];
+  List<bool> list4 = [false, false, false];
+  List<bool> list5 = [false, false, false];
+  List<bool> list6 = [false, false, false, false];
+  List<bool> list7 = [false, false, false, false];
 
-@override
-Widget build(BuildContext context) {
+  String validatorError = "";
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.bgColor,
       body: Center(
@@ -29,8 +37,7 @@ Widget build(BuildContext context) {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
                           Text(
@@ -42,32 +49,61 @@ Widget build(BuildContext context) {
                             style: Styles.text15normal,
                           ),
                           const Gap(30),
-                          const CheckBoxList(questionText: 'In fitness, do you consider yourself as?',
-                            choices: ['Beginner', 'Intermediate', 'Expert'],  
+                          (validatorError == "" ? const SizedBox() : Text(validatorError, style: const TextStyle(color: Colors.red))),
+                          CheckBoxList(
+                            questionText: 'In fitness, do you consider yourself as?',
+                            choices: ['Beginner', 'Intermediate', 'Expert'],
+                            onSelectionChanged: (value) {
+                              list1 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'What fitness goals do you want to achieve?',
-                            choices: ['Loss Weight', 'Body Toning', 'Gain Muscles'],  
+                          CheckBoxList(
+                            questionText: 'What fitness goals do you want to achieve?',
+                            choices: ['Loss Weight', 'Body Toning', 'Gain Muscles'],
+                            onSelectionChanged: (value) {
+                              list2 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'What specific body part do you want for it?',
-                            choices: ['Upper body', 'Abdominal', 'Lower body', 'Full body'], 
+                          CheckBoxList(
+                            questionText: 'What specific body part do you want for it?',
+                            choices: ['Upper body', 'Abdominal', 'Lower body', 'Full body'],
+                            onSelectionChanged: (value) {
+                              list3 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'How do you want to attain these goals?',
-                            choices: ['Body exercises', 'Lifting weights', 'Food restrictions'], 
+                          CheckBoxList(
+                            questionText: 'How do you want to attain these goals?',
+                            choices: ['Body exercises', 'Lifting weights', 'Food restrictions'],
+                            onSelectionChanged: (value) {
+                              list4 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'How many minutes/hours do you exercise?',
-                            choices: ['Less than 30 minutes', 'An hour', 'More than an hour'], 
+                          CheckBoxList(
+                            questionText: 'How many minutes/hours do you exercise?',
+                            choices: ['Less than 30 minutes', 'An hour', 'More than an hour'],
+                            onSelectionChanged: (value) {
+                              list5 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'How many times in a week do you exercise?',
-                            choices: ['None', 'Once a week', 'Twice a week', '3-4 times a week', 'More than'], 
+                          CheckBoxList(
+                            questionText: 'How many times in a week do you exercise?',
+                            choices: ['None', 'Once a week', 'Twice a week', '3-4 times a week', 'More than'],
+                            onSelectionChanged: (value) {
+                              list6 = value;
+                            },
                           ),
                           const Gap(15),
-                          const CheckBoxList(questionText: 'Do you have a body or health complications that need to be considered upon the process?',
-                            choices: ['None', 'Injuries', 'Breathing complications(ex: Asthma)', 'Cardiovascular diseases'], 
+                          CheckBoxList(
+                            questionText: 'Do you have a body or health complications that need to be considered upon the process?',
+                            choices: ['None', 'Injuries', 'Breathing complications(ex: Asthma)', 'Cardiovascular diseases'],
+                            onSelectionChanged: (value) {
+                              list7 = value;
+                            },
                           ),
                         ],
                       ),
@@ -76,19 +112,28 @@ Widget build(BuildContext context) {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(
-                    right: 20, left: 20, bottom: 30, top: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Confirm',
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ClientSuccessRegistration(),
-                          ),
-                        );
+                        List<List<bool>> allLists = [list1, list2, list3, list4, list5, list6, list7];
+
+                        // Check if each list has at least one true value
+                        // success registration
+                        if (allLists.every((list) => list.any((item) => item))) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ClientSuccessRegistration(),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            validatorError = "Please check at least one checkbox in each list";
+                          });
+                        }
                       },
                     ),
                   ],
@@ -102,16 +147,16 @@ Widget build(BuildContext context) {
   }
 }
 
-
 class CheckBoxList extends StatefulWidget {
   final List<String> choices;
   final String questionText;
+  final ValueChanged<List<bool>> onSelectionChanged;
 
   const CheckBoxList({
     Key? key,
     required this.choices,
     required this.questionText,
-
+    required this.onSelectionChanged,
   }) : super(key: key);
 
   @override
@@ -119,7 +164,6 @@ class CheckBoxList extends StatefulWidget {
 }
 
 class _CheckBoxListState extends State<CheckBoxList> {
-
   List<bool> isCheckedList = [];
 
   @override
@@ -136,29 +180,28 @@ class _CheckBoxListState extends State<CheckBoxList> {
       isCheckedList = List<bool>.generate(widget.choices.length, (index) => false);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.questionText, 
-          style:  Styles.text15bold
-          ),
+        Text(widget.questionText, style: Styles.text15bold),
         for (int index = 0; index < widget.choices.length; index++)
           CheckboxListTile(
-            activeColor: Styles.primaryColor, // Use your desired checkbox color 
+            activeColor: Styles.primaryColor, // Use your desired checkbox color
             title: Text(
               widget.choices[index],
               style: Styles.text15normal,
             ),
-             dense: true, 
+            dense: true,
             value: isCheckedList[index],
+
             onChanged: (bool? value) {
               setState(() {
                 isCheckedList[index] = value!;
               });
+              widget.onSelectionChanged(isCheckedList);
             },
           ),
       ],

@@ -60,7 +60,8 @@ class _RegisterState extends State<Register> {
     }
 
     // returns true if all fields are filled and valid
-    Future<bool> registerUser() async {
+    Future<bool> validateAndSendEmail() async {
+      // check if all fields are filled
       if (emailController.text == "" ||
           passwordController.text == "" ||
           firstNameController.text == "" ||
@@ -71,12 +72,21 @@ class _RegisterState extends State<Register> {
           validatorError = "Please fill all the fields";
         });
         return false;
+
+        // check if email is valid
       } else if (isValidEmail(emailController.text) == false) {
         print("Invalid email");
         setState(() {
           validatorError = "Please enter a valid email";
         });
 
+        return false;
+
+        // else send email to user
+      } else if (!_isCheck) {
+        setState(() {
+          validatorError = "Please accept our terms and conditions";
+        });
         return false;
       } else {
         print("Sending email to user");
@@ -290,7 +300,7 @@ class _RegisterState extends State<Register> {
                     MainButton(
                       title: 'Register',
                       onPressed: () async {
-                        if (await registerUser()) {
+                        if (await validateAndSendEmail()) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

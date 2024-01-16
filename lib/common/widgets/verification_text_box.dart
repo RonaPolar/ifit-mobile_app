@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 
-
 class VerificationCodeScreen extends StatefulWidget {
   final void Function() onConfirmPressed;
 
@@ -11,10 +10,11 @@ class VerificationCodeScreen extends StatefulWidget {
 
   @override
   State<VerificationCodeScreen> createState() => _VerificationCodeScreenState();
-  
 }
 
 class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
+  int _otp = 0;
+  String _errorMessage = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,11 +43,11 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'We have sent the code verification to',
+                                  'We have sent the code verification to your email.',
                                   style: Styles.text15normal,
                                 ),
                                 Text(
-                                  'jua*********@gmail.com',
+                                  'Please check your inbox.',
                                   style: Styles.text15normal.copyWith(
                                     color: Colors.blue,
                                   ),
@@ -61,6 +61,9 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                             fieldWidth: 65.0,
                             fieldSpacing: 20.0,
                             onCodeChanged: (code) {
+                              setState(() {
+                                _otp = int.parse(code);
+                              });
                               // Handle the OTP code here
                             },
                           ),
@@ -88,6 +91,18 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                         ],
                       ),
                     ),
+                    (_errorMessage.isNotEmpty
+                        ? Align(
+                            //make a condition that make if any of it wasnt filled it will display "Enter _____"
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              _errorMessage,
+                              style: Styles.text15normal.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                          )
+                        : Container())
                   ],
                 ),
               ),
@@ -103,8 +118,16 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     MainButton(
                       title: 'Confirm',
                       onPressed: () {
-                        // Call the callback function provided by the parent widget
-                        widget.onConfirmPressed();
+                        var otpCodes = [2835, 5274, 4169, 6170, 8765, 9571, 7453, 3597, 1346, 5738];
+
+                        if (otpCodes.contains(_otp)) {
+                          // Call the callback function provided by the parent widget
+                          widget.onConfirmPressed();
+                        } else {
+                          setState(() {
+                            _errorMessage = 'Invalid OTP! Please try again.';
+                          });
+                        }
                       },
                     ),
                   ],
@@ -117,9 +140,6 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
     );
   }
 }
-
-
-
 
 //Verification Box of Number/Code
 class VerificationTextBox extends StatefulWidget {
