@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +6,9 @@ import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
-import 'package:ifit/screens/account-login&reg/password/pass_recovery.dart';
 import 'package:ifit/screens/account-login&reg/register/register.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
