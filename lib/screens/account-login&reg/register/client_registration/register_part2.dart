@@ -120,8 +120,6 @@ class _RegisterPart2State extends State<RegisterPart2> {
                               setState(() {
                                 dateOfBirth = date;
                               });
-
-                              print('Selected date: $date');
                             },
                           ),
                           const Gap(15),
