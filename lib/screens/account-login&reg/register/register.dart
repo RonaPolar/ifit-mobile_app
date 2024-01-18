@@ -24,8 +24,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   bool _isPasswordVisible = false; // Track password visibility
   bool _isCheck = false; // Track check box
-  String? selectedValue;
-  String? destinationScreen;
+  String? selectedValue = "Client";
+  String? destinationScreen = "ClientRegistration";
   String validatorError = "";
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -71,6 +71,9 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please fill all the fields";
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(validatorError))
+        );
         return false;
 
         // check if email is valid
@@ -79,6 +82,9 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please enter a valid email";
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(validatorError))
+        );
 
         return false;
 
@@ -87,6 +93,9 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please accept our terms and conditions";
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(validatorError))
+        );
         return false;
       } else {
         print("Sending email to user");
