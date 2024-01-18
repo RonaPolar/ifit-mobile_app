@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/screens/account-login&reg/register/client_registration/client_reg_success.dart';
+import 'package:ifit/common/utils/api_connect.dart';
 
 class RegisterPart3 extends StatefulWidget {
   const RegisterPart3({super.key});
@@ -25,6 +28,35 @@ class _RegisterPart3State extends State<RegisterPart3> {
 
   @override
   Widget build(BuildContext context) {
+    final ApiConnect apiConnect = Get.find();
+    final box = GetStorage();
+
+    Future<bool> registerUser() async {
+      var userData = {
+        'password': box.read("Rpassword"),
+        'user': {
+          'name': box.read("Rfirst_name") + box.read("Rlast_name"),
+          'email': box.read("Remail"),
+          'phone_number': box.read("Rphone_number"),
+          'photo_url':
+              'https://firebasestorage.googleapis.com/v0/b/ifit-api.appspot.com/o/profile_pic.png?alt=media&token=0a84aa95-bf8d-41d4-b66d-000cfc34978b',
+          'birth_date': box.read("RdateOfBirth"),
+          'gender': ("Rgender"),
+          'user_type': 'client',
+          'weight': box.read("Rweight"),
+          'height': box.read("Rheight"),
+        }
+      };
+
+      var res = await apiConnect.registerUser(userData);
+
+      if (res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       body: Center(
@@ -117,18 +149,21 @@ class _RegisterPart3State extends State<RegisterPart3> {
                   children: [
                     MainButton(
                       title: 'Confirm',
-                      onPressed: () {
+                      onPressed: () async {
                         List<List<bool>> allLists = [list1, list2, list3, list4, list5, list6, list7];
 
                         // Check if each list has at least one true value
                         // success registration
                         if (allLists.every((list) => list.any((item) => item))) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ClientSuccessRegistration(),
-                            ),
-                          );
+                          //register the user
+                          if (await registerUser()) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ClientSuccessRegistration(),
+                              ),
+                            );
+                          }
                         } else {
                           setState(() {
                             validatorError = "Please check at least one checkbox in each list";
