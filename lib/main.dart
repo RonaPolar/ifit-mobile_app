@@ -1,10 +1,12 @@
 // ignore_for_file: unused_import
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/firebase_options.dart';
 import 'package:ifit/screens/account-login&reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
@@ -22,10 +24,12 @@ import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final WidgetsBinding widgetsBinding = WidgetsBinding.instance; // Define and initialize widgetsBinding
+  final WidgetsBinding widgetsBinding =
+      WidgetsBinding.instance; // Define and initialize widgetsBinding
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  SharedPreferences prefs = await SharedPreferences.getInstance(); //dependency to check if just installed
+  SharedPreferences prefs = await SharedPreferences
+      .getInstance(); //dependency to check if just installed
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
   Widget homeScreen;
   Get.put(ApiConnect());
@@ -38,6 +42,9 @@ void main() async {
     homeScreen = const Register(); //Registration
   }
   await GetStorage.init();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(MyApp(homeScreen: homeScreen));
 }
 
@@ -56,7 +63,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // whenever initialization is completed, remove the splash screen:
-    Future.delayed(const Duration(seconds: 2)).then((value) => {FlutterNativeSplash.remove()});
+    Future.delayed(const Duration(seconds: 2))
+        .then((value) => {FlutterNativeSplash.remove()});
   }
 
   @override

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/program_widgets.dart';
-import 'package:ifit/common/widgets/charts/workout_linechart.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_category.dart';
@@ -123,9 +122,26 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    width: double.maxFinite,
-                    child: LineChartWidget(),
+                  Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Styles.secondColor, // You might want to specify a color or other decorations.
+                      ),
+                      height: 200,
+                      width: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("789 kcal", 
+                            style: Styles.normal.copyWith(
+                              fontSize: 25, fontWeight: FontWeight.w500, color: Colors.white)),
+                          const Gap(20),
+                          Text("Overall Calorie Loss", 
+                            style: Styles.title),
+                        ],
+                      ),
+                    ),
                   ),
                   const Gap(20),
                   Row(

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -15,27 +17,64 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  List experts = [
-    {
-      "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
-      "profession": "Physician",
-      "number": "09678882245",
-      "age": "33",
-      "gender": "Male",
-      "email": "ottooctavius@gmail.com",
-      "bday": "February 20, 1990",
-      "rate": "4.5",
-      "mealCreated": "2",
-      "workoutCreated": "3",
-      "descriptions": "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
-    },
-  ];
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phone_numberController = TextEditingController();
+  TextEditingController _professionController = TextEditingController();
+  TextEditingController _birth_dateController = TextEditingController();
+  TextEditingController _genderController = TextEditingController();
+  String age = "";
+  String profession_id = "";
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('experts')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            // Use the outer 'name' variable
+            setState(() {
+              _nameController.text = userData['name'] ?? '';
+              _emailController.text = userData['email'] ?? '';
+              _phone_numberController.text = userData['phone_number'] ?? '';
+              _professionController.text = userData['profession'] ?? '';
+              _birth_dateController.text = userData['birth_date'] ?? '';
+              _genderController.text = userData['gender'] ?? '';
+              profession_id = userData['profession_id'] ?? '';
+
+              String birthdateString = userData['birth_date'] ?? '';
+              DateTime birthdate = DateTime.parse(birthdateString);
+
+              DateTime currentDate = DateTime.now();
+              Duration difference = currentDate.difference(birthdate);
+
+              age = (difference.inDays ~/ 365).toString();
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -48,8 +87,8 @@ class _EditProfileState extends State<EditProfile> {
           },
           child: Container(
             margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
+            height: 30,
+            width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -61,8 +100,10 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
-        title: Text('Edit Profile',
-        style: Styles.headline20,),
+        title: Text(
+          'Edit Profile',
+          style: Styles.headline20,
+        ),
       ),
       body: Column(
         children: [
@@ -76,10 +117,7 @@ class _EditProfileState extends State<EditProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Profile Details",
-                          style: Styles.title
-                        ),
+                        Text("Profile Details", style: Styles.title),
                         const Gap(20),
                         Container(
                           decoration: BoxDecoration(
@@ -94,12 +132,15 @@ class _EditProfileState extends State<EditProfile> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(30),
                                 child: SizedBox(
-                                  width: 100,
                                   height: 100,
-                                  child: Image.asset(
-                                    experts[0]["image"].toString(),
+                                  child: Image.network(
+                                    profession_id,
                                     fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Text('Image Error: $error');
+                                    },
                                   ),
+                                  // Replace with your placeholder widget or image
                                 ),
                               ),
                               Positioned(
@@ -120,29 +161,49 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         const Gap(15),
-                        TextfieldContainer(hitText: experts[0]["name"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _nameController,
+                            hitText: 'name',
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: experts[0]["email"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_mail_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _emailController,
+                            hitText: 'email',
+                            icon: FluentSystemIcons.ic_fluent_mail_regular,
+                            obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(hitText: experts[0]["number"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _phone_numberController,
+                            hitText: 'Number',
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: experts[0]["profession"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_accounts_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _professionController,
+                            hitText: 'profession',
+                            icon: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
+                            obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(hitText: experts[0]["bday"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _birth_dateController,
+                            hitText: 'birthdate',
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: experts[0]["age"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_regular, obscureText: false),
+                        DisplayTextContainer(
+                            hitText: '${age}',
+                            icon: FluentSystemIcons.ic_fluent_person_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: experts[0]["gender"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_people_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _genderController,
+                            hitText: 'gender',
+                            icon: FluentSystemIcons.ic_fluent_people_regular,
+                            obscureText: false),
                       ],
                     ),
-                    
                   ],
                 ),
               ),
@@ -150,17 +211,20 @@ class _EditProfileState extends State<EditProfile> {
           ),
           Padding(
             padding: const EdgeInsets.all(15),
-            child: MainButton(title: "Update Changes", onPressed: (){
-              showDialog(context: context,
-                builder: (BuildContext context) {
-                  return ConfirmationDialog(
-                    onYesPressed: (){
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const ExpProfile()));
-                    },
-                  );});
-            }),
+            child: MainButton(
+                title: "Update Changes",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmationDialog(
+                          onYesPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const ExpProfile()));
+                          },
+                        );
+                      });
+                }),
           )
         ],
       ),

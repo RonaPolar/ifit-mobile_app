@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -12,7 +14,9 @@ import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:ifit/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
-import 'package:ifit/screens/clients_main_screens/profile_screens/settings/settings.dart';
+import 'package:ifit/screens/clients_main_screens/profile_screens/settings/settings.dart'
+    as CloudFirestoreSettings;
+import 'package:ifit/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,10 +26,58 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String name = "";
+  String height = "";
+  String weight = "";
+  int age = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('clients')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            // Use the outer 'name' variable
+            setState(() {
+              name = userData['name'] ?? '';
+              height = userData['height'] ?? '';
+              weight = userData['weight'] ?? '';
+
+              String birthdateString = userData['birth_date'] ?? '';
+              DateTime birthdate = DateTime.parse(birthdateString);
+
+              DateTime currentDate = DateTime.now();
+              Duration difference = currentDate.difference(birthdate);
+
+              age = difference.inDays ~/ 365; // Approximate age in years
+              print(age);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   bool positive = false;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -35,13 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-              builder: (context) => const HomeNavBar()));
+                MaterialPageRoute(builder: (context) => const HomeNavBar()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
+            height: 30,
+            width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -53,8 +104,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        title: Text('Profile',
-        style: Styles.headline20,),
+        title: Text(
+          'Profile',
+          style: Styles.headline20,
+        ),
       ),
       body: ListView(
         children: [
@@ -67,75 +120,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Row(
                       children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Styles.primaryColor, // Replace with your desired border color
-                            width: 2.0, // Replace with your desired border width
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset(
-                              'assets/icons/profile_pic.png',
-                              fit: BoxFit.fill,
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Styles
+                                  .primaryColor, // Replace with your desired border color
+                              width:
+                                  2.0, // Replace with your desired border width
                             ),
                           ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Juan Dela Cruz",
-                            style: Styles.title
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Image.asset(
+                                'assets/icons/profile_pic.png',
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
-                          const Gap(5),
-                          Text(
-                            "Lose a Fat Program",
-                            style: Styles.text15normal
-                          )
-                        ],
-                      ),
-                    ),
-                      SizedBox(
-                      width: 80,
-                      height: 30,
-                        child: MainButton(
-                          title: "Edit",
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const EditProfile()));
-                        },
-                        textStyle: Styles.seeMore.copyWith(
-                          color: Colors.white,
                         ),
-                      )),             
-                    ],
-                    ),
-                    const Gap(10),
-                    const Row(
-                      children: [
+                        const Gap(10),
                         Expanded(
-                            child: ProfileCell(value: '188cm', title: 'Height')
-                            ),
-                        Gap(10),
-                        Expanded(
-                            child: ProfileCell(value: '56kg', title: 'Weight')
-                            ),
-                        Gap(10),
-                        Expanded(
-                            child: ProfileCell(value: '22yo', title: 'Height')
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${name}", style: Styles.title),
+                              const Gap(5),
+                              Text("Lose a Fat Program",
+                                  style: Styles.text15normal)
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            width: 80,
+                            height: 30,
+                            child: MainButton(
+                              title: "Edit",
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const EditProfile()));
+                              },
+                              textStyle: Styles.seeMore.copyWith(
+                                color: Colors.white,
+                              ),
+                            )),
                       ],
                     ),
-
+                    const Gap(10),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: ProfileCell(
+                                value: '${height} cm', title: 'Height')),
+                        Gap(10),
+                        Expanded(
+                            child: ProfileCell(
+                                value: '${weight} kg', title: 'Weight')),
+                        Gap(10),
+                        Expanded(
+                            child: ProfileCell(value: '${age}', title: 'Age')),
+                      ],
+                    ),
                     const Gap(15),
                     Container(
                       height: 140,
@@ -151,31 +199,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Account",
-                            style: Styles.title
-                          ),
+                          Text("Account", style: Styles.title),
                           const Gap(1),
                           NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_history_regular,
+                            iconData:
+                                FluentSystemIcons.ic_fluent_history_regular,
                             title: 'Activity History',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ActivityTracker()));
+                                  builder: (context) =>
+                                      const ActivityTracker()));
                             },
                           ),
                           NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_activity_regular,
+                            iconData:
+                                FluentSystemIcons.ic_fluent_activity_regular,
                             title: 'Workout Progress',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ProgressTrackerNavBar()));
+                                  builder: (context) =>
+                                      const WorkoutTrackerScreen()));
                             },
                           ),
                         ],
                       ),
                     ),
-
                     const Gap(20),
                     Container(
                       height: 110,
@@ -191,33 +239,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Notifications",
-                            style: Styles.title
-                          ),
+                          Text("Notifications", style: Styles.title),
                           const Gap(1),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(FluentSystemIcons.ic_fluent_alert_regular,),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Text(
-                                "Pop-up Notification",
-                                style: Styles.text12.copyWith(
-                                  fontSize: 16
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  FluentSystemIcons.ic_fluent_alert_regular,
                                 ),
-                              ),
-                            ),
-                            const ToggleSwitch()
-                          ]),
-                          
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "Pop-up Notification",
+                                    style: Styles.text12.copyWith(fontSize: 16),
+                                  ),
+                                ),
+                                const ToggleSwitch()
+                              ]),
                         ],
                       ),
                     ),
-
                     const Gap(20),
                     Container(
                       height: 250,
@@ -233,17 +276,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Other",
-                            style: Styles.title
-                          ),
+                          Text("Other", style: Styles.title),
                           const Gap(1),
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_info_regular,
                             title: 'About',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const About()));
+                                  builder: (context) => const About()));
                             },
                           ),
                           NextNavigation(
@@ -255,46 +295,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           ),
                           NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_shield_regular,
+                            iconData:
+                                FluentSystemIcons.ic_fluent_shield_regular,
                             title: 'Privacy Policy',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const PrivacyPolicyScreen()));
+                                  builder: (context) =>
+                                      const PrivacyPolicyScreen()));
                             },
                           ),
                           NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_settings_regular,
+                            iconData:
+                                FluentSystemIcons.ic_fluent_settings_regular,
                             title: 'Settings',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Settings()));
+                                  builder: (context) =>
+                                      CloudFirestoreSettings.Settings()));
                             },
                           ),
                           NextNavigation(
                             iconData: Icons.logout_outlined,
                             title: 'Log Out',
                             onTap: () {
-                              showDialog(context: context,
-                                builder: (BuildContext context) {
-                                  return ConfirmationDialog(
-                                    onYesPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const LogIn()));
-                                    },
-                                  );});
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ConfirmationDialog(
+                                      onYesPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LogIn()));
+                                      },
+                                    );
+                                  });
                             },
                           ),
                         ],
                       ),
-                    ),                
-                ],
+                    ),
+                  ],
                 ),
-
-              ],//main Children
+              ], //main Children
             ),
           ),
         ],
-
       ),
     );
   }
@@ -318,41 +364,38 @@ class _ProfileCellState extends State<ProfileCell> {
       height: 70,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 2)]
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 2)]),
       child: Row(
         children: [
           Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ShaderMask(
-                blendMode: BlendMode.srcIn,
-                shaderCallback: (bounds) {
-                  return LinearGradient(
-                          colors: Styles.gradientColor,
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight)
-                      .createShader(
-                          Rect.fromLTRB(0, 0, bounds.width, bounds.height));
-                },
-                child: Text(
-                  widget.value,
-                  style: const TextStyle(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (bounds) {
+                    return LinearGradient(
+                            colors: Styles.gradientColor,
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight)
+                        .createShader(
+                            Rect.fromLTRB(0, 0, bounds.width, bounds.height));
+                  },
+                  child: Text(
+                    widget.value,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Text(
-                widget.title,
-                style: Styles.text15normal
-              ),
-            ],
-          ),),
+                Text(widget.title, style: Styles.text15normal),
+              ],
+            ),
+          ),
         ],
       ),
     );

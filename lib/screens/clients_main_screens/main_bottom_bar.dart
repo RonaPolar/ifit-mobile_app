@@ -2,7 +2,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/program_tracker.dart';
-import 'package:ifit/screens/clients_main_screens/progress_tracker_screens/progress_tracker.dart';
+// import 'package:ifit/screens/clients_main_screens/progress_tracker_screens/progress_tracker.dart';
 import 'package:ifit/screens/clients_main_screens/discover_screens/discover.dart';
 import 'package:ifit/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/screens/clients_main_screens/profile_screens/profile.dart';
@@ -111,23 +111,23 @@ class _MainBottomBarState extends State<MainBottomBar> {
                     setState(() {});
                   }
                 }),
-            BottomBar(
-                icon: FluentSystemIcons.ic_fluent_accessibility_regular,
-                selectIcon: FluentSystemIcons.ic_fluent_accessibility_filled,
-                isActive: selectTab == 2,
-                onTap: () {
-                  selectTab = 2;
-                  currentTab = const ProgressTrackerScreen();
-                  if (mounted) {
-                    setState(() {});
-                  }
-                }),
+            // BottomBar(
+            //     icon: FluentSystemIcons.ic_fluent_accessibility_regular,
+            //     selectIcon: FluentSystemIcons.ic_fluent_accessibility_filled,
+            //     isActive: selectTab == 2,
+            //     onTap: () {
+            //       selectTab = 2;
+            //       currentTab = const ProgressTrackerScreen();
+            //       if (mounted) {
+            //         setState(() {});
+            //       }
+            //     }),
             BottomBar(
                 icon: FluentSystemIcons.ic_fluent_activity_regular,
                 selectIcon: FluentSystemIcons.ic_fluent_activity_filled,
-                isActive: selectTab == 3,
+                isActive: selectTab == 2,
                 onTap: () {
-                  selectTab = 3;
+                  selectTab = 2;
                   currentTab = const ProgramTrackerScreen();
                   if (mounted) {
                     setState(() {});
@@ -136,9 +136,9 @@ class _MainBottomBarState extends State<MainBottomBar> {
             BottomBar(
                 icon: FluentSystemIcons.ic_fluent_person_regular,
                 selectIcon: FluentSystemIcons.ic_fluent_person_filled,
-                isActive: selectTab == 4,
+                isActive: selectTab == 3,
                 onTap: () {
-                  selectTab = 4;
+                  selectTab = 3;
                   currentTab = const ProfileScreen();
                   if (mounted) {
                     setState(() {});
@@ -181,17 +181,17 @@ class _DiscoverNavbarState extends State<DiscoverNavbar> {
 }
 
 
-class ProgressTrackerNavBar extends StatefulWidget {
-  const ProgressTrackerNavBar({super.key});
-  @override
-  State<ProgressTrackerNavBar> createState() => _ProgressTrackerNavBarState();
-}
-class _ProgressTrackerNavBarState extends State<ProgressTrackerNavBar> {
-  @override
-  Widget build(BuildContext context) {
-    return const MainBottomBar(initialSelectTab: 2, initialCurrentTab: ProgressTrackerScreen());
-  }
-}
+// class ProgressTrackerNavBar extends StatefulWidget {
+//   const ProgressTrackerNavBar({super.key});
+//   @override
+//   State<ProgressTrackerNavBar> createState() => _ProgressTrackerNavBarState();
+// }
+// class _ProgressTrackerNavBarState extends State<ProgressTrackerNavBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MainBottomBar(initialSelectTab: 2, initialCurrentTab: ProgressTrackerScreen());
+//   }
+// }
 
 
 class ProgramTrackerNavbar extends StatefulWidget {
@@ -202,7 +202,7 @@ class ProgramTrackerNavbar extends StatefulWidget {
 class _ProgramTrackerNavbarState extends State<ProgramTrackerNavbar> {
   @override
   Widget build(BuildContext context) {
-    return const MainBottomBar(initialSelectTab: 3, initialCurrentTab: ProgramTrackerScreen());
+    return const MainBottomBar(initialSelectTab: 2, initialCurrentTab: ProgramTrackerScreen());
   }
 }
 
@@ -215,6 +215,6 @@ class ProfileNavBar extends StatefulWidget {
 class _ProfileNavBarState extends State<ProfileNavBar> {
   @override
   Widget build(BuildContext context) {
-    return const MainBottomBar(initialSelectTab: 4, initialCurrentTab: ProfileScreen());
+    return const MainBottomBar(initialSelectTab: 3, initialCurrentTab: ProfileScreen());
   }
 }

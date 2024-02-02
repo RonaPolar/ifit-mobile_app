@@ -6,7 +6,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/screens/account-login&reg/register/client_registration/register_part3.dart';
-import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 
 class RegisterPart2 extends StatefulWidget {
@@ -30,7 +30,11 @@ class _RegisterPart2State extends State<RegisterPart2> {
     final box = GetStorage();
     Future<bool> validateFields() async {
       // check if all fields are filled
-      if (numberController.text == "" || selectedValue == null || dateOfBirth == null || weightController.text == "" || heightController.text == "") {
+      if (numberController.text == "" ||
+          selectedValue == null ||
+          dateOfBirth == null ||
+          weightController.text == "" ||
+          heightController.text == "") {
         setState(() {
           validatorError = "Please fill all the fields";
         });
@@ -65,7 +69,8 @@ class _RegisterPart2State extends State<RegisterPart2> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 20, top: 10),
                       child: Column(
                         children: [
                           Image.asset(
@@ -82,12 +87,16 @@ class _RegisterPart2State extends State<RegisterPart2> {
                             style: Styles.text15normal,
                           ),
                           const Gap(20),
-                          (validatorError == "" ? const SizedBox() : Text(validatorError, style: const TextStyle(color: Colors.red))),
+                          (validatorError == ""
+                              ? const SizedBox()
+                              : Text(validatorError,
+                                  style: const TextStyle(color: Colors.red))),
 
                           const Gap(10),
                           TextfieldContainer(
                               hitText: 'Number',
-                              icon: FluentSystemIcons.ic_fluent_book_number_regular,
+                              icon: FluentSystemIcons
+                                  .ic_fluent_book_number_regular,
                               obscureText: false,
                               controller: numberController,
                               keyboardType: TextInputType.number),
@@ -131,7 +140,8 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                     keyboardType: TextInputType.number,
                                     controller: weightController,
                                     hitText: 'Your Weight',
-                                    icon: FluentSystemIcons.ic_fluent_data_funnel_regular,
+                                    icon: FluentSystemIcons
+                                        .ic_fluent_data_funnel_regular,
                                     obscureText: false),
                               ),
                               const Gap(5),
@@ -139,7 +149,9 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                 width: 50,
                                 height: 50,
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: Styles.primaryColor, borderRadius: BorderRadius.circular(15)),
+                                decoration: BoxDecoration(
+                                    color: Styles.primaryColor,
+                                    borderRadius: BorderRadius.circular(15)),
                                 child: const Text('KG',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -156,7 +168,8 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                     keyboardType: TextInputType.number,
                                     controller: heightController,
                                     hitText: 'Your Height',
-                                    icon: FluentSystemIcons.ic_fluent_arrow_sort_regular,
+                                    icon: FluentSystemIcons
+                                        .ic_fluent_arrow_sort_regular,
                                     obscureText: false),
                               ),
                               const Gap(5),
@@ -164,7 +177,9 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                 width: 50,
                                 height: 50,
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: Styles.primaryColor, borderRadius: BorderRadius.circular(15)),
+                                decoration: BoxDecoration(
+                                    color: Styles.primaryColor,
+                                    borderRadius: BorderRadius.circular(15)),
                                 child: const Text('CM',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -179,7 +194,8 @@ class _RegisterPart2State extends State<RegisterPart2> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, bottom: 30, top: 20),
                 child: Column(
                   children: [
                     MainButton(

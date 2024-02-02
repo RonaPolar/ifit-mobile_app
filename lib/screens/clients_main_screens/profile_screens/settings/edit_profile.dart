@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,25 +18,75 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-    List user = [
-    {
-      "name": "Juan Dela Cruz",
-      "image": "assets/icons/profile_pic.png",
-      "program": "Loss Weight Program",
-      "number": "09678882245",
-      "height": "188cm",
-      "weight": "56kg",
-      "age": "22",
-      "gender": "Female",
-      "email": "juandelacruz@gmail.com",
-      "bday": "February 13, 2001",
-    },
-  ];
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _numberController = TextEditingController();
+  TextEditingController _programController = TextEditingController();
+  TextEditingController _birth_dateController = TextEditingController();
+  String age = "";
+  String height = "";
+  String weight = "";
+  String gender = "";
+  String photo_url = "";
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('clients')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            setState(() {
+              _nameController.text = userData['name'] ?? '';
+              _emailController.text = userData['email'] ?? '';
+              _numberController.text = userData['phone_number'] ?? '';
+              _programController.text = userData['program'] ?? '';
+              _birth_dateController.text = userData['birth_date'] ?? '';
+
+              gender = userData['gender'] ?? '';
+              height = userData['height'] ?? '';
+              weight = userData['weight'] ?? '';
+              photo_url = userData['photo_url'] ?? '';
+              String birthdateString = userData['birth_date'] ?? '';
+              DateTime birthdate = DateTime.parse(birthdateString);
+
+              DateTime currentDate = DateTime.now();
+              Duration difference = currentDate.difference(birthdate);
+
+              age = (difference.inDays ~/ 365).toString();
+            });
+          } else {
+            print('User data is null.');
+          }
+        } else {
+          print('No user data found for this UID.');
+        }
+      } else {
+        print('User is null.');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-  String? selectedValue;
+    String? selectedValue;
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -48,8 +100,8 @@ class _EditProfileState extends State<EditProfile> {
           },
           child: Container(
             margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
+            height: 30,
+            width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -61,8 +113,10 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
-        title: Text('Edit Profile',
-        style: Styles.headline20,),
+        title: Text(
+          'Edit Profile',
+          style: Styles.headline20,
+        ),
       ),
       body: Column(
         children: [
@@ -76,10 +130,7 @@ class _EditProfileState extends State<EditProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Profile Details",
-                          style: Styles.title
-                        ),
+                        Text("Profile Details", style: Styles.title),
                         const Gap(20),
                         Container(
                           decoration: BoxDecoration(
@@ -94,12 +145,15 @@ class _EditProfileState extends State<EditProfile> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(30),
                                 child: SizedBox(
-                                  width: 100,
                                   height: 100,
-                                  child: Image.asset(
-                                    user[0]["image"].toString(),
+                                  child: Image.network(
+                                    photo_url,
                                     fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Text('Image Error: $error');
+                                    },
                                   ),
+                                  // Replace with your placeholder widget or image
                                 ),
                               ),
                               Positioned(
@@ -120,55 +174,83 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         const Gap(15),
-                        TextfieldContainer(hitText: user[0]["name"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _nameController,
+                            hitText: "Name",
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(hitText: user[0]["email"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _emailController,
+                            hitText: "Email",
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(hitText: user[0]["number"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _numberController,
+                            hitText: "Number",
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
                         const Gap(15),
-                        RegisterDropDown(hintText: user[0]["program"].toString(), 
+                        RegisterDropDown(
+                          hintText: _programController.text,
                           icon: FluentSystemIcons.ic_fluent_edit_regular,
                           items: const [
                             DropdownMenuItem<String>(
                               value: "Loss Weight",
-                              child: Text("Loss Weight Program"),),
+                              child: Text("Loss Weight Program"),
+                            ),
                             DropdownMenuItem<String>(
                               value: "Body Toning",
-                              child: Text("Body Toning Program"),),
+                              child: Text("Body Toning Program"),
+                            ),
                             DropdownMenuItem<String>(
                               value: "Gain Muscles",
-                              child: Text("Gain Muscles Program"),)
-                          ],  
+                              child: Text("Gain Muscles Program"),
+                            )
+                          ],
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value;
                             });
                           },
                           selectedValue: selectedValue,
-                          ),
-                        // TextfieldContainer(hitText: user[0]["program"].toString(), 
+                        ),
+                        // TextfieldContainer(hitText: user[0]["program"].toString(),
                         //   icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(hitText: user[0]["bday"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
+                        TextfieldContainer(
+                            controller: _birth_dateController,
+                            hitText: "Birthdate",
+                            icon: FluentSystemIcons.ic_fluent_edit_regular,
+                            obscureText: false),
+
                         const Gap(15),
-                        DisplayTextContainer(hitText: user[0]["age"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_accounts_regular, obscureText: false),
+                        DisplayTextContainer(
+                            hitText: age,
+                            icon: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: user[0]["gender"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_accounts_regular, obscureText: false),
+                        DisplayTextContainer(
+                            hitText: gender,
+                            icon: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: user[0]["height"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_accounts_regular, obscureText: false),
+                        DisplayTextContainer(
+                            hitText: height,
+                            icon: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
+                            obscureText: false),
                         const Gap(15),
-                        DisplayTextContainer(hitText: user[0]["weight"].toString(), 
-                          icon: FluentSystemIcons.ic_fluent_person_accounts_regular, obscureText: false),
+                        DisplayTextContainer(
+                            hitText: weight,
+                            icon: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
+                            obscureText: false),
                       ],
                     ),
-                    
                   ],
                 ),
               ),
@@ -176,17 +258,20 @@ class _EditProfileState extends State<EditProfile> {
           ),
           Padding(
             padding: const EdgeInsets.all(15),
-            child: MainButton(title: "Update Changes", onPressed: (){
-              showDialog(context: context,
-                builder: (BuildContext context) {
-                  return ConfirmationDialog(
-                    onYesPressed: (){
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const ProfileNavBar()));
-                    },
-                  );});
-            }),
+            child: MainButton(
+                title: "Update Changes",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmationDialog(
+                          onYesPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const ProfileNavBar()));
+                          },
+                        );
+                      });
+                }),
           )
         ],
       ),

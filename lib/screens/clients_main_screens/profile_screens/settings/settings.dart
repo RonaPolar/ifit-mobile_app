@@ -30,8 +30,8 @@ class _SettingsState extends State<Settings> {
           },
           child: Container(
             margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
+            height: 30,
+            width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -43,8 +43,10 @@ class _SettingsState extends State<Settings> {
             ),
           ),
         ),
-        title: Text('Settings',
-        style: Styles.headline20,),
+        title: Text(
+          'Settings',
+          style: Styles.headline20,
+        ),
       ),
       body: Column(
         children: [
@@ -69,25 +71,23 @@ class _SettingsState extends State<Settings> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Account",
-                            style: Styles.title
-                          ),
+                          Text("Account", style: Styles.title),
                           const Gap(1),
                           NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
+                            iconData: FluentSystemIcons
+                                .ic_fluent_person_accounts_regular,
                             title: 'Edit Profile Details',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const EditProfile()));
+                                  builder: (context) => const EditProfile()));
                             },
                           ),
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_lock_regular,
                             title: 'Change Email',
                             onTap: () {
-                              Navigator.of(context).push( MaterialPageRoute(
-                                builder: (context) => const ChangeEmail()));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const ChangeEmail()));
                             },
                           ),
                           NextNavigation(
@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
                             title: 'Change Password',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ChangePass()));
+                                  builder: (context) => const ChangePass()));
                             },
                           ),
                           NextNavigation(
@@ -103,19 +103,17 @@ class _SettingsState extends State<Settings> {
                             title: 'Delete Account',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const DeleteAccount()));
+                                  builder: (context) => const DeleteAccount()));
                             },
                           ),
                         ],
                       ),
                     ),
-                    
                   ],
                 ),
               ),
             ),
           ),
-          
         ],
       ),
     );

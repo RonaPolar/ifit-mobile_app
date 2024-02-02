@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -14,7 +16,6 @@ class ProgressTrackerScreen extends StatefulWidget {
 }
 
 class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
-
   List imaArr = [
     {
       "title": "Front Facing",
@@ -59,6 +60,55 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
     },
   ];
 
+  String name = "";
+  String height = "";
+  String weight = "";
+  int age = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('clients')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            // Use the outer 'name' variable
+            setState(() {
+              name = userData['name'] ?? '';
+              height = userData['height'] ?? '';
+              weight = userData['weight'] ?? '';
+
+              String birthdateString = userData['birth_date'] ?? '';
+              DateTime birthdate = DateTime.parse(birthdateString);
+
+              DateTime currentDate = DateTime.now();
+              Duration difference = currentDate.difference(birthdate);
+
+              age = difference.inDays ~/ 365; // Approximate age in years
+              print(age);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -71,8 +121,7 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
         leading: InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-              builder: (context) => const HomeNavBar()));
+                MaterialPageRoute(builder: (context) => const HomeNavBar()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -102,24 +151,22 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
             Expanded(
               child: ListView(
                 children: [
-                  Text("Profile Overview",
-                    style: Styles.title),
-                    const Gap(10),
-                    const Row(
-                      children: [
-                        Expanded(
-                            child: ProfileCell(value: '188cm', title: 'Height')
-                            ),
-                        Gap(10),
-                        Expanded(
-                            child: ProfileCell(value: '56kg', title: 'Weight')
-                            ),
-                        Gap(10),
-                        Expanded(
-                            child: ProfileCell(value: '22yo', title: 'Height')
-                            ),
-                      ],
-                    ),
+                  Text("Profile Overview", style: Styles.title),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: ProfileCell(
+                              value: '${height} cm', title: 'Height')),
+                      Gap(10),
+                      Expanded(
+                          child: ProfileCell(
+                              value: '${weight} kg', title: 'Weight')),
+                      Gap(10),
+                      Expanded(
+                          child: ProfileCell(value: '${age}', title: 'Age')),
+                    ],
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -127,14 +174,8 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "September",
-                            style: Styles.text15bold
-                          ),
-                          Text(
-                            "December",
-                            style: Styles.text15bold
-                          ),
+                          Text("September", style: Styles.text15bold),
+                          Text("December", style: Styles.text15bold),
                         ],
                       ),
                       ListView.builder(
@@ -148,10 +189,8 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const Gap(20),
-                                  Text(
-                                    iObj["title"].toString(),
-                                    style: Styles.text15bold
-                                  ),
+                                  Text(iObj["title"].toString(),
+                                      style: Styles.text15bold),
                                   const Gap(5),
                                   Row(
                                     mainAxisAlignment:
@@ -159,55 +198,49 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
                                     children: [
                                       SizedBox(
                                         width: 25,
-                                        child: Text(
-                                          iObj["month_1_per"].toString(),
-                                          textAlign: TextAlign.right,
-                                          style: Styles.normal.copyWith(
-                                            fontSize: 12,
-                                          )
-                                        ),
+                                        child:
+                                            Text(iObj["month_1_per"].toString(),
+                                                textAlign: TextAlign.right,
+                                                style: Styles.normal.copyWith(
+                                                  fontSize: 12,
+                                                )),
                                       ),
                                       SimpleAnimationProgressBar(
                                         height: 10,
                                         width: media.width - 120,
                                         backgroundColor: Styles.bgColor,
-                                        foregrondColor: Styles.secondColor.withOpacity(0.5),
-                                        ratio: (double.tryParse(
-                                                    iObj["diff_per"]
-                                                        .toString()) ??
+                                        foregrondColor:
+                                            Styles.secondColor.withOpacity(0.5),
+                                        ratio: (double.tryParse(iObj["diff_per"]
+                                                    .toString()) ??
                                                 0.0) /
                                             100.0,
                                         direction: Axis.horizontal,
                                         curve: Curves.fastLinearToSlowEaseIn,
                                         duration: const Duration(seconds: 3),
-                                        borderRadius:
-                                            BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
                                       SizedBox(
                                         width: 25,
                                         child: Text(
-                                          iObj["month_2_per"].toString(),
-                                          textAlign: TextAlign.left,
-                                          style: Styles.normal.copyWith(
-                                            fontSize: 12
-                                          )
-                                        ),
+                                            iObj["month_2_per"].toString(),
+                                            textAlign: TextAlign.left,
+                                            style: Styles.normal
+                                                .copyWith(fontSize: 12)),
                                       ),
                                     ],
                                   ),
                                 ]);
                           }),
-                          const Gap(125)
+                      const Gap(125)
                     ],
                   ),
-
-              ],
+                ],
+              ),
             ),
-          ),
-          
-        ], //Main Children
+          ], //Main Children
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

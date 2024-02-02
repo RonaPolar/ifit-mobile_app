@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,6 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 
 class _HomeScreenState extends State<HomeScreen> {
   List recommendWorkoutArr = [
@@ -65,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-    List recommendMealArr = [
+  List recommendMealArr = [
     {
       "name": "Blueberry Pancake",
       "image": "assets/images/meal/pancake.png",
@@ -106,381 +107,416 @@ class _HomeScreenState extends State<HomeScreen> {
     {"title": "6:30am - 7am", "subtitle": "Meal"},
   ];
 
+  String name = ""; // Declare the variable outside of initState
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('clients')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            // Use the outer 'name' variable
+            setState(() {
+              name = userData['name'] ?? '';
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    
+    fetchData();
     return Scaffold(
       backgroundColor: Styles.bgColor,
       body: ListView(
         children: [
           Container(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome Back,',
-                        style: Styles.text15normal,
-                      ),
-                      Text(
-                        'Juan Dela Cruz',
-                        style: Styles.headline20,
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const NotificationScreen()));
-                      },
-                      icon: const Icon(
-                          FluentSystemIcons.ic_fluent_alert_regular))
-                ],
-              ),
-              const Gap(20),
-
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                    color: const Color.fromRGBO(255, 0, 0, 72),
-                    borderRadius: BorderRadius.circular(20)),
-                child: Stack(alignment: Alignment.center, children: [
-                  Image.asset(
-                    "assets/images/Dots.png",
-                    height: 120,
-                    width: double.maxFinite,
-                    fit: BoxFit.fitHeight,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "BMI (Body Mass Index)",
-                              style: Styles.text15bold.copyWith(
-                                  color: Colors.white,
-                                  ),
-                            ),
-                            Text(
-                              "You have a normal weight",
-                              style: Styles.seeMore.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
-                                  ),
-                            ),
-                            const Gap(12),
-                            SizedBox(
-                                width: 110,
-                                height: 30,
-                                child: MainButton(
-                                  title: "View More",
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => const ProfileNavBar()));
-                                  },
-                                  textStyle: Styles.seeMore.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                )),
-                          ],
-                        ),
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: PieChart(
-                            PieChartData(
-                              pieTouchData: PieTouchData(
-                                touchCallback:
-                                    (FlTouchEvent event, pieTouchResponse) {},
-                              ),
-                              startDegreeOffset: 250,
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 1,
-                              centerSpaceRadius: 0,
-                              sections: showingSections(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
-              ),
-            
-            const Gap(15),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              decoration: BoxDecoration(
-                color: Styles.secondColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(15),),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Today Target',
-                    style: Styles.text15bold.copyWith(
-                      color: Colors.black,
-                      ),
-                  ),
-                  SizedBox(
-                    width: 80,
-                    height: 30,
-                      child: MainButton(
-                        title: "Check",
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                          builder: (context) => const ActivityTracker()));
-                      },
-                      textStyle: Styles.seeMore.copyWith(
-                        color: Colors.white,
-                      ),
-                    )),                    
-                    ],
-                  ),
-                ),
-            const Gap(20),
-
-            Text(
-              'Activity Today',
-               style: Styles.title
-            ),
-            const Gap(10),
-            Row(
-            children: [
-              Expanded( //Schedule Container
-                child: Container(
-                  height: 315,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 15),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black26, blurRadius: 2)
-                      ]),
-                    child: Column(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        NextNavigation(title: 'Schedule',
-                          nextIconColor: Styles.fadeTextColor,
-                          titleTextStyle: Styles.text15bold.copyWith(
-                            color: Styles.fadeTextColor,
-                          ),
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MealSched(),
-                            ));
-                          },),
-                          Text(
-                            "Monday",
-                            style: Styles.seeMore.copyWith(
-                                color: Styles.secondColor.withOpacity(0.5),
-                                fontWeight: FontWeight.w700,
-                                ),
-                          ),
-                        const Gap(5),
-                        Row( //text at Schedule
-                          children: [
-                            SimpleAnimationProgressBar(
-                            height: 235,
-                            width: 20,
-                            backgroundColor: Colors.grey.shade200,
-                            foregrondColor: Colors.white,
-                            ratio: 0.8, //1 is 100%
-                            direction: Axis.vertical,
-                            curve: Curves.fastLinearToSlowEaseIn,
-                            duration: const Duration(seconds: 3),
-                            borderRadius: BorderRadius.circular(15),
-                            gradientColor: LinearGradient(
-                                colors: [Styles.secondColor.withOpacity(0.5), Styles.secondColor],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter),
-                            ),
-                            const Gap(10),
-                            Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Gap(2),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: schedArr.map((wObj) { //schedule content
-                                  var isLast = wObj == schedArr.last;
-                                  return Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 10,
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              color: Styles.secondColor
-                                                  .withOpacity(0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                          ),
-                                          if (!isLast)
-                                            DottedDashedLine(
-                                                height: 40,
-                                                width: 0,
-                                                dashColor: Styles
-                                                    .secondColor
-                                                    .withOpacity(0.5),
-                                                axis: Axis.vertical)
-                                        ],
-                                      ),
-                                      const Gap(5), //gap between text and line
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [ //waterArry
-                                          Text(
-                                            wObj["title"].toString(),
-                                            style: Styles.normal.copyWith(
-                                              fontSize: 12,
-                                              color: Styles.fadeTextColor,
-                                            ),
-                                          ),
-                                          Text(
-                                            wObj["subtitle"].toString(),
-                                            style: Styles.normal.copyWith(
-                                                fontSize: 12,
-                                                color: Styles.secondColor.withOpacity(0.5),
-                                                ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  );
-                                }).toList(),
-                              )
-                            ],
-                          ))
-                        ],
+                        Text(
+                          'Welcome Back,',
+                          style: Styles.text15normal,
+                        ),
+                        Text(
+                          '${name}',
+                          style: Styles.headline20,
                         ),
                       ],
                     ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationScreen()));
+                        },
+                        icon: const Icon(
+                            FluentSystemIcons.ic_fluent_alert_regular))
+                  ],
                 ),
-              ),
-              
-              ],),
-              const Gap(20),
-
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Workout Recommendation",
-                style: Styles.title
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const WorkoutTrackerScreen()
-                        ),
-                      );
-                },
-                child: Text(
-                  "See More",
-                  style: Styles.seeMore
+                const Gap(20),
+                Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                      color: const Color.fromRGBO(255, 0, 0, 72),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Stack(alignment: Alignment.center, children: [
+                    Image.asset(
+                      "assets/images/Dots.png",
+                      height: 120,
+                      width: double.maxFinite,
+                      fit: BoxFit.fitHeight,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "BMI (Body Mass Index)",
+                                style: Styles.text15bold.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                "You have a normal weight",
+                                style: Styles.seeMore.copyWith(
+                                  color: Colors.white.withOpacity(0.7),
+                                ),
+                              ),
+                              const Gap(12),
+                              SizedBox(
+                                  width: 110,
+                                  height: 30,
+                                  child: MainButton(
+                                    title: "View More",
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ProfileNavBar()));
+                                    },
+                                    textStyle: Styles.seeMore.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          AspectRatio(
+                            aspectRatio: 1,
+                            child: PieChart(
+                              PieChartData(
+                                pieTouchData: PieTouchData(
+                                  touchCallback:
+                                      (FlTouchEvent event, pieTouchResponse) {},
+                                ),
+                                startDegreeOffset: 250,
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                sectionsSpace: 1,
+                                centerSpaceRadius: 0,
+                                sections: showingSections(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ]),
+                ),
+                const Gap(15),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Styles.secondColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: recommendWorkoutArr.length,
-                  itemBuilder: (context, index) {
-                  var wObj = recommendWorkoutArr[index] as Map? ?? {};
-                  return InkWell(
-                      onTap: () {
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Today Target',
+                        style: Styles.text15bold.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                          width: 80,
+                          height: 30,
+                          child: MainButton(
+                            title: "Check",
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ActivityTracker()));
+                            },
+                            textStyle: Styles.seeMore.copyWith(
+                              color: Colors.white,
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                const Gap(20),
+                Text('Activity Today', style: Styles.title),
+                const Gap(10),
+                Row(
+                  children: [
+                    Expanded(
+                      //Schedule Container
+                      child: Container(
+                        height: 315,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 15),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(color: Colors.black26, blurRadius: 2)
+                            ]),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            NextNavigation(
+                              title: 'Schedule',
+                              nextIconColor: Styles.fadeTextColor,
+                              titleTextStyle: Styles.text15bold.copyWith(
+                                color: Styles.fadeTextColor,
+                              ),
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const MealSched(),
+                                ));
+                              },
+                            ),
+                            Text(
+                              "Monday",
+                              style: Styles.seeMore.copyWith(
+                                color: Styles.secondColor.withOpacity(0.5),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Gap(5),
+                            Row(
+                              //text at Schedule
+                              children: [
+                                SimpleAnimationProgressBar(
+                                  height: 235,
+                                  width: 20,
+                                  backgroundColor: Colors.grey.shade200,
+                                  foregrondColor: Colors.white,
+                                  ratio: 0.8, //1 is 100%
+                                  direction: Axis.vertical,
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  duration: const Duration(seconds: 3),
+                                  borderRadius: BorderRadius.circular(15),
+                                  gradientColor: LinearGradient(
+                                      colors: [
+                                        Styles.secondColor.withOpacity(0.5),
+                                        Styles.secondColor
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter),
+                                ),
+                                const Gap(10),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Gap(2),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: schedArr.map((wObj) {
+                                        //schedule content
+                                        var isLast = wObj == schedArr.last;
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 10,
+                                                  height: 10,
+                                                  decoration: BoxDecoration(
+                                                    color: Styles.secondColor
+                                                        .withOpacity(0.5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                if (!isLast)
+                                                  DottedDashedLine(
+                                                      height: 40,
+                                                      width: 0,
+                                                      dashColor: Styles
+                                                          .secondColor
+                                                          .withOpacity(0.5),
+                                                      axis: Axis.vertical)
+                                              ],
+                                            ),
+                                            const Gap(
+                                                5), //gap between text and line
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                //waterArry
+                                                Text(
+                                                  wObj["title"].toString(),
+                                                  style: Styles.normal.copyWith(
+                                                    fontSize: 12,
+                                                    color: Styles.fadeTextColor,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  wObj["subtitle"].toString(),
+                                                  style: Styles.normal.copyWith(
+                                                    fontSize: 12,
+                                                    color: Styles.secondColor
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                ))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Workout Recommendation", style: Styles.title),
+                    TextButton(
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WorkoutDetails(dObj: wObj)),
+                              builder: (context) =>
+                                  const WorkoutTrackerScreen()),
                         );
                       },
-                      child: BigContainer(image: wObj["image"], 
-                        title: wObj["name"], 
-                        bottomText: "${wObj["duration"]} minutes | ${wObj["kcal"]} kcal",));
-                }),
-              ),
-                
-            const Gap(15),
-            Row(  
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Meal Recommendation",
-                style: Styles.title
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const MealTrackerScreen()
-                        ),
-                      );
-                },
-                child: Text(
-                  "See More",
-                  style: Styles.seeMore
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: recommendMealArr.length,
-                  itemBuilder: (context, index) {
-                  var mObj = recommendMealArr[index] as Map? ?? {};
-                  return InkWell(
-                      onTap: () {
+                      child: Text("See More", style: Styles.seeMore),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: recommendWorkoutArr.length,
+                      itemBuilder: (context, index) {
+                        var wObj = recommendWorkoutArr[index] as Map? ?? {};
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        WorkoutDetails(dObj: wObj)),
+                              );
+                            },
+                            child: BigContainer(
+                              image: wObj["image"],
+                              title: wObj["name"],
+                              bottomText:
+                                  "${wObj["duration"]} minutes | ${wObj["kcal"]} kcal",
+                            ));
+                      }),
+                ),
+                const Gap(15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Meal Recommendation", style: Styles.title),
+                    TextButton(
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MealDetails(dObj: mObj)),
+                              builder: (context) => const MealTrackerScreen()),
                         );
                       },
-                      child: BigContainer(image: mObj["image"], 
-                        title: mObj["name"], 
-                        bottomText: "${mObj["categories"]} | ${mObj["kcal"]} kcal",));
-                }),
-              ),
+                      child: Text("See More", style: Styles.seeMore),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: recommendMealArr.length,
+                      itemBuilder: (context, index) {
+                        var mObj = recommendMealArr[index] as Map? ?? {};
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MealDetails(dObj: mObj)),
+                              );
+                            },
+                            child: BigContainer(
+                              image: mObj["image"],
+                              title: mObj["name"],
+                              bottomText:
+                                  "${mObj["categories"]} | ${mObj["kcal"]} kcal",
+                            ));
+                      }),
+                ),
               ],
             ),
           ),
@@ -505,8 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 badgeWidget: Text(
                   "20.1",
                   style: Styles.text12.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700),
+                      color: Colors.white, fontWeight: FontWeight.w700),
                 ));
           case 1:
             return PieChartSectionData(

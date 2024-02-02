@@ -69,7 +69,8 @@ class _RegisterPart3State extends State<RegisterPart3> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
                           Text(
@@ -81,9 +82,13 @@ class _RegisterPart3State extends State<RegisterPart3> {
                             style: Styles.text15normal,
                           ),
                           const Gap(30),
-                          (validatorError == "" ? const SizedBox() : Text(validatorError, style: const TextStyle(color: Colors.red))),
+                          (validatorError == ""
+                              ? const SizedBox()
+                              : Text(validatorError,
+                                  style: const TextStyle(color: Colors.red))),
                           CheckBoxList(
-                            questionText: 'In fitness, do you consider yourself as?',
+                            questionText:
+                                'In fitness, do you consider yourself as?',
                             choices: ['Beginner', 'Intermediate', 'Expert'],
                             onSelectionChanged: (value) {
                               list1 = value;
@@ -91,48 +96,82 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'What fitness goals do you want to achieve?',
-                            choices: ['Loss Weight', 'Body Toning', 'Gain Muscles'],
+                            questionText:
+                                'What fitness goals do you want to achieve?',
+                            choices: [
+                              'Loss Weight',
+                              'Body Toning',
+                              'Gain Muscles'
+                            ],
                             onSelectionChanged: (value) {
                               list2 = value;
                             },
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'What specific body part do you want for it?',
-                            choices: ['Upper body', 'Abdominal', 'Lower body', 'Full body'],
+                            questionText:
+                                'What specific body part do you want for it?',
+                            choices: [
+                              'Upper body',
+                              'Abdominal',
+                              'Lower body',
+                              'Full body'
+                            ],
                             onSelectionChanged: (value) {
                               list3 = value;
                             },
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'How do you want to attain these goals?',
-                            choices: ['Body exercises', 'Lifting weights', 'Food restrictions'],
+                            questionText:
+                                'How do you want to attain these goals?',
+                            choices: [
+                              'Body exercises',
+                              'Lifting weights',
+                              'Food restrictions'
+                            ],
                             onSelectionChanged: (value) {
                               list4 = value;
                             },
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'How many minutes/hours do you exercise?',
-                            choices: ['Less than 30 minutes', 'An hour', 'More than an hour'],
+                            questionText:
+                                'How many minutes/hours do you exercise?',
+                            choices: [
+                              'Less than 30 minutes',
+                              'An hour',
+                              'More than an hour'
+                            ],
                             onSelectionChanged: (value) {
                               list5 = value;
                             },
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'How many times in a week do you exercise?',
-                            choices: ['None', 'Once a week', 'Twice a week', '3-4 times a week', 'More than'],
+                            questionText:
+                                'How many times in a week do you exercise?',
+                            choices: [
+                              'None',
+                              'Once a week',
+                              'Twice a week',
+                              '3-4 times a week',
+                              'More than'
+                            ],
                             onSelectionChanged: (value) {
                               list6 = value;
                             },
                           ),
                           const Gap(15),
                           CheckBoxList(
-                            questionText: 'Do you have a body or health complications that need to be considered upon the process?',
-                            choices: ['None', 'Injuries', 'Breathing complications(ex: Asthma)', 'Cardiovascular diseases'],
+                            questionText:
+                                'Do you have a body or health complications that need to be considered upon the process?',
+                            choices: [
+                              'None',
+                              'Injuries',
+                              'Breathing complications(ex: Asthma)',
+                              'Cardiovascular diseases'
+                            ],
                             onSelectionChanged: (value) {
                               list7 = value;
                             },
@@ -144,29 +183,41 @@ class _RegisterPart3State extends State<RegisterPart3> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, bottom: 30, top: 20),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Confirm',
                       onPressed: () async {
-                        List<List<bool>> allLists = [list1, list2, list3, list4, list5, list6, list7];
+                        List<List<bool>> allLists = [
+                          list1,
+                          list2,
+                          list3,
+                          list4,
+                          list5,
+                          list6,
+                          list7
+                        ];
 
                         // Check if each list has at least one true value
                         // success registration
-                        if (allLists.every((list) => list.any((item) => item))) {
+                        if (allLists
+                            .every((list) => list.any((item) => item))) {
                           //register the user
                           if (await registerUser()) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ClientSuccessRegistration(),
+                                builder: (context) =>
+                                    const ClientSuccessRegistration(),
                               ),
                             );
                           }
                         } else {
                           setState(() {
-                            validatorError = "Please check at least one checkbox in each list";
+                            validatorError =
+                                "Please check at least one checkbox in each list";
                           });
                         }
                       },
@@ -204,7 +255,8 @@ class _CheckBoxListState extends State<CheckBoxList> {
   @override
   void initState() {
     super.initState();
-    isCheckedList = List<bool>.generate(widget.choices.length, (index) => false);
+    isCheckedList =
+        List<bool>.generate(widget.choices.length, (index) => false);
   }
 
   @override
@@ -212,7 +264,8 @@ class _CheckBoxListState extends State<CheckBoxList> {
     super.didUpdateWidget(oldWidget);
     if (widget.choices.length != oldWidget.choices.length) {
       // The number of choices has changed, regenerate isCheckedList
-      isCheckedList = List<bool>.generate(widget.choices.length, (index) => false);
+      isCheckedList =
+          List<bool>.generate(widget.choices.length, (index) => false);
     }
   }
 

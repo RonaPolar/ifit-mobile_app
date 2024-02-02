@@ -13,6 +13,7 @@ import 'package:ifit/screens/account-login&reg/register/expert_registration/expe
 import 'package:ifit/screens/account-login&reg/register/popup_privacy_terms.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ifit/screens/account-login&reg/services.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -71,9 +72,8 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please fill all the fields";
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(validatorError))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
         return false;
 
         // check if email is valid
@@ -82,9 +82,8 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please enter a valid email";
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(validatorError))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
 
         return false;
 
@@ -93,9 +92,8 @@ class _RegisterState extends State<Register> {
         setState(() {
           validatorError = "Please accept our terms and conditions";
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(validatorError))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
         return false;
       } else {
         print("Sending email to user");
@@ -133,7 +131,8 @@ class _RegisterState extends State<Register> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
                           Text(
@@ -175,7 +174,9 @@ class _RegisterState extends State<Register> {
 
                             obscureText: !_isPasswordVisible,
                             rightIcon: IconButton(
-                              icon: _isPasswordVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                              icon: _isPasswordVisible
+                                  ? const Icon(Icons.visibility)
+                                  : const Icon(Icons.visibility_off),
                               onPressed: () {
                                 setState(() {
                                   _isPasswordVisible = !_isPasswordVisible;
@@ -256,8 +257,10 @@ class _RegisterState extends State<Register> {
                                   });
                                 },
                                 icon: _isCheck
-                                    ? const Icon(FluentSystemIcons.ic_fluent_checkbox_checked_regular)
-                                    : const Icon(FluentSystemIcons.ic_fluent_checkbox_unchecked_regular),
+                                    ? const Icon(FluentSystemIcons
+                                        .ic_fluent_checkbox_checked_regular)
+                                    : const Icon(FluentSystemIcons
+                                        .ic_fluent_checkbox_unchecked_regular),
                                 color: Styles.fadeTextColor,
                               ),
                               Expanded(
@@ -303,7 +306,8 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5, top: 20),
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, bottom: 5, top: 20),
                 child: Column(
                   children: [
                     MainButton(
@@ -313,19 +317,32 @@ class _RegisterState extends State<Register> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
+                              builder: (context) =>
+                                  VerificationCodeScreen(onConfirmPressed: () {
                                 // check if all fields are filled and valid
 
                                 if (destinationScreen == "ClientRegistration") {
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const RegisterPart2()),
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegisterPart2()),
                                   );
-                                } else if (destinationScreen == "ExpertRegistration") {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const ExpertRegistration1()),
-                                  );
+                                } else if (destinationScreen ==
+                                    "ExpertRegistration") {
+                                  Services()
+                                      .Signup(
+                                          firstNameController.text,
+                                          emailController.text,
+                                          passwordController.text)
+                                      .then({
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ExpertRegistration1()),
+                                    )
+                                  });
                                 }
                               }),
                             ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -25,9 +27,45 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
       "rate": "4.5",
       "mealCreated": "2",
       "workoutCreated": "3",
-      "descriptions": "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
+      "descriptions":
+          "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
     },
   ];
+
+  String name = ""; // Declare the variable outside of initState
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data based on the provided UID when the widget initializes
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('experts')
+            .where('email', isEqualTo: user.email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          var userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
+          if (userData != null) {
+            // Use the outer 'name' variable
+            setState(() {
+              name = userData['name'] ?? '';
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +89,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                           style: Styles.text15normal,
                         ),
                         Text(
-                          'Dr. Otto Octavius',
+                          '${name}',
                           style: Styles.headline20,
                         ),
                       ],
@@ -199,9 +237,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Workouts',
-                              style: Styles.title
-                            ),
+                            Text('Workouts', style: Styles.title),
                             const Gap(5),
                             Text(
                               "${experts[0]["workoutCreated"]}",
@@ -234,10 +270,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
-                            Text('Meals',
-                              style: Styles.title
-                            ),
+                            Text('Meals', style: Styles.title),
                             const Gap(5),
                             Text(
                               "${experts[0]["mealCreated"]}",
@@ -253,7 +286,6 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                     ),
                   ],
                 ),
-
                 const Gap(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
