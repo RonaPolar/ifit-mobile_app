@@ -209,9 +209,13 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                       icon: Icons.fitness_center_outlined,
                       obscureText: false),
 
-                    const AddsubButton(
+                   AddsubButton(
                       title: 'Items', 
-                      add: TextfieldContainer(
+                      onAddClicked: () {
+                      // Your custom logic here
+                      // print('Custom function for Add button clicked!');
+                      },
+                      add: const TextfieldContainer(
                         hitText: 'Equipment with Quantity', 
                         icon: Icons.fitness_center_outlined,
                         obscureText: false)),

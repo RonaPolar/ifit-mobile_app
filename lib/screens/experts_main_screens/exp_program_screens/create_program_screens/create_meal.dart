@@ -267,7 +267,9 @@ class _CreateMealState extends State<CreateMeal> {
 class AddsubButton extends StatefulWidget {
   final String title;
   final Widget add;
-  const AddsubButton({super.key, required this.title, required this.add});
+  final VoidCallback? onAddClicked;
+  
+  const AddsubButton({super.key, required this.title, required this.add, this.onAddClicked});
 
   @override
   State<AddsubButton> createState() => _AddsubButtonState();
@@ -306,6 +308,9 @@ class _AddsubButtonState extends State<AddsubButton> {
                       ],
                     ),
                   );
+                  if (widget.onAddClicked != null) {
+                    widget.onAddClicked!();
+                  }
                 });
               },
             ),
