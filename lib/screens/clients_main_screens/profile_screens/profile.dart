@@ -16,6 +16,7 @@ import 'package:ifit/screens/clients_main_screens/profile_screens/privacy_policy
 import 'package:ifit/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 import 'package:ifit/screens/clients_main_screens/profile_screens/settings/settings.dart'
     as CloudFirestoreSettings;
+import 'package:ifit/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -217,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      const ProgressTrackerNavBar()));
+                                      const WorkoutTrackerScreen()));
                             },
                           ),
                         ],
