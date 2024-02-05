@@ -314,6 +314,7 @@ class _RegisterState extends State<Register> {
                       title: 'Register',
                       onPressed: () async {
                         if (await validateAndSendEmail()) {
+                          // ignore: use_build_context_synchronously
                           Navigator.push(
                             context,
                             MaterialPageRoute(

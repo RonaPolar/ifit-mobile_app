@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -19,7 +20,6 @@ class _CreateMealState extends State<CreateMeal> {
   String? selectedValue;
   String? selectedFoodCategory;
   String? selectedFoodPurpose;
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +107,6 @@ class _CreateMealState extends State<CreateMeal> {
                       },
                       selectedValue: selectedFoodCategory,
                     ),
-
-
                     const Gap(10),
                     RegisterDropDown(
                       hintText: 'Purpose',
@@ -129,13 +127,11 @@ class _CreateMealState extends State<CreateMeal> {
                       ],
                       onChanged: (value) {
                         setState(() {
-                          selectedFoodPurpose  = value;
+                          selectedFoodPurpose = value;
                         });
                       },
-                      selectedValue: selectedFoodPurpose ,
+                      selectedValue: selectedFoodPurpose,
                     ),
-
-
                     const Gap(10),
                     const TextfieldContainer(
                         hitText: 'Food Plan Name',
@@ -157,14 +153,15 @@ class _CreateMealState extends State<CreateMeal> {
                         ),
                         const Gap(10),
                         SizedBox(
-                          height: 25,
-                          width: 100,
-                          child: MainButton(title: 'Upload', 
-                            textStyle: Styles.title.copyWith(color: Colors.white),
-                            onPressed: (){}))
+                            height: 25,
+                            width: 100,
+                            child: MainButton(
+                                title: 'Upload',
+                                textStyle:
+                                    Styles.title.copyWith(color: Colors.white),
+                                onPressed: () {}))
                       ],
                     ),
-
                     const Gap(20),
                     Text(
                       "Nutritions",
@@ -172,25 +169,24 @@ class _CreateMealState extends State<CreateMeal> {
                     ),
                     const Gap(5),
                     const TextfieldContainer(
-                      hitText: 'Calories',
-                      imagePath: "assets/icons/calories.png",
-                      obscureText: false),
+                        hitText: 'Calories',
+                        imagePath: "assets/icons/calories.png",
+                        obscureText: false),
                     const Gap(10),
                     const TextfieldContainer(
-                      hitText: 'Fats',
-                      imagePath: "assets/icons/fat.png",
-                      obscureText: false),
+                        hitText: 'Fats',
+                        imagePath: "assets/icons/fat.png",
+                        obscureText: false),
                     const Gap(10),
                     const TextfieldContainer(
-                      hitText: 'Sugar',
-                      imagePath: "assets/icons/sugar.png",
-                      obscureText: false),
+                        hitText: 'Sugar',
+                        imagePath: "assets/icons/sugar.png",
+                        obscureText: false),
                     const Gap(10),
                     const TextfieldContainer(
-                      hitText: 'Protein',
-                      imagePath: "assets/icons/protein.png",
-                      obscureText: false),
-
+                        hitText: 'Protein',
+                        imagePath: "assets/icons/protein.png",
+                        obscureText: false),
                     const Gap(20),
                     Text(
                       "Ingrediets Needed",
@@ -198,16 +194,17 @@ class _CreateMealState extends State<CreateMeal> {
                     ),
                     const Gap(5),
                     const TextfieldContainer(
-                      hitText: 'Ingredients with Measurement',
-                      icon: FluentSystemIcons.ic_fluent_food_regular,
-                      obscureText: false),
-                    const AddsubButton(
-                      title: 'Ingredients', 
-                      add: TextfieldContainer(
-                        hitText: 'Ingredients with Measurement', 
+                        hitText: 'Ingredients with Measurement',
                         icon: FluentSystemIcons.ic_fluent_food_regular,
-                        obscureText: false)),
-
+                        obscureText: false),
+                    const AddsubButton(
+                      title: 'Ingredients',
+                      add: TextfieldContainer(
+                          hitText: 'Ingredients with Measurement',
+                          icon: FluentSystemIcons.ic_fluent_food_regular,
+                          obscureText: false),
+                      subtract: Column(),
+                    ),
                     const Gap(20),
                     Text(
                       "Step by Step Preparations",
@@ -221,11 +218,14 @@ class _CreateMealState extends State<CreateMeal> {
                       ),
                     ),
                     const AddsubButton(
-                      title: 'Steps', 
+                      title: 'Steps',
                       add: SizedBox(
-                        height: 100,
-                        child: BigTextField(hintText: 'Input the Next Step to the Preparation'))),
-                    
+                          height: 100,
+                          child: BigTextField(
+                              hintText:
+                                  'Input the Next Step to the Preparation')),
+                      subtract: Column(),
+                    ),
                   ],
                 ),
               ],
@@ -245,12 +245,14 @@ class _CreateMealState extends State<CreateMeal> {
                           return ConfirmationDialog(
                             question: "Are you sure to create?",
                             onYesPressed: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ExpPrograms()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ExpPrograms()));
                             },
                           );
-                    });
+                        });
                   },
                 ),
               ],
@@ -262,14 +264,19 @@ class _CreateMealState extends State<CreateMeal> {
   }
 }
 
-
 //Button for Add and Subtract
 class AddsubButton extends StatefulWidget {
   final String title;
   final Widget add;
-  final VoidCallback? onAddClicked;
-  
-  const AddsubButton({super.key, required this.title, required this.add, this.onAddClicked});
+  final Widget subtract;
+  final VoidCallback? onSubtract;
+  const AddsubButton({
+    super.key,
+    required this.title,
+    required this.add,
+    required this.subtract,
+    this.onSubtract,
+  });
 
   @override
   State<AddsubButton> createState() => _AddsubButtonState();
@@ -292,6 +299,12 @@ class _AddsubButtonState extends State<AddsubButton> {
                   if (steps.isNotEmpty) {
                     steps.removeLast();
                   }
+                  if (steps.isEmpty) {
+                    steps.removeAt(0);
+                  }
+                  if (widget.onSubtract != null) {
+                    widget.onSubtract!();
+                  }
                 });
               },
             ),
@@ -302,15 +315,9 @@ class _AddsubButtonState extends State<AddsubButton> {
                 setState(() {
                   steps.add(
                     Column(
-                      children: [
-                        const Gap(5),
-                        widget.add
-                      ],
+                      children: [const Gap(5), widget.add],
                     ),
                   );
-                  if (widget.onAddClicked != null) {
-                    widget.onAddClicked!();
-                  }
                 });
               },
             ),

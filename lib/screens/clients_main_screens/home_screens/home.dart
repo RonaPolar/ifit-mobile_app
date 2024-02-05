@@ -107,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
     {"title": "6:30am - 7am", "subtitle": "Meal"},
   ];
 
-  String name = ""; // Declare the variable outside of initState
+  String name = "";
+  double bmi = 0;
 
   @override
   void initState() {
@@ -130,9 +131,25 @@ class _HomeScreenState extends State<HomeScreen> {
               querySnapshot.docs.first.data() as Map<String, dynamic>?;
 
           if (userData != null) {
-            // Use the outer 'name' variable
             setState(() {
               name = userData['name'] ?? '';
+              double height =
+                  double.tryParse(userData['height'] ?? '0.0') ?? 0.0;
+              double weight =
+                  double.tryParse(userData['weight'] ?? '0.0') ?? 0.0;
+
+              // Convert height to meters
+              double heightInMeters = height / 100;
+
+              // Calculate BMI
+              bmi = weight / (heightInMeters * heightInMeters);
+
+              if (height != 0.0 && weight != 0.0) {
+                // Calculate BMI
+                bmi = weight / (heightInMeters * heightInMeters);
+              } else {
+                print('Height or weight is zero, unable to calculate BMI');
+              }
             });
           }
         }
@@ -534,12 +551,12 @@ class _HomeScreenState extends State<HomeScreen> {
           case 0:
             return PieChartSectionData(
                 color: primary,
-                value: 20.1,
+                value: bmi,
                 title: '',
                 radius: 45,
                 titlePositionPercentageOffset: 0.55,
                 badgeWidget: Text(
-                  "20.1",
+                  bmi.toStringAsFixed(1), // Display BMI with one decimal place
                   style: Styles.text12.copyWith(
                       color: Colors.white, fontWeight: FontWeight.w700),
                 ));

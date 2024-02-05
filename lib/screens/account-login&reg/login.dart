@@ -2,14 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/screens/account-login&reg/register/register.dart';
 import 'package:ifit/screens/account-login&reg/services.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:get/get.dart';
 import 'package:ifit/screens/experts_main_screens/exp_bottom_bar.dart';
 
 class LogIn extends StatefulWidget {
@@ -24,33 +22,10 @@ class _LogInState extends State<LogIn> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final ApiConnect apiConnect = Get.find();
-
   bool _isInvalidCredentials = false;
   @override
   Widget build(BuildContext context) {
     void loginUser() async {
-      // var userData = {
-      //   'email': emailController.text,
-      //   'password': passwordController.text,
-      // };
-      // var res = await apiConnect.loginUser(userData);
-
-      // if (res.statusCode == 200) {
-      //   // userfound
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => const HomeNavBar(),
-      //     ),
-      //   );
-      // } else {
-      //   // user not found
-      //   setState(() {
-      //     _isInvalidCredentials = true;
-      //   });
-      // }
-
       Services()
           .SignIn(emailController.text, passwordController.text)
           .then((value) {
@@ -66,6 +41,7 @@ class _LogInState extends State<LogIn> {
             ),
           );
         });
+
         FirebaseFirestore.instance
             .collection('clients')
             .where('email', isEqualTo: emailController.text)
@@ -79,17 +55,6 @@ class _LogInState extends State<LogIn> {
           );
         });
       });
-
-      // Services()
-      //     .SignIn(emailController.text, passwordController.text)
-      //     .then((value) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => const HomeNavBar(),
-      //     ),
-      //   );
-      // });
     }
 
     return Scaffold(

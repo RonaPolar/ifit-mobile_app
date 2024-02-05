@@ -6,7 +6,19 @@ class Services {
 
   // ignore: non_constant_identifier_names
   SignIn(String email, String password) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+
+    final user = userCredential.user;
+
+    if (user != null) {
+      // Access 'uid' and other properties
+      print("User is . Authentication success.");
+      // Continue with the login process
+    } else {
+      // Handle the case where the user is null
+      print("User is null. Authentication failed.");
+    }
   }
 
   Signup(String firstname, String email, String password) async {

@@ -16,6 +16,9 @@ class CreateWorkoutNext extends StatefulWidget {
 }
 
 class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
+  final TextEditingController workoutDescriptions = TextEditingController();
+  final TextEditingController workoutDescriptions2 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,21 +29,25 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            showDialog(context: context,
-              builder: (BuildContext context) {
-                return ConfirmationDialog(
-                  question: "Are you Done?",
-                  onYesPressed: () {
-                    Navigator.pushReplacement(context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateWorkout()));
-                  },
-            );});
+            Navigator.pop(context);
+            // showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return ConfirmationDialog(
+            //         question: "Are you Done?",
+            //         onYesPressed: () {
+            //           Navigator.pushReplacement(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) => const CreateWorkout()));
+            //         },
+            //       );
+            //     });
           },
           child: Container(
             margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
+            height: 30,
+            width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -52,8 +59,10 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
             ),
           ),
         ),
-        title: Text('Exercise Continuation',
-        style: Styles.headline20,),
+        title: Text(
+          'Exercise Continuation',
+          style: Styles.headline20,
+        ),
       ),
       body: Column(
         children: [
@@ -65,13 +74,13 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       height: 100,
                       child: BigTextField(
+                        controller: workoutDescriptions,
                         hintText: "Descriptions",
                       ),
                     ),
-
                     const Gap(10),
                     Text(
                       'How many repetitions or how long?',
@@ -81,24 +90,25 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      const SizedBox(
-                        width: 150,
-                        child: TextfieldContainer(
-                          hitText: 'times',
-                          icon: FluentSystemIcons.ic_fluent_data_funnel_regular,
-                          obscureText: false),
-                      ),
-                      Text("or", style: Styles.text15bold),
-                      const SizedBox(
-                        width: 150,
-                        child: TextfieldContainer(
-                          hitText: 'seconds',
-                          icon: FluentSystemIcons.ic_fluent_data_funnel_regular,
-                          obscureText: false),
-                        ),
+                        //  SizedBox(
+                        //   width: 150,
+                        //   child: TextfieldContainer(
+                        //       hitText: 'times',
+                        //       icon: FluentSystemIcons
+                        //           .ic_fluent_data_funnel_regular,
+                        //       obscureText: false),
+                        // ),
+                        // Text("or", style: Styles.text15bold),
+                        //  SizedBox(
+                        //   width: 150,
+                        //   child: TextfieldContainer(
+                        //       hitText: 'seconds',
+                        //       icon: FluentSystemIcons
+                        //           .ic_fluent_data_funnel_regular,
+                        //       obscureText: false),
+                        // ),
                       ],
                     ),
-
                     const Gap(10),
                     Row(
                       children: [
@@ -108,31 +118,38 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                         ),
                         const Gap(10),
                         SizedBox(
-                          height: 25,
-                          width: 100,
-                          child: MainButton(title: 'Upload', 
-                            textStyle: Styles.title.copyWith(color: Colors.white),
-                            onPressed: (){}))
+                            height: 25,
+                            width: 100,
+                            child: MainButton(
+                                title: 'Upload',
+                                textStyle:
+                                    Styles.title.copyWith(color: Colors.white),
+                                onPressed: () {}))
                       ],
                     ),
-
                     const Gap(20),
                     Text(
                       "Step by Step Tutorial",
                       style: Styles.title,
                     ),
                     const Gap(5),
-                    const SizedBox(
+                    SizedBox(
                       height: 100,
                       child: BigTextField(
+                        controller: workoutDescriptions,
                         hintText: 'Input the Step 1 to the Preparation',
                       ),
                     ),
-                    const AddsubButton(
-                      title: 'Steps', 
+                    AddsubButton(
+                      title: 'Steps',
                       add: SizedBox(
-                        height: 100,
-                        child: BigTextField(hintText: 'Input the Next Step to the Preparation'))),
+                          height: 100,
+                          child: BigTextField(
+                              controller: workoutDescriptions,
+                              hintText:
+                                  'Input the Next Step to the Preparation')),
+                      subtract: Column(),
+                    ),
                   ],
                 )
               ],
@@ -147,17 +164,19 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                   title: 'Done',
                   onPressed: () {
                     showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ConfirmationDialog(
-                          question: "Are you Done?",
-                          onYesPressed: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) => const CreateWorkout()));
-                          },
-                        );
-                    });
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ConfirmationDialog(
+                            question: "Are you Done?",
+                            onYesPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateWorkout()));
+                            },
+                          );
+                        });
                   },
                 ),
               ],
@@ -165,6 +184,24 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BigTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+
+  BigTextField({required this.controller, required this.hintText});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+      ),
+      maxLines: 5,
     );
   }
 }
