@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'I-Fit',
 
-      // home: const CreateWorkout(), //for testing
+      // home: const HomeNavBar(), //for testing
       home: widget.homeScreen, //either Onboarding or Register Screen
     );
   }
