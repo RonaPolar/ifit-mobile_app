@@ -19,7 +19,8 @@ class TextfieldContainer extends StatefulWidget {
     required this.obscureText,
     this.margin,
     this.controller,
-    this.keyboardType, this.imagePath,
+    this.keyboardType,
+    this.imagePath,
   }) : super(key: key);
 
   @override
@@ -33,7 +34,8 @@ class _TextfieldContainerState extends State<TextfieldContainer> {
     if (widget.icon != null) {
       prefixIcon = Icon(widget.icon);
     } else if (widget.imagePath != null) {
-      prefixIcon = Image.asset(widget.imagePath!, scale: 10, fit: BoxFit.scaleDown);
+      prefixIcon =
+          Image.asset(widget.imagePath!, scale: 10, fit: BoxFit.scaleDown);
     }
 
     return Container(
@@ -61,7 +63,6 @@ class _TextfieldContainerState extends State<TextfieldContainer> {
   }
 }
 
-
 class DisplayTextContainer extends StatefulWidget {
   final String hitText;
   final IconData icon;
@@ -73,7 +74,8 @@ class DisplayTextContainer extends StatefulWidget {
     required this.hitText,
     required this.icon,
     this.rightIcon,
-    this.margin, required bool obscureText,
+    this.margin,
+    required bool obscureText,
   }) : super(key: key);
 
   @override
@@ -108,10 +110,6 @@ class _DisplayTextContainerState extends State<DisplayTextContainer> {
     );
   }
 }
-
-
-
-
 
 class BigTextField extends StatefulWidget {
   final String hintText;
