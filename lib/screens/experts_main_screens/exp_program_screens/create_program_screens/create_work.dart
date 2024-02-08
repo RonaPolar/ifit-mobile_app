@@ -1,16 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/confirmation_dialog.dart';
 import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/screens/account-login&reg/register/client_registration/register_part2.dart';
 import 'package:ifit/screens/experts_main_screens/exp_bottom_bar.dart';
-import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
-import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
-import 'package:random_string/random_string.dart';
 
 class CreateWorkout extends StatefulWidget {
   const CreateWorkout({super.key});
@@ -20,58 +19,57 @@ class CreateWorkout extends StatefulWidget {
 }
 
 class _CreateWorkoutState extends State<CreateWorkout> {
-  String customDocId = "";
+  final customDocId = FirebaseFirestore.instance.collection("workoutPlan")
+      .doc();
 
-  Future<String> generateUniqueDocId() async {
-    // Reference to your Firestore collection
-    CollectionReference<Map<String, dynamic>> collection =
-        FirebaseFirestore.instance.collection('your_collection');
+  // Future<String> generateUniqueDocId() async {
+  //   // Reference to your Firestore collection
+  //   CollectionReference<Map<String, dynamic>> collection =
+  //       FirebaseFirestore.instance.collection('your_collection');
+  //
+  //   QuerySnapshot<Map<String, dynamic>>
+  //       snapshot; // Declare snapshot outside the loop
+  //
+  //   // Generate a unique ID (e.g., using a random string)
+  //   do {
+  //     customDocId =
+  //         randomAlphaNumeric(20); // Change the length according to your needs
+  //
+  //     // Check if the generated ID is already in use
+  //     snapshot = await collection.where('workoutPlans', isEqualTo: customDocId).get();
+  //
+  //     // If the ID is already in use, generate a new one
+  //   } while (snapshot.docs.isNotEmpty);
+  //
+  //   return customDocId;
+  // }
 
-    QuerySnapshot<Map<String, dynamic>>
-        snapshot; // Declare snapshot outside the loop
-
-    // Generate a unique ID (e.g., using a random string)
-    do {
-      customDocId =
-          randomAlphaNumeric(20); // Change the length according to your needs
-
-      // Check if the generated ID is already in use
-      snapshot =
-          await collection.where('workoutPlans', isEqualTo: customDocId).get();
-
-      // If the ID is already in use, generate a new one
-    } while (snapshot.docs.isNotEmpty);
-
-    return customDocId;
-  }
-
-  late TextEditingController _listallitemscontroller;
-  List<String> allItems = [];
+  // late TextEditingController _listallitemscontroller;
+  // List<String> allItems = [];
   List<TextEditingController> allItemsControllers = [];
+  List<ExcerciseInstructions> exerciseinstructions_list = [];
 
   @override
   void initState() {
     super.initState();
     // Initialize a new controller for each TextfieldContainer
-    allItemsControllers = List.generate(1, (index) => TextEditingController());
+    // allItemsControllers = List.generate(1, (index) => TextEditingController());
 
-    _listallitemscontroller = TextEditingController();
-
-    generateUniqueDocId();
+    // _listallitemscontroller = TextEditingController();
   }
 
   @override
   void dispose() {
-    _listallitemscontroller.dispose();
+    // _listallitemscontroller.dispose();
     super.dispose();
   }
 
-  void displayItems() {
-    setState(() {
-      _listallitemscontroller.text =
-          '[${allItems.map((item) => "'$item'").join(',')}]';
-    });
-  }
+  // void displayItems() {
+  //   setState(() {
+  //     _listallitemscontroller.text =
+  //         '[${allItems.map((item) => "'$item'").join(',')}]';
+  //   });
+  // }
 
   String? selectedWorkoutCategory;
   String? selectedWorkoutDifficulty;
@@ -81,9 +79,10 @@ class _CreateWorkoutState extends State<CreateWorkout> {
   final TextEditingController workoutPlanName = TextEditingController();
   final TextEditingController workoutDescriptions = TextEditingController();
   final TextEditingController workoutDaysOfThePlan = TextEditingController();
-  final TextEditingController workoutMinutesitTakestoDo =
-      TextEditingController();
+  final TextEditingController workoutMinutesitTakestoDo = TextEditingController();
   final TextEditingController workoutCalories = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +138,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${customDocId}'),
+                    Text(customDocId.id),
                     RegisterDropDown(
                       hintText: 'Category',
                       icon: Icons.fitness_center_outlined,
@@ -233,12 +232,16 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                           borderRadius: BorderRadius.circular(20)),
                       child: SizedBox(
                         height: 100,
-                        child: BigTextField(
+                        child: TextField(
                           controller: workoutDescriptions,
-                          hintText: "Descriptions",
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Description",
+                          ),
+                          maxLines: 5,
+                        )
                         ),
                       ),
-                    ),
                     const Gap(10),
                     Row(
                       children: [
@@ -253,7 +256,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                             child: MainButton(
                                 title: 'Upload',
                                 textStyle:
-                                    Styles.title.copyWith(color: Colors.white),
+                                Styles.title.copyWith(color: Colors.white),
                                 onPressed: () {}))
                       ],
                     ),
@@ -295,50 +298,57 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                     //     allItems.add(newItem);
                     //   },
                     // ),
-                    AddsubButton(
-                      title: 'Items',
-                      add: Column(
-                        children: [
-                          // Use ListView.builder to dynamically generate TextfieldContainer widgets
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: allItemsControllers.length,
-                            itemBuilder: (context, index) {
-                              // Create a new TextEditingController for each TextfieldContainer
-                              TextEditingController controller =
-                                  TextEditingController();
-                              allItemsControllers.add(controller);
-
-                              return Column(
-                                children: [
-                                  TextfieldContainer(
-                                    controller: controller,
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    allItemsControllers.removeLast();
+                                  });
+                                },
+                                icon: Icon(Icons.remove)
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: const Text("Items"),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    allItemsControllers.add(
+                                        TextEditingController());
+                                  });
+                                },
+                                icon: Icon(Icons.add)
+                            )
+                          ],
+                        ),
+                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: allItemsControllers.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0),
+                                  child: TextfieldContainer(
+                                    controller: allItemsControllers[index],
                                     hitText: 'Equipment with Quantity',
                                     icon: Icons.fitness_center_outlined,
                                     obscureText: false,
                                     onItemAdded: (newItem) {},
-                                  )
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      subtract: Column(),
-                      onSubtract: () {
-                        allItems.clear();
-                        allItemsControllers.removeLast();
-                        for (int i = 0; i < allItemsControllers.length; i++) {
-                          String newItem = allItemsControllers[i].text;
-
-                          if (newItem != "") {
-                            allItems.add(newItem);
-                          }
-                        }
-                        print(allItems);
-                      },
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-
                     const Gap(20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,71 +361,198 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                             style: Styles.text15normal),
                       ],
                     ),
-                    AddsubButton(
-                      title: 'Sets',
-                      add: Column(
-                        children: [
-                          const Gap(5),
-                          Text(
-                            'Input the Exercises to the Set and Click Continue',
-                            style: Styles.text15bold,
-                          ),
-                          const Gap(5),
-                          TextfieldContainer(
-                            hitText: 'Exercise',
-                            icon: Icons.fitness_center_outlined,
-                            rightIcon: SizedBox(
-                                width: 100,
-                                child: MainButton(
-                                    title: 'Continue',
-                                    textStyle: Styles.text15bold
-                                        .copyWith(color: Colors.white),
-                                    onPressed: () {
-                                      // Navigator.pushReplacement(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             const CreateWorkoutNext()));
-
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              child: Column(
-                                                children: [],
-                                              ),
-                                            );
-                                          });
-                                    })),
-                            obscureText: false,
-                            onItemAdded: (newItem) {},
-                          ),
-                          AddsubButton(
-                            title: 'Exercise',
-                            add: TextfieldContainer(
-                              hitText: 'Exercise',
-                              icon: Icons.fitness_center_outlined,
-                              rightIcon: SizedBox(
-                                  width: 100,
-                                  child: MainButton(
-                                      title: 'Continue',
-                                      textStyle: Styles.text15bold
-                                          .copyWith(color: Colors.white),
-                                      onPressed: () {
-                                        // Navigator.pushReplacement(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             const CreateWorkoutNext()));
-                                      })),
-                              obscureText: false,
-                              onItemAdded: (newItem) {},
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    exerciseinstructions_list.removeLast();
+                                  });
+                                },
+                                icon: Icon(Icons.remove)
                             ),
-                            subtract: Column(),
-                          ),
-                        ],
-                      ),
-                      subtract: Column(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: const Text("New Exercise"),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    exerciseinstructions_list.add(
+                                        ExcerciseInstructions());
+                                  });
+                                },
+                                icon: Icon(Icons.add)
+                            )
+                          ],
+                        ),
+                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
+                        ListView.builder(
+                          controller: ScrollController(),
+                          shrinkWrap: true,
+                          itemCount: exerciseinstructions_list.length,
+                          itemBuilder: (context, index) {
+                            const names =["Name","Description","Countings"];
+                            var controllers = [
+                              TextEditingController(text: exerciseinstructions_list[index].name),
+                              TextEditingController(text: exerciseinstructions_list[index].descriptions),
+                              TextEditingController(text: exerciseinstructions_list[index].countings.toString()),
+                            ];
+                            var keytypes = [
+                              TextInputType.name,
+                              TextInputType.text,
+                              TextInputType.number,
+                            ];
+                            var steps = <TextEditingController>[...exerciseinstructions_list[index].instructions.map((e) => TextEditingController(text: e))];
+
+                            return GestureDetector(
+                              onTap: (){
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false ,
+                                    builder: (builder){
+                                      var SCSVscroller = ScrollController();
+                                      return StatefulBuilder(
+                                          builder: (context, thissetState){
+                                              return  AlertDialog(
+                                                title: Text("Edit Exercise"),
+                                                content: SizedBox(
+                                                  width:  double.maxFinite,
+                                                  height: double.maxFinite,
+                                                  child: SingleChildScrollView(
+                                                      controller: SCSVscroller,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              // FilePickerResult? result = await FilePicker.platform.pickFiles();
+                                                              //
+                                                              // if (result != null) {
+                                                              //   File file = File(result.files.single.path!);
+                                                              // } else {
+                                                              //
+                                                              // }
+                                                            },
+                                                            child: Card(
+
+                                                              child : Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Container(
+                                                                  width: double.maxFinite,
+                                                                    child: Text("Video file picker")),
+                                                              )
+                                                            ),
+                                                          ),
+                                                          ListView.builder(
+                                                              shrinkWrap: true,
+                                                              itemCount: names.length,
+                                                              itemBuilder: (context,index){
+                                                                return Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                                  child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(names[index]),
+                                                                      TextField(
+                                                                          controller: controllers[index],
+                                                                          keyboardType: keytypes[index])
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              }
+                                                          ),
+                                                          Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              IconButton(
+                                                                  onPressed: () {
+                                                                    thissetState(() {
+                                                                      steps.removeLast();
+                                                                    });
+                                                                  },
+                                                                  icon: Icon(Icons.remove)
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: const Text("Steps"),
+                                                              ),
+                                                              IconButton(
+                                                                  onPressed: () {
+                                                                    SCSVscroller.animateTo(SCSVscroller.position.maxScrollExtent, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                                                                    thissetState(() {
+                                                                      steps.add(TextEditingController());
+                                                                    });
+                                                                  },
+                                                                  icon: Icon(Icons.add)
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          ListView.builder(
+                                                              shrinkWrap: true,
+                                                              controller: ScrollController(),
+                                                              itemCount: steps.length,
+                                                              itemBuilder: (context,index){
+                                                                return Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                                  child: Card(
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text("step ${index + 1}"),
+                                                                        TextField(
+                                                                          controller: steps[index],
+                                                                          textInputAction: TextInputAction.next,
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }
+                                                          ),
+                                                        ],
+                                                      )
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: (){
+                                                        setState(() {
+                                                          exerciseinstructions_list[index] = ExcerciseInstructions().fill(
+                                                              controllers[0].text,
+                                                              "null",
+                                                              int.parse(controllers[2].text),
+                                                              controllers[1].text,
+                                                              steps.map((e) => e.text).toList()
+                                                          );
+                                                        });
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text("OK")
+                                                  )
+                                                ],
+                                              );
+                                          });
+                                    });
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Workout name: ${exerciseinstructions_list[index].name}"),
+                                      Text("Steps: ${exerciseinstructions_list[index].instructions.length}"),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -424,47 +561,41 @@ class _CreateWorkoutState extends State<CreateWorkout> {
           ),
           Container(
             padding:
-                const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+            const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
             child: Column(
               children: [
                 MainButton(
                   title: 'Done',
                   onPressed: () {
-                    // if (allItems.isEmpty) {
-                    //   allItems.removeAt(0);
-                    // } else {
-                    //   allItems.removeAt(0);
-                    // }
-
-                    for (int i = 0; i < allItemsControllers.length; i++) {
-                      String newItem = allItemsControllers[i].text;
-
-                      if (newItem != "") {
-                        allItems.add(newItem);
+                    var equipments = <String>[];
+                    if (allItemsControllers.isNotEmpty) {
+                      for (final item in allItemsControllers) {
+                        equipments.add(item.text);
                       }
                     }
 
-                    displayItems();
-
                     FirebaseFirestore.instance
-                        .collection('workoutPlans')
-                        .doc('UfT2T8SHa0IwVUijW7tS')
-                        .set({
-                      'workoutCategory': selectedWorkoutCategory,
-                      'workoutPurpose': selectedWorkoutPurpose,
-                      'workoutDifficulty': selectedWorkoutDifficulty,
-                      'workoutPlanName': workoutPlanName.text,
-                      'workoutDescriptions': workoutDescriptions.text,
-                      'workoutDaysOfThePlan': workoutDaysOfThePlan.text,
-                      'workoutMinutesitTakestoDo':
-                          workoutMinutesitTakestoDo.text,
-                      'workoutCalories': workoutCalories.text,
-                      'equipments': FieldValue.arrayUnion(allItems),
-                    });
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ExpPrograms()));
+                        .collection('workoutPlans') //collection
+                        .doc() //document name
+                        .set(
+                        WorkoutData(
+                            selectedWorkoutCategory,
+                            selectedWorkoutPurpose,
+                            selectedWorkoutDifficulty,
+                            workoutPlanName.text,
+                            workoutDescriptions.text,
+                            workoutDaysOfThePlan.text,
+                            workoutDaysOfThePlan.text,
+                            workoutCalories.text,
+                            equipments,
+                            [...exerciseinstructions_list.map((e) => e.toMap())]
+                        ).toMap()
+                    );
+
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const ExpPrograms()));
                   },
                 ),
               ],
@@ -473,6 +604,80 @@ class _CreateWorkoutState extends State<CreateWorkout> {
         ],
       ),
     );
+  }
+}
+
+class WorkoutData {
+  String? workoutCategory;
+  String? workoutPurpose;
+  String? workoutDifficulty;
+  String? workoutPlanName;
+  String? workoutDescriptions;
+  String? workoutDaysOfThePlan;
+  String? workoutMinutesitTakestoDo;
+  String? workoutCalories;
+  List<String>? equipments;
+  List<Map<String, dynamic>>? exerciseInstructions;
+
+  WorkoutData(this.workoutCategory,
+      this.workoutPurpose,
+      this.workoutDifficulty,
+      this.workoutPlanName,
+      this.workoutDescriptions,
+      this.workoutDaysOfThePlan,
+      this.workoutMinutesitTakestoDo,
+      this.workoutCalories,
+      this.equipments,
+      this.exerciseInstructions);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'workoutCategory': workoutCategory ?? "",
+      'workoutPurpose': workoutPurpose ?? "",
+      'workoutDifficulty': workoutDifficulty ?? "",
+      'workoutPlanName': workoutPlanName ?? "",
+      'workoutDescriptions': workoutDescriptions ?? "",
+      'workoutDaysOfThePlan': workoutDaysOfThePlan ?? "",
+      'workoutMinutesitTakestoDo': workoutMinutesitTakestoDo ?? 0.0,
+      'workoutCalories': workoutCalories ?? 0.0,
+      'equipments': equipments ?? [],
+      "exerciseInstructions": exerciseInstructions ?? {}
+    };
+  }
+}
+
+class ExcerciseInstructions {
+  String name = "";
+  String videolink = "";
+  int countings = 0;
+  String descriptions = "";
+  List<String> instructions = [];
+
+  ExcerciseInstructions() {
+    name = "";
+    videolink = "";
+    countings = 0;
+    descriptions = "";
+    instructions = [];
+  }
+
+  ExcerciseInstructions fill(String name, String videolink, int countings, String descriptions,List<String> instructions) {
+    this.name = name;
+    this.instructions = instructions;
+    this.descriptions = descriptions;
+    this.countings = countings;
+    this.videolink = videolink;
+    return this;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "videolink": videolink,
+      "countings": countings,
+      "descriptions": descriptions,
+      "instructions": instructions
+    };
   }
 }
 
