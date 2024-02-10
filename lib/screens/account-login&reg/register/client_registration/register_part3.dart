@@ -89,7 +89,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'In fitness, do you consider yourself as?',
-                            choices: ['Beginner', 'Intermediate', 'Expert'],
+                            choices: const ['Beginner', 'Intermediate', 'Expert'],
                             onSelectionChanged: (value) {
                               list1 = value;
                             },
@@ -98,7 +98,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'What fitness goals do you want to achieve?',
-                            choices: [
+                            choices: const [
                               'Loss Weight',
                               'Body Toning',
                               'Gain Muscles'
@@ -111,7 +111,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'What specific body part do you want for it?',
-                            choices: [
+                            choices: const [
                               'Upper body',
                               'Abdominal',
                               'Lower body',
@@ -125,7 +125,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'How do you want to attain these goals?',
-                            choices: [
+                            choices: const [
                               'Body exercises',
                               'Lifting weights',
                               'Food restrictions'
@@ -138,7 +138,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'How many minutes/hours do you exercise?',
-                            choices: [
+                            choices: const [
                               'Less than 30 minutes',
                               'An hour',
                               'More than an hour'
@@ -151,7 +151,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'How many times in a week do you exercise?',
-                            choices: [
+                            choices: const [
                               'None',
                               'Once a week',
                               'Twice a week',
@@ -166,7 +166,7 @@ class _RegisterPart3State extends State<RegisterPart3> {
                           CheckBoxList(
                             questionText:
                                 'Do you have a body or health complications that need to be considered upon the process?',
-                            choices: [
+                            choices: const [
                               'None',
                               'Injuries',
                               'Breathing complications(ex: Asthma)',

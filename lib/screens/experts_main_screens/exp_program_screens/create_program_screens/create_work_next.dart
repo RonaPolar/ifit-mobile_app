@@ -87,7 +87,7 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                       style: Styles.title,
                     ),
                     const Gap(5),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //  SizedBox(
@@ -148,7 +148,7 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                               controller: workoutDescriptions,
                               hintText:
                                   'Input the Next Step to the Preparation')),
-                      subtract: Column(),
+                      subtract: const Column(),
                     ),
                   ],
                 )
@@ -192,7 +192,7 @@ class BigTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
 
-  BigTextField({required this.controller, required this.hintText});
+  const BigTextField({super.key, required this.controller, required this.hintText});
 
   @override
   Widget build(BuildContext context) {

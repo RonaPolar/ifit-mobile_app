@@ -158,11 +158,11 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
                       Expanded(
                           child: ProfileCell(
                               value: '${height} cm', title: 'Height')),
-                      Gap(10),
+                      const Gap(10),
                       Expanded(
                           child: ProfileCell(
                               value: '${weight} kg', title: 'Weight')),
-                      Gap(10),
+                      const Gap(10),
                       Expanded(
                           child: ProfileCell(value: '${age}', title: 'Age')),
                     ],

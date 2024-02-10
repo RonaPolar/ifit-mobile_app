@@ -281,7 +281,7 @@ class _RegisterDropDownState extends State<RegisterDropDown> {
 class DatepickerField extends StatefulWidget {
   final ValueChanged<DateTime?> onDateSelected;
 
-  DatepickerField({required this.onDateSelected});
+  const DatepickerField({super.key, required this.onDateSelected});
 
   @override
   _DatepickerFieldState createState() => _DatepickerFieldState();

@@ -234,7 +234,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                         height: 100,
                         child: TextField(
                           controller: workoutDescriptions,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "Description",
                           ),
@@ -308,11 +308,11 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                     allItemsControllers.removeLast();
                                   });
                                 },
-                                icon: Icon(Icons.remove)
+                                icon: const Icon(Icons.remove)
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: const Text("Items"),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("Items"),
                             ),
                             IconButton(
                                 onPressed: () {
@@ -321,7 +321,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                         TextEditingController());
                                   });
                                 },
-                                icon: Icon(Icons.add)
+                                icon: const Icon(Icons.add)
                             )
                           ],
                         ),
@@ -371,11 +371,11 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                     exerciseinstructions_list.removeLast();
                                   });
                                 },
-                                icon: Icon(Icons.remove)
+                                icon: const Icon(Icons.remove)
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: const Text("New Exercise"),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("New Exercise"),
                             ),
                             IconButton(
                                 onPressed: () {
@@ -384,7 +384,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                         ExcerciseInstructions());
                                   });
                                 },
-                                icon: Icon(Icons.add)
+                                icon: const Icon(Icons.add)
                             )
                           ],
                         ),
@@ -417,7 +417,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                       return StatefulBuilder(
                                           builder: (context, thissetState){
                                               return  AlertDialog(
-                                                title: Text("Edit Exercise"),
+                                                title: const Text("Edit Exercise"),
                                                 content: SizedBox(
                                                   width:  double.maxFinite,
                                                   height: double.maxFinite,
@@ -473,20 +473,20 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                                                       steps.removeLast();
                                                                     });
                                                                   },
-                                                                  icon: Icon(Icons.remove)
+                                                                  icon: const Icon(Icons.remove)
                                                               ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: const Text("Steps"),
+                                                              const Padding(
+                                                                padding: EdgeInsets.all(8.0),
+                                                                child: Text("Steps"),
                                                               ),
                                                               IconButton(
                                                                   onPressed: () {
-                                                                    SCSVscroller.animateTo(SCSVscroller.position.maxScrollExtent, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                                                                    SCSVscroller.animateTo(SCSVscroller.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                                                                     thissetState(() {
                                                                       steps.add(TextEditingController());
                                                                     });
                                                                   },
-                                                                  icon: Icon(Icons.add)
+                                                                  icon: const Icon(Icons.add)
                                                               ),
                                                             ],
                                                           ),
@@ -530,7 +530,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                                                         });
                                                         Navigator.pop(context);
                                                       },
-                                                      child: Text("OK")
+                                                      child: const Text("OK")
                                                   )
                                                 ],
                                               );
@@ -685,7 +685,7 @@ class BigTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
 
-  BigTextField({required this.controller, required this.hintText});
+  const BigTextField({super.key, required this.controller, required this.hintText});
 
   @override
   Widget build(BuildContext context) {
