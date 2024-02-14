@@ -4,7 +4,10 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/more_icon.dart';
 
 class ExpActivityHistory extends StatefulWidget {
-  const ExpActivityHistory({super.key});
+  const ExpActivityHistory({
+    super.key,
+  });
+
 
   @override
   State<ExpActivityHistory> createState() => _ExpActivityHistoryState();

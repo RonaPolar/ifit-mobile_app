@@ -4,6 +4,9 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/program_created.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/rating.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
@@ -12,7 +15,12 @@ import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 
 class ExpHomeScreen extends StatefulWidget {
-  const ExpHomeScreen({super.key});
+  const ExpHomeScreen({
+    required this.expertModel,
+    super.key,
+  });
+
+  final ExpertModel expertModel;
 
   @override
   State<ExpHomeScreen> createState() => _ExpHomeScreenState();
@@ -35,40 +43,10 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
   String name = ""; // Declare the variable outside of initState
 
   @override
-  void initState() {
-    super.initState();
-    // Fetch data based on the provided UID when the widget initializes
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    try {
-      var user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('Experts')
-            .where('email', isEqualTo: user.email)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          var userData =
-              querySnapshot.docs.first.data() as Map<String, dynamic>?;
-
-          if (userData != null) {
-            // Use the outer 'name' variable
-            setState(() {
-              name = userData['name'] ?? '';
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+
+    final ExpertModel expert = widget.expertModel;
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       body: ListView(
@@ -89,7 +67,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                           style: Styles.text15normal,
                         ),
                         Text(
-                          '${name}',
+                          expert.name,
                           style: Styles.headline20,
                         ),
                       ],
@@ -104,82 +82,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                   ],
                 ),
                 const Gap(20),
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                      color: const Color.fromRGBO(255, 0, 0, 72),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Stack(alignment: Alignment.center, children: [
-                    Image.asset(
-                      "assets/images/Dots.png",
-                      height: 120,
-                      width: double.maxFinite,
-                      fit: BoxFit.fitHeight,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Profile Rating by Clients",
-                                style: Styles.text15bold.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                "You have a High Rating",
-                                style: Styles.seeMore.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
-                                ),
-                              ),
-                              const Gap(12),
-                              SizedBox(
-                                  width: 110,
-                                  height: 25,
-                                  child: MainButton(
-                                    title: "View More",
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ExpProfileScreen()));
-                                    },
-                                    textStyle: Styles.seeMore.copyWith(
-                                      color: Colors.white,
-                                    ),
-                                  )),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Icon(
-                                    FluentSystemIcons.ic_fluent_star_filled,
-                                    size: 80,
-                                    color: Styles.bgColor,
-                                  ),
-                                  Text(
-                                    '4.5',
-                                    style: Styles.headline20
-                                        .copyWith(color: Styles.primaryColor),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ]),
-                ),
+                ExpertRatingWidget(expertModel: expert),
                 const Gap(15),
                 Container(
                   padding:
@@ -215,77 +118,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                   ),
                 ),
                 const Gap(20),
-                Text('Program Created', style: Styles.title),
-                const Gap(10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: double.maxFinite,
-                        height: 100,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: const [
-                            BoxShadow(color: Colors.black26, blurRadius: 2),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Workouts', style: Styles.title),
-                            const Gap(5),
-                            Text(
-                              "${Experts[0]["workoutCreated"]}",
-                              style: Styles.normal.copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Styles.secondColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Gap(15),
-                    Expanded(
-                      child: Container(
-                        width: double.maxFinite,
-                        height: 100,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: const [
-                            BoxShadow(color: Colors.black26, blurRadius: 2),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Meals', style: Styles.title),
-                            const Gap(5),
-                            Text(
-                              "${Experts[0]["mealCreated"]}",
-                              style: Styles.normal.copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Styles.secondColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                ProgramCreatedWidget(expertModel: expert),
                 const Gap(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

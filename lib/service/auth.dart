@@ -82,9 +82,6 @@ class Auth extends ChangeNotifier {
       } else {
       }
     });
-
-
-
   }
 
   /// EXPERTS -------------------->

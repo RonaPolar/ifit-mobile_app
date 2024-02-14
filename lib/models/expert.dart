@@ -73,6 +73,7 @@ class ExpertModel {
   final String profession;
   final String professionId;
   final String proofOfFieldOfStudy;
+  final double? rating;
   final String uid;
   final String userType;
   final bool verified;
@@ -88,6 +89,7 @@ class ExpertModel {
     required this.profession,
     required this.professionId,
     required this.proofOfFieldOfStudy,
+    this.rating = 0.0,
     required this.uid,
     required this.userType,
     required this.verified,
@@ -105,6 +107,7 @@ class ExpertModel {
     String? profession,
     String? professionId,
     String? proofOfFieldOfStudy,
+    double? rating,
     String? uid,
     String? userType,
     bool? verified,
@@ -121,6 +124,7 @@ class ExpertModel {
         profession: profession ?? this.profession,
         professionId: professionId ?? this.professionId,
         proofOfFieldOfStudy: proofOfFieldOfStudy ?? this.proofOfFieldOfStudy,
+        rating: rating ?? this.rating,
         uid: uid ?? this.uid,
         userType: userType ?? this.userType,
         verified: verified ?? this.verified,
@@ -139,6 +143,7 @@ class ExpertModel {
     profession: json["profession"],
     professionId: json["profession_id"],
     proofOfFieldOfStudy: json["proof_of_field_of_study"],
+    rating: json["rating"] ?? 0.0,
     uid: json["uid"],
     userType: json["user_type"],
     verified: json["verified"],
@@ -155,6 +160,7 @@ class ExpertModel {
     "profession": profession,
     "profession_id": professionId,
     "proof_of_field_of_study": proofOfFieldOfStudy,
+    "rating": rating,
     "uid": uid,
     "user_type": userType,
     "verified": verified,

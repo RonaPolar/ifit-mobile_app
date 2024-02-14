@@ -29,8 +29,6 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     final Auth auth = Provider.of<Auth>(context);
 
-
-
     void loginUser() async {
       await auth.login().then((_) {
         bool isExpert = auth.userType == "Expert";

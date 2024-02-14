@@ -58,10 +58,10 @@ class _ExpertSuccessRegistrationState extends State<ExpertSuccessRegistration> {
                     MainButton(
                       title: 'Go to Home',
                       onPressed: () {
-                        Navigator.pushReplacement(context,
-                          MaterialPageRoute(
-                            builder: (context) => const ExpHomeScreen()),
-                        );
+                        // Navigator.pushReplacement(context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const ExpHomeScreen()),
+                        // );
                       },
                     ),
                   ],
