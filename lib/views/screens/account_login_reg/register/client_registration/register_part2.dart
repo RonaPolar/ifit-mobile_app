@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/text_field_container.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
 
 import 'package:intl/intl.dart';

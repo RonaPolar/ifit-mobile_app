@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/search.dart';
+import 'package:ifit/views/widgets/search.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/body/favorites_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';

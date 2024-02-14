@@ -4,11 +4,11 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/icon_text_icon.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 
 class ExpHomeScreen extends StatefulWidget {
@@ -141,14 +141,14 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                               const Gap(12),
                               SizedBox(
                                   width: 110,
-                                  height: 30,
+                                  height: 25,
                                   child: MainButton(
                                     title: "View More",
                                     onPressed: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const ExpProfile()));
+                                                  const ExpProfileScreen()));
                                     },
                                     textStyle: Styles.seeMore.copyWith(
                                       color: Colors.white,
@@ -295,7 +295,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                       titleTextStyle: Styles.title,
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ExpPrograms()));
+                            builder: (context) => const ExpProgramScreen()));
                       },
                     ),
                     Container(

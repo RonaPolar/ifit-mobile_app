@@ -2,7 +2,7 @@ import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/video_player.dart';
+import 'package:ifit/views/widgets/video_player.dart';
 import 'package:readmore/readmore.dart';
 
 class WorkoutExercisesSteps extends StatefulWidget {

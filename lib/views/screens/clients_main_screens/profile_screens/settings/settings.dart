@@ -2,7 +2,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/icon_text_icon.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_email.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_pass.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/delete_account.dart';

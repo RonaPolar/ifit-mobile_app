@@ -3,12 +3,14 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/text_field_container.dart';
+import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:ifit/views/screens/account_login_reg/services.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:provider/provider.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -25,30 +27,38 @@ class _LogInState extends State<LogIn> {
   bool _isInvalidCredentials = false;
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context);
+
+
+
     void loginUser() async {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeNavBar(), // expHome()
-          // ? Expert : HomeNavBar() client
-        ),
-      );
+      await auth.login().then((_) {
+        bool isExpert = auth.userType == "Expert";
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => isExpert ? const ExpBottomBar() : const HomeNavBar(),
+          ),
+        );
+      });
+
 
       // Services()
-      //   .SignIn(emailController.text, passwordController.text)
-      //   .then((value) {
-      //     // FirebaseFirestore.instance
-      //     // .collection('Experts')
-      //     // .where('email', isEqualTo: emailController.text)
-      //     // .get()
-      //     // .then((QuerySnapshot querySnapshot) {
-      //     //     Navigator.pushReplacement(
-      //     //       context,
-      //     //       MaterialPageRoute(
-      //     //         builder: (context) => const ExpHome(),
-      //     //       ),
-      //     //     );
-      //     // });
+        // .SignIn(emailController.text, passwordController.text)
+        // .then((value) {
+          // FirebaseFirestore.instance
+          // .collection('Experts')
+          // .where('email', isEqualTo: emailController.text)
+          // .get()
+          // .then((QuerySnapshot querySnapshot) {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const ExpHome(),
+          //       ),
+          //     );
+          // });
       //
       //     FirebaseFirestore.instance
       //         .collection('clients')
@@ -81,25 +91,23 @@ class _LogInState extends State<LogIn> {
                           const EdgeInsets.only(right: 20, left: 20, top: 20),
                       child: Column(
                         children: [
-                          Text(
-                            'Hey there,',
+                          Text('Hey there,',
                             style: Styles.text18,
                           ),
-                          Text(
-                            'Welcome Back',
+                          Text('Welcome Back',
                             style: Styles.headline25,
                           ),
                           const Gap(30),
                           TextFieldContainer(
-                              hitText: 'Email',
-                              icon: FluentSystemIcons.ic_fluent_mail_regular,
-                              obscureText: false,
-                              controller: emailController),
+                            hitText: 'Email',
+                            icon: FluentSystemIcons.ic_fluent_mail_regular,
+                            controller: Auth.email,
+                          ),
                           const Gap(15),
                           TextFieldContainer(
                             //password eye icon
                             hitText: 'Password',
-                            controller: passwordController,
+                            controller: Auth.password,
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
                             obscureText: !_isPasswordVisible,
                             rightIcon: IconButton(

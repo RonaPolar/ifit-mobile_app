@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Expert {
   final String name;
   final String image;
@@ -61,12 +63,13 @@ class Expert {
 ///
 class ExpertModel {
   final String birthDate;
-  final String datejoined;
+  final DateTime dateCreation;
+  final String? datejoined;
   final String email;
   final String gender;
   final String name;
   final String phoneNumber;
-  final String photoUrl;
+  final String? photoUrl;
   final String profession;
   final String professionId;
   final String proofOfFieldOfStudy;
@@ -76,18 +79,19 @@ class ExpertModel {
 
   ExpertModel({
     required this.birthDate,
-    required this.datejoined,
+    this.datejoined,
     required this.email,
     required this.gender,
     required this.name,
     required this.phoneNumber,
-    required this.photoUrl,
+    this.photoUrl,
     required this.profession,
     required this.professionId,
     required this.proofOfFieldOfStudy,
     required this.uid,
     required this.userType,
     required this.verified,
+    required this.dateCreation,
   });
 
   ExpertModel copyWith({
@@ -104,6 +108,7 @@ class ExpertModel {
     String? uid,
     String? userType,
     bool? verified,
+    DateTime? dateCreation,
   }) =>
       ExpertModel(
         birthDate: birthDate ?? this.birthDate,
@@ -119,10 +124,12 @@ class ExpertModel {
         uid: uid ?? this.uid,
         userType: userType ?? this.userType,
         verified: verified ?? this.verified,
+        dateCreation: dateCreation ?? this.dateCreation,
       );
 
   factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
     birthDate: json["birth_date"],
+    dateCreation: (json["date_creation"] as Timestamp).toDate(),
     datejoined: json["datejoined"],
     email: json["email"],
     gender: json["gender"],
@@ -151,6 +158,7 @@ class ExpertModel {
     "uid": uid,
     "user_type": userType,
     "verified": verified,
+    "date_creation": Timestamp.fromDate(dateCreation),
   };
 }
 

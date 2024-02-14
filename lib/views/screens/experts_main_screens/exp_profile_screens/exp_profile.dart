@@ -2,10 +2,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/confirmation_dialog.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/icon_text_icon.dart';
-import 'package:ifit/common/widgets/toggle_switch.dart';
+import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
+import 'package:ifit/views/widgets/toggle_switch.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
@@ -48,7 +50,7 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
         leading: InkWell(
           onTap: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const ExpHome()));
+                .push(MaterialPageRoute(builder: (context) => const ExpHomeScreen()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -183,7 +185,7 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                             title: 'Program Progress',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ExpPrograms()));
+                                  builder: (context) => const ExpProgramScreen()));
                             },
                           ),
                         ],

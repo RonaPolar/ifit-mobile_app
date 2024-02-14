@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/main_button.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/client_reg_success.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 

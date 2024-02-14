@@ -6,8 +6,9 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/confirmation_dialog.dart';
-import 'package:ifit/common/widgets/main_button.dart';
+import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 
@@ -102,7 +103,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ExpPrograms()));
+                              builder: (context) => const ExpProgramScreen()));
                     },
                   );
                 });

@@ -4,9 +4,10 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/program_widgets.dart';
-import 'package:ifit/common/widgets/search.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/program_widgets.dart';
+import 'package:ifit/views/widgets/search.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
@@ -159,7 +160,7 @@ TextEditingController txtSearch = TextEditingController();
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-            builder: (context) => const ExpHome()));
+            builder: (context) => const ExpHomeScreen()));
         },
         child: Container(
           margin: const EdgeInsets.all(12),

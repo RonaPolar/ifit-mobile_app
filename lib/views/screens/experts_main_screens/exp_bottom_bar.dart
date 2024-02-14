@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
@@ -6,16 +7,11 @@ import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/exp
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
+import 'package:ifit/views/screens/wrappers/expert.dart';
 
 
 class ExpBottomBar extends StatefulWidget {
-  final int initialSelectTab;
-  final Widget initialCurrentTab;
-  
-  const ExpBottomBar({super.key,
-    required this.initialSelectTab,
-    required this.initialCurrentTab,
-  });
+  const ExpBottomBar({super.key,});
 
   @override
   State<ExpBottomBar> createState() => _ExpBottomBarState();
@@ -23,21 +19,42 @@ class ExpBottomBar extends StatefulWidget {
 
 class _ExpBottomBarState extends State<ExpBottomBar> {
   int selectTab = 0;
-  late PageStorageBucket pageBucket;
-  late Widget currentTab;
+  // late PageStorageBucket pageBucket;
+  // late Widget currentTab;
 
-  @override
-  void initState() {
-    super.initState();
-    selectTab = widget.initialSelectTab;
-    currentTab = widget.initialCurrentTab;
-    pageBucket = PageStorageBucket();
-  }
+
+  final List<Widget> body = const [
+    ExpHomeScreen(),
+    ExpDiscoverScreen(),
+    ExpProgramScreen(),
+    ExpProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageStorage(bucket: pageBucket, child: currentTab),
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+
+          if (snapshot.hasData) {
+            final String uid = snapshot.data!.uid;
+
+            return ExpertAuthWrapper(
+              uid: uid,
+              child: body[selectTab],
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Something went wrong: ${snapshot.error}"),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+      ),
       bottomNavigationBar: BottomAppBar(  //the line above the bottombar
           child: Container(
         decoration: BoxDecoration(color: Styles.bgColor, boxShadow: const [
@@ -52,45 +69,37 @@ class _ExpBottomBarState extends State<ExpBottomBar> {
                 selectIcon: FluentSystemIcons.ic_fluent_home_filled,
                 isActive: selectTab == 0,
                 onTap: () {
-                  selectTab = 0;
-                  currentTab = const ExpHomeScreen();
-                  if (mounted) {
-                    setState(() {});
-                  }
+                  setState(() {
+                    selectTab = 0;
+                  });
                 }),
             BottomBar(
                 icon: FluentSystemIcons.ic_fluent_grid_regular,
                 selectIcon: FluentSystemIcons.ic_fluent_grid_filled,
                 isActive: selectTab == 1,
                 onTap: () {
-                  selectTab = 1;
-                  currentTab = const ExpDiscoverScreen();
-                  if (mounted) {
-                    setState(() {});
-                  }
+                  setState(() {
+                    selectTab = 1;
+                  });
                 }),
             BottomBar(
                 icon: FluentSystemIcons.ic_fluent_activity_regular,
                 selectIcon: FluentSystemIcons.ic_fluent_activity_filled,
                 isActive: selectTab == 2,
                 onTap: () {
-                  selectTab = 2;
-                  currentTab = const ExpProgramScreen();
-                  if (mounted) {
-                    setState(() {});
-                  }
+                  setState(() {
+                    selectTab = 2;
+                  });
                 }),
             BottomBar(
                 icon: FluentSystemIcons.ic_fluent_person_regular,
                 selectIcon: FluentSystemIcons.ic_fluent_person_filled,
                 isActive: selectTab == 3,
                 onTap: () {
-                  selectTab = 3;
-                  currentTab = const ExpProfileScreen();
-                  if (mounted) {
-                    setState(() {});
-                  }
-                }),
+                  setState(() {
+                    selectTab = 3;
+                  });
+            }),
           ],
         ),
       )),
@@ -100,64 +109,73 @@ class _ExpBottomBarState extends State<ExpBottomBar> {
 
 
 
-class ExpHome extends StatefulWidget {
-  const ExpHome({super.key});
-
-  @override
-  State<ExpHome> createState() => _ExpHomeState();
-}
-
-class _ExpHomeState extends State<ExpHome> {
-  @override
-  Widget build(BuildContext context) {
-    return const ExpBottomBar(
-      initialSelectTab: 0,
-      initialCurrentTab: ExpHomeScreen(),
-    );
-  }
-}
-
-
-class ExpDiscover extends StatefulWidget {
-  const ExpDiscover({super.key});
-
-  @override
-  State<ExpDiscover> createState() => _ExpDiscoverState();
-}
-
-class _ExpDiscoverState extends State<ExpDiscover> {
-  @override
-  Widget build(BuildContext context) {
-    return const ExpBottomBar(initialSelectTab: 1, initialCurrentTab: ExpDiscoverScreen());
-  }
-}
-
-
-class ExpPrograms extends StatefulWidget {
-  const ExpPrograms({super.key});
-
-  @override
-  State<ExpPrograms> createState() => _ExpProgramsState();
-}
-
-class _ExpProgramsState extends State<ExpPrograms> {
-  @override
-  Widget build(BuildContext context) {
-    return const ExpBottomBar(initialSelectTab: 2, initialCurrentTab: ExpProgramScreen());
-  }
-}
-
-
-class ExpProfile extends StatefulWidget {
-  const ExpProfile({super.key});
-
-  @override
-  State<ExpProfile> createState() => _ExpProfileState();
-}
-
-class _ExpProfileState extends State<ExpProfile> {
-  @override
-  Widget build(BuildContext context) {
-    return const ExpBottomBar(initialSelectTab: 3, initialCurrentTab: ExpProfileScreen());
-  }
-}
+// class ExpHome extends StatefulWidget {
+//   const ExpHome({super.key});
+//
+//   @override
+//   State<ExpHome> createState() => _ExpHomeState();
+// }
+//
+// class _ExpHomeState extends State<ExpHome> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const ExpBottomBar(
+//       initialSelectTab: 0,
+//       initialCurrentTab: ExpHomeScreen(),
+//     );
+//   }
+// }
+//
+//
+// class ExpDiscover extends StatefulWidget {
+//   const ExpDiscover({super.key});
+//
+//   @override
+//   State<ExpDiscover> createState() => _ExpDiscoverState();
+// }
+//
+// class _ExpDiscoverState extends State<ExpDiscover> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const ExpBottomBar(
+//       initialSelectTab: 1,
+//       initialCurrentTab: ExpDiscoverScreen(),
+//     );
+//   }
+// }
+//
+//
+// class ExpPrograms extends StatefulWidget {
+//   const ExpPrograms({super.key});
+//
+//   @override
+//   State<ExpPrograms> createState() => _ExpProgramsState();
+// }
+//
+// class _ExpProgramsState extends State<ExpPrograms> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const ExpBottomBar(
+//       initialSelectTab: 2,
+//       initialCurrentTab: ExpProgramScreen(),
+//     );
+//   }
+// }
+//
+//
+// class ExpProfile extends StatefulWidget {
+//   const ExpProfile({super.key});
+//
+//   @override
+//   State<ExpProfile> createState() => _ExpProfileState();
+// }
+//
+// class _ExpProfileState extends State<ExpProfile> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const ExpBottomBar(
+//       initialSelectTab: 3,
+//       initialCurrentTab: ExpProfileScreen(),
+//     );
+//   }
+// }

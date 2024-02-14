@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/program_widgets.dart';
+import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
 

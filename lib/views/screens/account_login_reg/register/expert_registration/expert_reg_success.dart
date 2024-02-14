@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/main_button.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
 
 class ExpertSuccessRegistration extends StatefulWidget {
   const ExpertSuccessRegistration({super.key});
@@ -59,7 +60,7 @@ class _ExpertSuccessRegistrationState extends State<ExpertSuccessRegistration> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                           MaterialPageRoute(
-                            builder: (context) => const ExpHome()),
+                            builder: (context) => const ExpHomeScreen()),
                         );
                       },
                     ),

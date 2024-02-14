@@ -2,9 +2,9 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/confirmation_dialog.dart';
-import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/common/widgets/text_field_container.dart';
+import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 

@@ -1,7 +1,7 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/more_icon.dart';
+import 'package:ifit/views/widgets/more_icon.dart';
 
 class ActivityTracker extends StatefulWidget {
   const ActivityTracker({super.key});

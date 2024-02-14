@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/program_widgets.dart';
+import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';

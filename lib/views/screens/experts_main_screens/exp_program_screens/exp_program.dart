@@ -5,11 +5,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/program_widgets.dart';
+import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 
@@ -115,7 +116,7 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
         leading: InkWell(
           onTap: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const ExpHome()));
+                .push(MaterialPageRoute(builder: (context) => const ExpHomeScreen()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),
