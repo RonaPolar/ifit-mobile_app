@@ -1,14 +1,4 @@
-// To parse this JSON data, do
-//
-//     final clientModel = clientModelFromJson(jsonString);
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
-import 'dart:convert';
-
-ClientModel clientModelFromJson(String str) => ClientModel.fromJson(json.decode(str));
-
-String clientModelToJson(ClientModel data) => json.encode(data.toJson());
 
 class ClientModel {
   final String birthDate;

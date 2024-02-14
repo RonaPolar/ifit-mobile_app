@@ -93,7 +93,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                   style: const TextStyle(color: Colors.red))),
 
                           const Gap(10),
-                          TextfieldContainer(
+                          TextFieldContainer(
                               hitText: 'Number',
                               icon: FluentSystemIcons
                                   .ic_fluent_book_number_regular,
@@ -136,7 +136,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: TextfieldContainer(
+                                child: TextFieldContainer(
                                     keyboardType: TextInputType.number,
                                     controller: weightController,
                                     hitText: 'Your Weight',
@@ -164,7 +164,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: TextfieldContainer(
+                                child: TextFieldContainer(
                                     keyboardType: TextInputType.number,
                                     controller: heightController,
                                     hitText: 'Your Height',

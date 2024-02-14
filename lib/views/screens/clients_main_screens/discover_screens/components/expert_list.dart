@@ -7,10 +7,12 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_
 class ExpertListWidget extends StatelessWidget {
   const ExpertListWidget({
     required this.discoverExperts,
+    required this.combinedList,
     super.key,
   });
 
   final List<Expert> discoverExperts;
+  final List combinedList;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,10 @@ class ExpertListWidget extends StatelessWidget {
             return InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ExpertProfile(exObj: exObj)));
+                  builder: (context) => ExpertProfile(
+                    exObj: exObj,
+                    combinedList: combinedList,
+                  )));
               },
               child: SquareContainer(
                 image: exObj.image,

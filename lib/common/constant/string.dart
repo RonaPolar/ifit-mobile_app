@@ -3,3 +3,5 @@ class JsonFile {
   static String meal = "assets/json/meal.json";
   static String expert = "assets/json/expert.json";
 }
+
+const String tExpertPath = "experts";

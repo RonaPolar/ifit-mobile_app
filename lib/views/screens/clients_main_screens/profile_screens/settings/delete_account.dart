@@ -61,7 +61,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                           style: Styles.title
                         ),
                         const Gap(20),
-                        const TextfieldContainer(hitText: 'Enter your Password',
+                        const TextFieldContainer(hitText: 'Enter your Password',
                           icon: FluentSystemIcons.ic_fluent_lock_regular,
                           obscureText: false,
                         ),

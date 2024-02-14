@@ -174,19 +174,19 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _nameController,
                             hitText: "Name",
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _emailController,
                             hitText: "Email",
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _numberController,
                             hitText: "Number",
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
@@ -219,7 +219,7 @@ class _EditProfileState extends State<EditProfile> {
                         // TextfieldContainer(hitText: user[0]["program"].toString(),
                         //   icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _birth_dateController,
                             hitText: "Birthdate",
                             icon: FluentSystemIcons.ic_fluent_edit_regular,

@@ -47,13 +47,13 @@ class _NewPasswordState extends State<NewPassword> {
                                   style: Styles.text15normal,
                                 ),
                                 const Gap(10),
-                                const TextfieldContainer(
+                                const TextFieldContainer(
                                   hitText: 'New Password',
                                   icon: FluentSystemIcons.ic_fluent_lock_regular,
                                   obscureText: false,
                                 ),
                                 const Gap(15),
-                                const TextfieldContainer(
+                                const TextFieldContainer(
                                   hitText: 'Input the New Password',
                                   icon: FluentSystemIcons.ic_fluent_lock_regular,
                                   obscureText: false,

@@ -153,6 +153,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               const Gap(15),
               ExpertListWidget(
                 discoverExperts: discoverExperts,
+                combinedList: combinedList,
               ),
               const Gap(10)
             ],//main Children

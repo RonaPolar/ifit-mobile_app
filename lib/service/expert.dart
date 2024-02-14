@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExpertProvider extends ChangeNotifier {
   Stream<List<ExpertModel>>? expertListStream;
@@ -19,6 +20,7 @@ class ExpertProvider extends ChangeNotifier {
   }
 
   void updateExpertListStream() {
-
+    expertListStream = getExpertList();
+    notifyListeners();
   }
 }

@@ -27,8 +27,7 @@ class _ExpertSuccessRegistrationState extends State<ExpertSuccessRegistration> {
                     shrinkWrap: true,
                     children: [
                       Container(
-                        padding:
-                            const EdgeInsets.only(right: 10, left: 10),
+                        padding: const EdgeInsets.only(right: 10, left: 10),
                         child: Column(
                           children: [
                             Image.asset('assets/images/registration_success.png'),
@@ -60,7 +59,8 @@ class _ExpertSuccessRegistrationState extends State<ExpertSuccessRegistration> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                           MaterialPageRoute(
-                            builder: (context) => const ExpHome()),);
+                            builder: (context) => const ExpHome()),
+                        );
                       },
                     ),
                   ],

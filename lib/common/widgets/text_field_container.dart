@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 
-class TextfieldContainer extends StatefulWidget {
+class TextFieldContainer extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final String hitText;
@@ -10,24 +10,26 @@ class TextfieldContainer extends StatefulWidget {
   final Widget? rightIcon;
   final bool obscureText;
   final EdgeInsets? margin;
+  final String? Function(String?)? validator;
 
-  const TextfieldContainer({
+  const TextFieldContainer({
     Key? key,
     required this.hitText,
     this.icon,
     this.rightIcon,
-    required this.obscureText,
+    this.obscureText = false,
     this.margin,
     this.controller,
     this.keyboardType,
     this.imagePath,
+    this.validator,
   }) : super(key: key);
 
   @override
-  State<TextfieldContainer> createState() => _TextfieldContainerState();
+  State<TextFieldContainer> createState() => _TextFieldContainerState();
 }
 
-class _TextfieldContainerState extends State<TextfieldContainer> {
+class _TextFieldContainerState extends State<TextFieldContainer> {
   @override
   Widget build(BuildContext context) {
     Widget? prefixIcon;
@@ -43,7 +45,7 @@ class _TextfieldContainerState extends State<TextfieldContainer> {
         color: Styles.boxtextField,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
@@ -58,6 +60,7 @@ class _TextfieldContainerState extends State<TextfieldContainer> {
             color: Styles.fadeTextColor,
           ),
         ),
+        validator: widget.validator,
       ),
     );
   }

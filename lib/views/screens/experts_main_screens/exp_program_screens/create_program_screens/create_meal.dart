@@ -205,7 +205,7 @@ class _CreateMealState extends State<CreateMeal> {
                       selectedValue: selectedFoodPurpose,
                     ),
                     const Gap(10),
-                    TextfieldContainer(
+                    TextFieldContainer(
                         controller: workoutPlanName,
                         hitText: 'Food Plan Name',
                         icon: FluentSystemIcons.ic_fluent_food_regular,
@@ -213,7 +213,7 @@ class _CreateMealState extends State<CreateMeal> {
                     const Gap(10),
                     SizedBox(
                       height: 100,
-                      child: TextfieldContainer(
+                      child: TextFieldContainer(
                           controller: workoutDescriptions,
                           hitText: "Descriptions",
                           obscureText: false),
@@ -268,25 +268,25 @@ class _CreateMealState extends State<CreateMeal> {
                       style: Styles.title,
                     ),
                     const Gap(5),
-                    TextfieldContainer(
+                    TextFieldContainer(
                         controller: workoutCalories,
                         hitText: 'Calories',
                         imagePath: "assets/icons/calories.png",
                         obscureText: false),
                     const Gap(10),
-                    TextfieldContainer(
+                    TextFieldContainer(
                         controller: workoutFats,
                         hitText: 'Fats',
                         imagePath: "assets/icons/fat.png",
                         obscureText: false),
                     const Gap(10),
-                    TextfieldContainer(
+                    TextFieldContainer(
                         controller: workoutSugar,
                         hitText: 'Sugar',
                         imagePath: "assets/icons/sugar.png",
                         obscureText: false),
                     const Gap(10),
-                    TextfieldContainer(
+                    TextFieldContainer(
                         controller: workoutprotein,
                         hitText: 'Protein',
                         imagePath: "assets/icons/protein.png",
@@ -332,7 +332,7 @@ class _CreateMealState extends State<CreateMeal> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: TextfieldContainer(
+                                  child: TextFieldContainer(
                                     controller: allItemsControllers[index],
                                     hitText: 'Equipment with Measurement',
                                     icon: Icons.fitness_center_outlined,
@@ -386,7 +386,7 @@ class _CreateMealState extends State<CreateMeal> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: TextfieldContainer(
+                                  child: TextFieldContainer(
                                     controller: allStepssControllers[index],
                                     hitText:
                                         'Input the Next Step to the Preparation',

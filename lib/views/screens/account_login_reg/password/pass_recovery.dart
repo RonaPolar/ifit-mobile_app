@@ -48,13 +48,13 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                                   style: Styles.text15normal,
                                 ),
                                 const Gap(10),
-                                const TextfieldContainer(
+                                const TextFieldContainer(
                                   hitText: 'Email',
                                   icon: FluentSystemIcons.ic_fluent_mail_regular,
                                   obscureText: false,
                                 ),
                                 const Gap(15),
-                                const TextfieldContainer(
+                                const TextFieldContainer(
                                   hitText: 'Number',
                                   icon: FluentSystemIcons.ic_fluent_call_end_regular,
                                   obscureText: false,

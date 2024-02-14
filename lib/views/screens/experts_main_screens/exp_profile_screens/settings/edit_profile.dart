@@ -161,32 +161,32 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _nameController,
                             hitText: 'name',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _emailController,
                             hitText: 'email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _phone_numberController,
                             hitText: 'Number',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _professionController,
                             hitText: 'profession',
                             icon: FluentSystemIcons
                                 .ic_fluent_person_accounts_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _birth_dateController,
                             hitText: 'birthdate',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
@@ -197,7 +197,7 @@ class _EditProfileState extends State<EditProfile> {
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false),
                         const Gap(15),
-                        TextfieldContainer(
+                        TextFieldContainer(
                             controller: _genderController,
                             hitText: 'gender',
                             icon: FluentSystemIcons.ic_fluent_people_regular,

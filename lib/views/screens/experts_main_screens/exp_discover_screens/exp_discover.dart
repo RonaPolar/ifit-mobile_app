@@ -425,7 +425,10 @@ TextEditingController txtSearch = TextEditingController();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ExpertProfile(exObj: exObj)),
+                              builder: (context) => ExpertProfile(
+                                combinedList: [],
+                                exObj: exObj,
+                              )),
                           );
                         },
                         child: SquareContainer(

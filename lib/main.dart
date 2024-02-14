@@ -73,9 +73,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<Auth>(create: (context) => Auth()),
-        ChangeNotifierProvider<Client>(create: (context) => Client()),
-        ChangeNotifierProvider<ExpertProvider>(create: (context) => ExpertProvider()),
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProvider<Client>(create: (_) => Client()),
+        ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

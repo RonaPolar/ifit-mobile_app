@@ -169,7 +169,9 @@ class _ViewMealDetailsState extends State<ViewMealDetails> {
                                             var exObj = discoverExperts[0];
                                            Navigator.push(context,
                                               MaterialPageRoute(
-                                                builder: (context) => ExpertProfile(exObj: exObj)),);
+                                                builder: (context) => ExpertProfile(exObj: exObj,
+                                                combinedList: [],
+                                                )),);
                                           },
                                       ),
                                     ],

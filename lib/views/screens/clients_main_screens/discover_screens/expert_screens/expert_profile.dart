@@ -8,17 +8,24 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/program_widgets.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExpertProfile extends StatefulWidget {
   const ExpertProfile({
     required this.exObj,
+    required this.combinedList,
     super.key,
   });
 
   final Expert exObj;
+  final List combinedList;
 
   @override
   State<ExpertProfile> createState() => _ExpertProfileState();
@@ -109,6 +116,8 @@ class _ExpertProfileState extends State<ExpertProfile> {
     List<dynamic> combinedList = [...popularWorkoutArr, ...popularMealArr];
     combinedList.shuffle(Random());
 
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
+
     return Container(
       color: Colors.red,
       child: NestedScrollView(
@@ -148,9 +157,9 @@ class _ExpertProfileState extends State<ExpertProfile> {
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
-              color: Styles.bgColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+            color: Styles.bgColor,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(25), topRight: Radius.circular(25))),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
@@ -215,7 +224,6 @@ class _ExpertProfileState extends State<ExpertProfile> {
                     ],
                   ),
 
-                  
                   const Gap(15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,8 +310,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
                   Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          "Programs Created",
+                      Text("Programs Created",
                           style: Styles.title
                         ),
                       GridView.builder(
@@ -313,11 +320,13 @@ class _ExpertProfileState extends State<ExpertProfile> {
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Adjust the number of columns as per your design
                         ),
-                        itemCount: combinedList.length,
+                        itemCount: widget.combinedList.length,
                         itemBuilder: (context, index) {
-                          var item = combinedList[index];
+                          dynamic item = widget.combinedList[index];
 
-                          if (item.containsKey("duration") && item.containsKey("kcal")) {
+                          print(combinedList);
+
+                          if (item is Workout) {
                             // It's a workout item
                             return InkWell(
                               onTap: () {
@@ -330,14 +339,15 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
-                                image: item["image"],
-                                title: item["name"],
-                                bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
+                                image: item.image,
+                                title: item.name,
+                                bottomText: "${item.duration} minutes | ${item.kcal} kcal",
                                 viewColor: Colors.grey.shade200,
                               ),
                             );
                           } else {
                             // It's a meal item
+                            final mealItem = item as Meal;
                             return InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -349,9 +359,9 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
-                                image: item["image"],
-                                title: item["name"],
-                                bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
+                                image: mealItem.image,
+                                title: mealItem.name,
+                                bottomText: "${mealItem.categories} | ${mealItem.kcal} kcal",
                                 viewColor: Colors.grey.shade200,
                               ),
                             );
@@ -370,8 +380,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
                         MainButton(
                           title: 'Contact Now',
                           onPressed: () {
-                            // Navigator.push(context,MaterialPageRoute(
-                            //     builder: (context) => const ContactUs()),);
+                            sendEmail("pajunar0@gmail.com");
                           },
                         ),
                       ],
@@ -385,5 +394,20 @@ class _ExpertProfileState extends State<ExpertProfile> {
         ), //Main top
       ),
     );
+  }
+
+  void sendEmail(String email) async {
+    final Uri params = Uri(
+      scheme: "mailto",
+      path: email,
+      query: "subject=Test%20Email&body=This is a test.",
+    );
+
+    if (await canLaunchUrl(params)) {
+      debugPrint("Going to email");
+      // await launchUrl(params);
+      Uri uri = Uri.parse("mailto:pajunar0@gmail.com?subject=This is test. &body=Hello");
+      await launchUrl(uri);
+    }
   }
 }

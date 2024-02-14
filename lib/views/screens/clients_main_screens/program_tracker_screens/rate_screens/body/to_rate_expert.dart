@@ -64,7 +64,9 @@ class _ToRateExpertScreenState extends State<ToRateExpertScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                ExpertProfile(exObj: exObj),
+                                ExpertProfile(exObj: exObj,
+                                  combinedList: [],
+                                ),
                             ),
                           );
                         },

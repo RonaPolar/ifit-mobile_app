@@ -7,6 +7,7 @@ import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/verification_text_box.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
 import 'package:ifit/views/screens/account_login_reg/register/Expert_registration/Expert_registration1.dart';
@@ -14,6 +15,7 @@ import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_term
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ifit/views/screens/account_login_reg/services.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -28,6 +30,7 @@ class _RegisterState extends State<Register> {
   String? selectedValue = "Client";
   String? destinationScreen = "ClientRegistration";
   String validatorError = "";
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final firstNameController = TextEditingController();
@@ -52,10 +55,9 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
+    final Auth auth = Provider.of<Auth>(context);
+
     bool isValidEmail(String email) {
-      // Regular expression for a simple email validation
-      // This regex might not cover all possible valid email formats
-      // For a more comprehensive solution, consider using a package like 'email_validator'
       RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
       return emailRegex.hasMatch(email);
     }
@@ -68,7 +70,7 @@ class _RegisterState extends State<Register> {
           firstNameController.text == "" ||
           lastNameController.text == "" ||
           selectedValue == null) {
-        print("on register user");
+        debugPrint("on register user");
         setState(() {
           validatorError = "Please fill all the fields";
         });
@@ -78,7 +80,7 @@ class _RegisterState extends State<Register> {
 
         // check if email is valid
       } else if (isValidEmail(emailController.text) == false) {
-        print("Invalid email");
+        debugPrint("Invalid email");
         setState(() {
           validatorError = "Please enter a valid email";
         });
@@ -145,33 +147,32 @@ class _RegisterState extends State<Register> {
                           ),
                           const Gap(30),
                           // this is where the modification of it --> /common/widgets/textfield_container.dart';
-                          TextfieldContainer(
+                          TextFieldContainer(
                             hitText: 'First Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
-                            controller: firstNameController,
+                            controller: Auth.firstName,
                           ),
                           const Gap(15),
-                          TextfieldContainer(
+                          TextFieldContainer(
                             hitText: 'Last Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
-                            controller: lastNameController,
+                            controller: Auth.lastName,
                           ),
                           const Gap(15),
-                          TextfieldContainer(
+                          TextFieldContainer(
                             hitText: 'Email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             obscureText: false,
-                            controller: emailController,
+                            controller: Auth.email,
                           ),
                           const Gap(15),
-                          TextfieldContainer(
+                          TextFieldContainer(
                             //password eye icon
                             hitText: 'Password',
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
-                            controller: passwordController,
-
+                            controller: Auth.password,
                             obscureText: !_isPasswordVisible,
                             rightIcon: IconButton(
                               icon: _isPasswordVisible
@@ -313,43 +314,41 @@ class _RegisterState extends State<Register> {
                     MainButton(
                       title: 'Register',
                       onPressed: () async {
-                        if (await validateAndSendEmail()) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  VerificationCodeScreen(onConfirmPressed: () {
-                                // check if all fields are filled and valid
+                        print(destinationScreen);
+                        // if (await validateAndSendEmail()) {
 
-                                if (destinationScreen == "ClientRegistration") {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const RegisterPart2()),
-                                  );
-                                } else if (destinationScreen ==
-                                    "ExpertRegistration") {
-                                  Services()
-                                      .Signup(
-                                          firstNameController.text,
-                                          emailController.text,
-                                          passwordController.text)
-                                      .then({
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ExpertRegistration1()),
-                                    )
-                                  });
-                                }
-                              }),
-                            ),
-                          );
+                          // ignore: use_build_context_synchronously
+                          // Navigator.push(context, MaterialPageRoute(
+                          //     builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
+                          //       // check if all fields are filled and valid
+                          //
+                          //     }),
+                          //   ),
+                          // );
+                          if (destinationScreen == "ClientRegistration") {
+                            Navigator.pushReplacement(context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const RegisterPart2()),
+                            );
+                          } else if (destinationScreen == "ExpertRegistration") {
+                            // Services().Signup(
+                            //     firstNameController.text,
+                            //         emailController.text,
+                            //         passwordController.text)
+                            //     .then({
+                            await auth.createUser().then((value) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const ExpertRegistration1()),
+                              );
+                            });
+                            // });
+                          }
                         }
-                      },
+                      // },
                     ),
                     const Gap(10),
                     Row(

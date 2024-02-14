@@ -26,43 +26,43 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     void loginUser() async {
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => const HomeNavBar(), // expHome()
-      //     // ? Expert : HomeNavBar() client
-      //   ),
-      // );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeNavBar(), // expHome()
+          // ? Expert : HomeNavBar() client
+        ),
+      );
 
-      Services()
-        .SignIn(emailController.text, passwordController.text)
-        .then((value) {
-          // FirebaseFirestore.instance
-          // .collection('Experts')
-          // .where('email', isEqualTo: emailController.text)
-          // .get()
-          // .then((QuerySnapshot querySnapshot) {
-          //     Navigator.pushReplacement(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => const ExpHome(),
-          //       ),
-          //     );
-          // });
-
-          FirebaseFirestore.instance
-              .collection('clients')
-              .where('email', isEqualTo: emailController.text)
-              .get()
-              .then((QuerySnapshot querySnapshot) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeNavBar(),
-              ),
-            );
-          });
-      });
+      // Services()
+      //   .SignIn(emailController.text, passwordController.text)
+      //   .then((value) {
+      //     // FirebaseFirestore.instance
+      //     // .collection('Experts')
+      //     // .where('email', isEqualTo: emailController.text)
+      //     // .get()
+      //     // .then((QuerySnapshot querySnapshot) {
+      //     //     Navigator.pushReplacement(
+      //     //       context,
+      //     //       MaterialPageRoute(
+      //     //         builder: (context) => const ExpHome(),
+      //     //       ),
+      //     //     );
+      //     // });
+      //
+      //     FirebaseFirestore.instance
+      //         .collection('clients')
+      //         .where('email', isEqualTo: emailController.text)
+      //         .get()
+      //         .then((QuerySnapshot querySnapshot) {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => const HomeNavBar(),
+      //         ),
+      //       );
+      //     });
+      // });
     }
 
     return Scaffold(
@@ -90,13 +90,13 @@ class _LogInState extends State<LogIn> {
                             style: Styles.headline25,
                           ),
                           const Gap(30),
-                          TextfieldContainer(
+                          TextFieldContainer(
                               hitText: 'Email',
                               icon: FluentSystemIcons.ic_fluent_mail_regular,
                               obscureText: false,
                               controller: emailController),
                           const Gap(15),
-                          TextfieldContainer(
+                          TextFieldContainer(
                             //password eye icon
                             hitText: 'Password',
                             controller: passwordController,
