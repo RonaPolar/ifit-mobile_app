@@ -1,0 +1,410 @@
+import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:ifit/common/utils/api_connect.dart';
+import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/common/widgets/main_button.dart';
+import 'package:ifit/common/widgets/verification_text_box.dart';
+import 'package:ifit/views/screens/account_login_reg/login.dart';
+import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
+import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
+import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_terms.dart';
+import 'package:ifit/common/widgets/text_field_container.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:ifit/views/screens/account_login_reg/services.dart';
+
+class Register extends StatefulWidget {
+  const Register({super.key});
+
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  bool _isPasswordVisible = false; // Track password visibility
+  bool _isCheck = false; // Track check box
+  String? selectedValue = "Client";
+  String? destinationScreen = "ClientRegistration";
+  String validatorError = "";
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  final ApiConnect apiConnect = Get.find();
+
+  // Function to show the Privacy Policy dialog
+  void _showPrivacyPolicyDialog() {
+    CustomDialogs.showPrivacyPolicyDialog(context);
+  }
+
+  // Function to show the Terms of Use dialog
+  void _showTermsOfUseDialog() {
+    CustomDialogs.showTermsOfUseDialog(context);
+  }
+
+  void _showTypesOfUserDialog() {
+    CustomDialogs.showTypesOfUserDialog(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final box = GetStorage();
+    bool isValidEmail(String email) {
+      // Regular expression for a simple email validation
+      // This regex might not cover all possible valid email formats
+      // For a more comprehensive solution, consider using a package like 'email_validator'
+      RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+      return emailRegex.hasMatch(email);
+    }
+
+    // returns true if all fields are filled and valid
+    Future<bool> validateAndSendEmail() async {
+      // check if all fields are filled
+      if (emailController.text == "" ||
+          passwordController.text == "" ||
+          firstNameController.text == "" ||
+          lastNameController.text == "" ||
+          selectedValue == null) {
+        print("on register user");
+        setState(() {
+          validatorError = "Please fill all the fields";
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
+        return false;
+
+        // check if email is valid
+      } else if (isValidEmail(emailController.text) == false) {
+        print("Invalid email");
+        setState(() {
+          validatorError = "Please enter a valid email";
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
+
+        return false;
+
+        // else send email to user
+      } else if (!_isCheck) {
+        setState(() {
+          validatorError = "Please accept our terms and conditions";
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(validatorError)));
+        return false;
+      } else {
+        print("Sending email to user");
+        var userEmail = {
+          'email': emailController.text,
+        };
+
+        var res = await apiConnect.sendEmailToUser(userEmail);
+
+        if (res.statusCode != 200) {
+          setState(() {
+            validatorError = "Invalid email, please try again";
+          });
+          return false;
+        }
+
+        box.write('Remail', emailController.text);
+        box.write('Rpassword', passwordController.text);
+        box.write('Rfirst_name', firstNameController.text);
+        box.write('Rlast_name', lastNameController.text);
+
+        return true;
+      }
+    }
+
+    return Scaffold(
+      backgroundColor: Styles.bgColor,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Container(
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Hey there,',
+                            style: Styles.text18,
+                          ),
+                          Text(
+                            'Create an Account',
+                            style: Styles.headline25,
+                          ),
+                          const Gap(30),
+                          // this is where the modification of it --> /common/widgets/textfield_container.dart';
+                          TextfieldContainer(
+                            hitText: 'First Name',
+                            icon: FluentSystemIcons.ic_fluent_person_regular,
+                            obscureText: false,
+                            controller: firstNameController,
+                          ),
+                          const Gap(15),
+                          TextfieldContainer(
+                            hitText: 'Last Name',
+                            icon: FluentSystemIcons.ic_fluent_person_regular,
+                            obscureText: false,
+                            controller: lastNameController,
+                          ),
+                          const Gap(15),
+                          TextfieldContainer(
+                            hitText: 'Email',
+                            icon: FluentSystemIcons.ic_fluent_mail_regular,
+                            obscureText: false,
+                            controller: emailController,
+                          ),
+                          const Gap(15),
+                          TextfieldContainer(
+                            //password eye icon
+                            hitText: 'Password',
+                            icon: FluentSystemIcons.ic_fluent_lock_regular,
+                            controller: passwordController,
+
+                            obscureText: !_isPasswordVisible,
+                            rightIcon: IconButton(
+                              icon: _isPasswordVisible
+                                  ? const Icon(Icons.visibility)
+                                  : const Icon(Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                          const Gap(15),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Text.rich(
+                              TextSpan(
+                                text: 'Click here to learn about ',
+                                children: [
+                                  TextSpan(
+                                    text: 'Type of User',
+                                    style: TextStyle(
+                                      color: Styles.textColor,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _showTypesOfUserDialog(); // Show Privacy Policy dialog
+                                      },
+                                  ),
+                                ],
+                              ),
+                              style: TextStyle(color: Styles.fadeTextColor),
+                            ),
+                          ),
+                          const Gap(5),
+                          RegisterDropDown(
+                            hintText: 'Type of User',
+                            icon: FluentSystemIcons.ic_fluent_people_regular,
+                            items: const [
+                              DropdownMenuItem<String>(
+                                value: "Client",
+                                child: Text("Client"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "Expert",
+                                child: Text("Expert"),
+                              )
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValue = value;
+                                box.write('Rtype', value);
+                                if (value == "Client") {
+                                  destinationScreen = "ClientRegistration";
+                                } else if (value == "Expert") {
+                                  destinationScreen = "ExpertRegistration";
+                                }
+                              });
+                            },
+                            selectedValue: selectedValue,
+                          ),
+                          const Gap(5),
+                          (validatorError == ""
+                              ? const SizedBox()
+                              : Align(
+                                  //make a condition that make if any of it wasnt filled it will display "Enter _____"
+                                  alignment: Alignment.bottomLeft,
+                                  child: Text(
+                                    validatorError,
+                                    style: Styles.text15normal.copyWith(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                )),
+                          const Gap(10),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isCheck = !_isCheck;
+                                  });
+                                },
+                                icon: _isCheck
+                                    ? const Icon(FluentSystemIcons
+                                        .ic_fluent_checkbox_checked_regular)
+                                    : const Icon(FluentSystemIcons
+                                        .ic_fluent_checkbox_unchecked_regular),
+                                color: Styles.fadeTextColor,
+                              ),
+                              Expanded(
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: 'By continuing you accept our ',
+                                    children: [
+                                      TextSpan(
+                                        text: 'Privacy Policy',
+                                        style: TextStyle(
+                                          color: Styles.textColor,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            _showPrivacyPolicyDialog(); // Show Privacy Policy dialog
+                                          },
+                                      ),
+                                      const TextSpan(text: ' and '),
+                                      TextSpan(
+                                        text: 'Terms of Use',
+                                        style: TextStyle(
+                                          color: Styles.textColor,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            _showTermsOfUseDialog(); // Show Terms of Use dialog
+                                          },
+                                      ),
+                                    ],
+                                  ),
+                                  style: TextStyle(color: Styles.fadeTextColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(10),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, bottom: 5, top: 20),
+                child: Column(
+                  children: [
+                    MainButton(
+                      title: 'Register',
+                      onPressed: () async {
+                        if (await validateAndSendEmail()) {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  VerificationCodeScreen(onConfirmPressed: () {
+                                // check if all fields are filled and valid
+
+                                if (destinationScreen == "ClientRegistration") {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegisterPart2()),
+                                  );
+                                } else if (destinationScreen ==
+                                    "ExpertRegistration") {
+                                  Services()
+                                      .Signup(
+                                          firstNameController.text,
+                                          emailController.text,
+                                          passwordController.text)
+                                      .then({
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ExpertRegistration1()),
+                                    )
+                                  });
+                                }
+                              }),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const Gap(10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: Styles.textColor,
+                          ),
+                        ),
+                        Text(
+                          ' Or ',
+                          style: Styles.text18,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Navigate to the login screen here
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LogIn(),
+                          ),
+                        );
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          style: Styles.text18,
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Already have an Account? ',
+                            ),
+                            TextSpan(
+                              text: 'Login',
+                              style: Styles.title.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
