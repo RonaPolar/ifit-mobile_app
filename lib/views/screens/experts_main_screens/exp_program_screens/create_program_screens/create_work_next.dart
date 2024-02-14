@@ -5,8 +5,8 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/confirmation_dialog.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 
 class CreateWorkoutNext extends StatefulWidget {
   const CreateWorkoutNext({super.key});

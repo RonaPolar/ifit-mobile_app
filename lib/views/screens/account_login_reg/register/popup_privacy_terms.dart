@@ -202,7 +202,7 @@ class CustomDialogs {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '• Are you an EXPERT?',
+                  '• Are you an Expert?',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),

@@ -26,19 +26,19 @@ class Services {
         email: email, password: password);
     String? uid = userCredential.user?.uid;
 
-    FirebaseFirestore.instance.collection('experts').doc(uid).set({
+    FirebaseFirestore.instance.collection('Experts').doc(uid).set({
       'date_creation': FieldValue.serverTimestamp(),
       'uid': uid,
       'name': firstname,
       'email': email,
-      'user_type': 'expert',
+      'user_type': 'Expert',
       'verified': false
     });
   }
 
   updateExpert(String uid, String? gender, String birth_date,
       String phone_number, String profession) {
-    FirebaseFirestore.instance.collection('experts').doc(uid).update({
+    FirebaseFirestore.instance.collection('Experts').doc(uid).update({
       'gender': gender,
       'birth_date': birth_date,
       'phone_number': phone_number,

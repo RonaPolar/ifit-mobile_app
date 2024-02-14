@@ -1,7 +1,7 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/body/expert_following.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/body/Expert_following.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/body/to_rate_expert.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/body/to_rate_program.dart';
 

@@ -7,7 +7,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/favorites_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/models/meal.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:readmore/readmore.dart';
 
 class ViewMealDetails extends StatefulWidget {
@@ -68,7 +68,7 @@ class _ViewMealDetailsState extends State<ViewMealDetails> {
   List discoverExperts = [
     {
       "name": "Dr. Octavius Brine",
-      "image": "assets/images/experts/expert2.png",
+      "image": "assets/images/Experts/Expert2.png",
       "profession": "Nutritionist",
       "rate": "3.9",
       "mealCreated": "2",

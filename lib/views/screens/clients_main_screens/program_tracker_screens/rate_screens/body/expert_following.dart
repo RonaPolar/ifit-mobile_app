@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 
 class ExperFollowingScreen extends StatefulWidget {
   const ExperFollowingScreen({super.key});
@@ -14,25 +14,25 @@ class _ExperFollowingScreenState extends State<ExperFollowingScreen> {
   List discoverExperts = [
     {
       "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
+      "image": "assets/images/Experts/Expert1.png",
       "profession": "Physician",
       "rate": "4.5",
     },
     {
       "name": "Dr. Harleen Quinzel",
-      "image": "assets/images/experts/expert3.jpg",
+      "image": "assets/images/Experts/Expert3.jpg",
       "profession": "Physical Therapist",
       "rate": "4.8",
     },
     {
       "name": "Dr. Octavius Brine",
-      "image": "assets/images/experts/expert2.png",
+      "image": "assets/images/Experts/Expert2.png",
       "profession": "Nutritionist",
       "rate": "3.9",
     },
     {
       "name": "Coach. Rendon Labador",
-      "image": "assets/images/experts/expert4.jpg",
+      "image": "assets/images/Experts/Expert4.jpg",
       "profession": "Gym Instructor",
       "rate": "3.9",
     },

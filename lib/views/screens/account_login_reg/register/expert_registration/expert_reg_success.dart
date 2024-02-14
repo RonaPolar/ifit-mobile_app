@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 
 class ExpertSuccessRegistration extends StatefulWidget {
   const ExpertSuccessRegistration({super.key});

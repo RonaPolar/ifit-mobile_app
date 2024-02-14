@@ -56,7 +56,7 @@ class _AboutState extends State<About> {
                         Image.asset('assets/images/Logo.png'),
                         const Gap(20),
                         Text(
-                          "The system \"I-FIT\" is an online fitness mobile application suitable for fitness experts and users. . Its main goal is to make the fitness app personalized the program based on the input that will be suited for the users’ body type, fitness goals and physical limitations that will be provided the experts without in contact.",
+                          "The system \"I-FIT\" is an online fitness mobile application suitable for fitness Experts and users. . Its main goal is to make the fitness app personalized the program based on the input that will be suited for the users’ body type, fitness goals and physical limitations that will be provided the Experts without in contact.",
                           textAlign: TextAlign.center,
                           style: Styles.text18),
                       ],

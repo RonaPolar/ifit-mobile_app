@@ -1,0 +1,14 @@
+{
+  "birth_date": "2001/12/10",
+  "email": "sample@gmail.com",
+  "gender": "male",
+  "height": "160",
+  "name": "lance rolan",
+  "phone_number": "+639684059727",
+  "photo_url": "https",
+  "uid": "123123",
+  "user_type": "client",
+  "weight": "20",
+  "meal_plans": [],
+  "workout_plans": []
+}

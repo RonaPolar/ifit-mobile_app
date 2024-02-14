@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
+import 'package:ifit/service/Expert.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
@@ -72,6 +74,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (context) => Auth()),
+        ChangeNotifierProvider<Client>(create: (context) => Client()),
+        ChangeNotifierProvider<ExpertProvider>(create: (context) => ExpertProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

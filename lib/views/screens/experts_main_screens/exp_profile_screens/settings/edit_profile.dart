@@ -7,7 +7,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/confirmation_dialog.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -38,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
       var user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('experts')
+            .collection('Experts')
             .where('email', isEqualTo: user.email)
             .get();
 

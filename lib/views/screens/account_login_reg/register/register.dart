@@ -9,7 +9,7 @@ import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/verification_text_box.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
+import 'package:ifit/views/screens/account_login_reg/register/Expert_registration/Expert_registration1.dart';
 import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_terms.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';

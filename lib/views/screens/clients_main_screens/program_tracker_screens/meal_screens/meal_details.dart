@@ -9,7 +9,7 @@ import 'package:ifit/common/widgets/favorites_button.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/icon_text_icon.dart';
 import 'package:ifit/models/meal.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
 import 'package:readmore/readmore.dart';
 
@@ -72,7 +72,7 @@ class _MealDetailsState extends State<MealDetails> {
   List discoverExperts = [
     {
       "name": "Dr. Octavius Brine",
-      "image": "assets/images/experts/expert2.png",
+      "image": "assets/images/Experts/Expert2.png",
       "profession": "Nutritionist",
       "rate": "3.9",
       "mealCreated": "2",

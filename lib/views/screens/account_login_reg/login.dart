@@ -8,7 +8,7 @@ import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:ifit/views/screens/account_login_reg/services.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -30,7 +30,7 @@ class _LogInState extends State<LogIn> {
       //   context,
       //   MaterialPageRoute(
       //     builder: (context) => const HomeNavBar(), // expHome()
-      //     // ? expert : HomeNavBar() client
+      //     // ? Expert : HomeNavBar() client
       //   ),
       // );
 
@@ -38,7 +38,7 @@ class _LogInState extends State<LogIn> {
         .SignIn(emailController.text, passwordController.text)
         .then((value) {
           // FirebaseFirestore.instance
-          // .collection('experts')
+          // .collection('Experts')
           // .where('email', isEqualTo: emailController.text)
           // .get()
           // .then((QuerySnapshot querySnapshot) {

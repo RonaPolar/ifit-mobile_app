@@ -6,7 +6,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/favorites_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_exercises_steps.dart';
 import 'package:readmore/readmore.dart';
 
@@ -116,7 +116,7 @@ class _ViewWorkoutDetailsState extends State<ViewWorkoutDetails> {
   List discoverExperts = [
     {
       "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
+      "image": "assets/images/Experts/Expert1.png",
       "profession": "Physician",
       "rate": "4.5",
       "mealCreated": "2",

@@ -9,7 +9,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_reg_success.dart';
+import 'package:ifit/views/screens/account_login_reg/register/Expert_registration/Expert_reg_success.dart';
 import 'package:ifit/views/screens/account_login_reg/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -296,7 +296,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
                     MainButton(
                       title: 'Next',
                       onPressed: () async {
-                        final path = 'experts';
+                        final path = 'Experts';
                         final file = File(professionid!.path);
 
                         final ref = FirebaseStorage.instance
@@ -312,7 +312,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
                         });
 
                         FirebaseFirestore.instance
-                            .collection('experts')
+                            .collection('Experts')
                             .doc(user!.uid)
                             .update({
                           'profession_id': downloadURL,
@@ -335,7 +335,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
                         });
 
                         FirebaseFirestore.instance
-                            .collection('experts')
+                            .collection('Experts')
                             .doc(user!.uid)
                             .update({
                           'proof_of_field_of_study': downloadURL2,

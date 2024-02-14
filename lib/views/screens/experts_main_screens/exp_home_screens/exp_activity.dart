@@ -35,7 +35,7 @@ class _ExpActivityHistoryState extends State<ExpActivityHistory> {
       "time": "29 May"
     },
     {
-      "image": "assets/images/experts/expert3.jpg",
+      "image": "assets/images/Experts/Expert3.jpg",
       "title": "You have Followed Dr. Harley Quinn",
       "time": "8 April"
     },

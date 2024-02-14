@@ -56,3 +56,103 @@ class Expert {
     "descriptions": descriptions,
   };
 }
+
+
+///
+class ExpertModel {
+  final String birthDate;
+  final String datejoined;
+  final String email;
+  final String gender;
+  final String name;
+  final String phoneNumber;
+  final String photoUrl;
+  final String profession;
+  final String professionId;
+  final String proofOfFieldOfStudy;
+  final String uid;
+  final String userType;
+  final bool verified;
+
+  ExpertModel({
+    required this.birthDate,
+    required this.datejoined,
+    required this.email,
+    required this.gender,
+    required this.name,
+    required this.phoneNumber,
+    required this.photoUrl,
+    required this.profession,
+    required this.professionId,
+    required this.proofOfFieldOfStudy,
+    required this.uid,
+    required this.userType,
+    required this.verified,
+  });
+
+  ExpertModel copyWith({
+    String? birthDate,
+    String? datejoined,
+    String? email,
+    String? gender,
+    String? name,
+    String? phoneNumber,
+    String? photoUrl,
+    String? profession,
+    String? professionId,
+    String? proofOfFieldOfStudy,
+    String? uid,
+    String? userType,
+    bool? verified,
+  }) =>
+      ExpertModel(
+        birthDate: birthDate ?? this.birthDate,
+        datejoined: datejoined ?? this.datejoined,
+        email: email ?? this.email,
+        gender: gender ?? this.gender,
+        name: name ?? this.name,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        photoUrl: photoUrl ?? this.photoUrl,
+        profession: profession ?? this.profession,
+        professionId: professionId ?? this.professionId,
+        proofOfFieldOfStudy: proofOfFieldOfStudy ?? this.proofOfFieldOfStudy,
+        uid: uid ?? this.uid,
+        userType: userType ?? this.userType,
+        verified: verified ?? this.verified,
+      );
+
+  factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
+    birthDate: json["birth_date"],
+    datejoined: json["datejoined"],
+    email: json["email"],
+    gender: json["gender"],
+    name: json["name"],
+    phoneNumber: json["phone_number"],
+    photoUrl: json["photo_url"],
+    profession: json["profession"],
+    professionId: json["profession_id"],
+    proofOfFieldOfStudy: json["proof_of_field_of_study"],
+    uid: json["uid"],
+    userType: json["user_type"],
+    verified: json["verified"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "birth_date": birthDate,
+    "datejoined": datejoined,
+    "email": email,
+    "gender": gender,
+    "name": name,
+    "phone_number": phoneNumber,
+    "photo_url": photoUrl,
+    "profession": profession,
+    "profession_id": professionId,
+    "proof_of_field_of_study": proofOfFieldOfStudy,
+    "uid": uid,
+    "user_type": userType,
+    "verified": verified,
+  };
+}
+
+
+

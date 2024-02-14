@@ -1,9 +1,9 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/my_programs/body/exp_created_program.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/my_programs/body/exp_deleted_program.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/my_programs/body/exp_favorites_program.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_created_program.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_deleted_program.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_favorites_program.dart';
 
 // class ExpMyPrograms extends StatefulWidget {
 //   final int initialSelectTab;

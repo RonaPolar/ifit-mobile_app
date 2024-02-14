@@ -10,7 +10,7 @@ import 'package:ifit/common/widgets/confirmation_dialog.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateMeal extends StatefulWidget {

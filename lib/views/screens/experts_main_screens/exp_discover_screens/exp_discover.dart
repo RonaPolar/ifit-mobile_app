@@ -7,13 +7,13 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/main_button.dart';
 import 'package:ifit/common/widgets/program_widgets.dart';
 import 'package:ifit/common/widgets/search.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/exp_meal_screen.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/exp_workout_screen.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/exp_meal_screen.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/exp_workout_screen.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
 
 class ExpDiscoverScreen extends StatefulWidget {
   const ExpDiscoverScreen({super.key});
@@ -107,7 +107,7 @@ TextEditingController txtSearch = TextEditingController();
   List discoverExperts = [
     {
       "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
+      "image": "assets/images/Experts/Expert1.png",
       "profession": "Physician",
       "rate": "4.5",
       "mealCreated": "2",
@@ -116,7 +116,7 @@ TextEditingController txtSearch = TextEditingController();
     },
     {
       "name": "Dr. Harleen Quinzel",
-      "image": "assets/images/experts/expert3.jpg",
+      "image": "assets/images/Experts/Expert3.jpg",
       "profession": "Physical Therapist",
       "rate": "4.8",
       "mealCreated": "3",
@@ -125,7 +125,7 @@ TextEditingController txtSearch = TextEditingController();
     },
     {
       "name": "Dr. Octavius Brine",
-      "image": "assets/images/experts/expert2.png",
+      "image": "assets/images/Experts/Expert2.png",
       "profession": "Nutritionist",
       "rate": "3.9",
       "mealCreated": "2",
@@ -134,7 +134,7 @@ TextEditingController txtSearch = TextEditingController();
     },
     {
       "name": "Coach. Rendon Labador",
-      "image": "assets/images/experts/expert4.jpg",
+      "image": "assets/images/Experts/Expert4.jpg",
       "profession": "Gym Instructor",
       "rate": "3.9",
       "mealCreated": "3",

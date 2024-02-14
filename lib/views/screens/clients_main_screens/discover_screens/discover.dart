@@ -6,12 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/common/widgets/search.dart';
 import 'package:ifit/common/widgets/program_widgets.dart';
+import 'package:ifit/common/widgets/search.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/expert_list.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/new_arrival.dart';
+import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/popular.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/my_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
@@ -26,79 +28,6 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
   TextEditingController txtSearch = TextEditingController();
-
-  //   List popularWorkoutArr = [
-  //       {
-  //     "name": "Full Body Exercises",
-  //     "image": "assets/icons/workout-pic.png",
-  //     "rate": "4.7",
-  //     "schedule": "Monday",
-  //     "categories": "Full Body",
-  //     "time": "9:00am",
-  //     "kcal": "320",
-  //     "exercise": "10",
-  //     "duration": "30",
-  //     "days": "21",
-  //   },
-  //   {
-  //     "name": "Upper Body Weights",
-  //     "image": "assets/icons/Lower-Weights.png",
-  //     "rate": "4.3",
-  //     "schedule": "Monday",
-  //     "categories": "Upper Body",
-  //     "time": "10:00am",
-  //     "kcal": "210",
-  //     "exercise": "10",
-  //     "duration": "30",
-  //     "days": "15",
-  //   },
-  //   {
-  //     "name": "Ab Exercises",
-  //     "image": "assets/icons/Ab-workout.png",
-  //     "rate": "4.5",
-  //     "schedule": "Monday",
-  //     "categories": "Abdominal",
-  //     "time": "4:00pm",
-  //     "kcal": "260",
-  //     "exercise": "10",
-  //     "duration": "30",
-  //     "days": "14",
-  //   },
-  // ];
-  //
-  // List popularMealArr = [
-  //   {
-  //     "name": "Blueberry Pancake",
-  //     "image": "assets/images/meal/pancake.png",
-  //     "rate": "4.9",
-  //     "kcal": "190",
-  //     "fats": "199",
-  //     "proteins": "305",
-  //     "sugar": "150",
-  //     "categories": "Breakfast",
-  //   },
-  //   {
-  //     "name": "Salad",
-  //     "image": "assets/images/meal/salad.png",
-  //     "rate": "4.6",
-  //     "kcal": "200",
-  //     "fats": "100",
-  //     "proteins": "300",
-  //     "sugar": "50",
-  //     "categories": "Lunch",
-  //   },
-  //   {
-  //     "name": "Salmon Nigiri",
-  //     "image": "assets/images/meal/nigiri.png",
-  //     "rate": "4.3",
-  //     "kcal": "300",
-  //     "fats": "250",
-  //     "proteins": "310",
-  //     "sugar": "100",
-  //     "categories": "Dinner",
-  //   },
-  // ];
-
 
   List<Expert> discoverExperts = [];
   List<Workout> popularWorkout = [];
@@ -115,15 +44,18 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final String meal = await rootBundle.loadString(JsonFile.meal);
     final String workout = await rootBundle.loadString(JsonFile.workout);
 
-    discoverExperts = (jsonDecode(expert)["expert"] as List).map((e) => Expert.fromJson(e)).toList();
-    popularWorkout = (jsonDecode(workout)["popularWorkout"] as List).map((e) => Workout.fromJson(e)).toList();
-    popularMeal = (jsonDecode(meal)["popularMeal"] as List).map((e) => Meal.fromJson(e)).toList();
+    setState(() {
+      discoverExperts = (jsonDecode(expert)["expert"] as List).map((e) => Expert.fromJson(e)).toList();
+      popularWorkout = (jsonDecode(workout)["popularWorkout"] as List).map((e) => Workout.fromJson(e)).toList();
+      popularMeal = (jsonDecode(meal)["popularMeal"] as List).map((e) => Meal.fromJson(e)).toList();
+    });
   }
 
 
   @override
   Widget build(BuildContext context) {
     List<dynamic> combinedList = [...popularWorkout, ...popularMeal];
+
     combinedList.shuffle(Random());
 
     return Scaffold(
@@ -133,34 +65,34 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         centerTitle: true,
         elevation: 0,
         leading: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-            builder: (context) => const HomeNavBar()));
-        },
-        child: Container(
-          margin: const EdgeInsets.all(12),
-            height: 30,
-            width: 30,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10)),
-          child: const Icon(
-            FluentSystemIcons.ic_fluent_chevron_left_filled,
-            size: 20,
-            color: Colors.black,
-          ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+              builder: (context) => const HomeNavBar()));
+            },
+            child: Container(
+              margin: const EdgeInsets.all(12),
+                height: 30,
+                width: 30,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Icon(
+                FluentSystemIcons.ic_fluent_chevron_left_filled,
+                size: 20,
+                color: Colors.black,
+              ),
+            ),
         ),
-      ),
         title: Container(
-          height: 35,
           width: double.maxFinite,
           decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10)),
-          alignment: Alignment.center,
-          child: SearchContainer(controller: txtSearch, hintText: "Search")
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(10)),
+          child: SearchContainer(
+            controller: txtSearch, hintText: "Search",
+          )
         ),
         actions: [
           InkWell(
@@ -197,8 +129,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     style: Styles.title
                   ),
               ),
-
-
               const Gap(10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -213,177 +143,18 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                   child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal:7),
-                            child: Text(
-                                "New Arrival",
-                                style: Styles.title
-                              ),
-                          ),
-                          SizedBox(
-                            height: 130,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: combinedList.length,
-                              itemBuilder: (context, index) {
-                                var item = combinedList[index];
-
-                                if (item.containsKey("duration") && item.containsKey("kcal")) {
-                                  // It's a workout item
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WorkoutDetails(dObj: item),
-                                        ),
-                                      );
-                                    },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
-                                    ),
-                                  );
-                                } else {
-                                  // It's a meal item
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MealDetails(dObj: item),
-                                        ),
-                                      );
-                                    },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      
-                      
+                      NewArrivalWidget(combinedList: combinedList),
                       const Gap(10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 7),
-                            child: Text(
-                              "Popular",
-                              style: Styles.title,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 130,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: combinedList.length,
-                              itemBuilder: (context, index) {
-                                var item = combinedList[index];
-
-                                if (item.containsKey("duration") && item.containsKey("kcal")) {
-                                  // It's a workout item
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WorkoutDetails(dObj: item),
-                                        ),
-                                      );
-                                    },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
-                                    ),
-                                  );
-                                } else {
-                                  // It's a meal item
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MealDetails(dObj: item),
-                                        ),
-                                      );
-                                    },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                      PopularWidget(combinedList: combinedList),
                     ],
                   ),
                 ),
               ),
-
-              
               const Gap(15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:15),
-                    child: 
-                      Text(
-                        "Experts",
-                        style: Styles.title
-                      ),
-                    ),
-                  GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Adjust the number of columns as per your design
-                    ),
-                    itemCount: discoverExperts.length,
-                    itemBuilder: (context, index) {
-                      Expert exObj = discoverExperts[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                            MaterialPageRoute(
-                              builder: (context) => ExpertProfile(exObj: exObj)),);
-                        },
-                        child: SquareContainer(
-                          image: exObj.image,
-                          title: exObj.name,
-                          bottomText: "${exObj.profession} | ${exObj.rate} stars",
-                        ),
-                      );
-                    },
-                  )
-                ],
+              ExpertListWidget(
+                discoverExperts: discoverExperts,
               ),
-                
-              
               const Gap(10)
-
-
             ],//main Children
           ),
         ],

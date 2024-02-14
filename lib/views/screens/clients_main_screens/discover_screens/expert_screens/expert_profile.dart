@@ -13,7 +13,6 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:readmore/readmore.dart';
 
 class ExpertProfile extends StatefulWidget {
-
   const ExpertProfile({
     required this.exObj,
     super.key,
@@ -109,7 +108,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
     String buttonText = isFollowing ? 'Following' : 'Follow';
     List<dynamic> combinedList = [...popularWorkoutArr, ...popularMealArr];
     combinedList.shuffle(Random());
-    
+
     return Container(
       color: Colors.red,
       child: NestedScrollView(

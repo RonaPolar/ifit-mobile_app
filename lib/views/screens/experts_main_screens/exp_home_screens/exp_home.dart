@@ -6,10 +6,10 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/widgets/icon_text_icon.dart';
 import 'package:ifit/common/widgets/main_button.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/exp_activity.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/exp_notifications.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/exp_program.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 
 class ExpHomeScreen extends StatefulWidget {
   const ExpHomeScreen({super.key});
@@ -19,10 +19,10 @@ class ExpHomeScreen extends StatefulWidget {
 }
 
 class _ExpHomeScreenState extends State<ExpHomeScreen> {
-  List experts = [
+  List Experts = [
     {
       "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
+      "image": "assets/images/Experts/Expert1.png",
       "profession": "Physician",
       "rate": "4.5",
       "mealCreated": "2",
@@ -46,7 +46,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
       var user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('experts')
+            .collection('Experts')
             .where('email', isEqualTo: user.email)
             .get();
 
@@ -240,7 +240,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                             Text('Workouts', style: Styles.title),
                             const Gap(5),
                             Text(
-                              "${experts[0]["workoutCreated"]}",
+                              "${Experts[0]["workoutCreated"]}",
                               style: Styles.normal.copyWith(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -273,7 +273,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                             Text('Meals', style: Styles.title),
                             const Gap(5),
                             Text(
-                              "${experts[0]["mealCreated"]}",
+                              "${Experts[0]["mealCreated"]}",
                               style: Styles.normal.copyWith(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

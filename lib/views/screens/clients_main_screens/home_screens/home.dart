@@ -14,6 +14,7 @@ import 'package:ifit/common/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/schedule.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/activity.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/bmi.dart';
@@ -22,6 +23,7 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,9 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Schedule(title: "6:30am - 7am", subtitle: "Meal"),
   ];
 
-  String name = "";
-  double bmi = 0;
-
   List<Workout> recommendWorkout = [];
   List<Meal> recommendMeal = [];
 
@@ -49,8 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // Fetch data based on the provided UID when the widget initializes
-    fetchData();
-    getStaticData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final Client client =  Provider.of<Client>(context, listen: false);
+      client.fetchData();
+      getStaticData();
+    });
+
   }
 
   Future<void> getStaticData() async {
@@ -64,51 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  Future<void> fetchData() async {
-    try {
-      var user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('clients')
-            .where('email', isEqualTo: user.email)
-            .get();
 
-        if (querySnapshot.docs.isNotEmpty) {
-          var userData =
-              querySnapshot.docs.first.data() as Map<String, dynamic>?;
-
-          if (userData != null) {
-            setState(() {
-              name = userData['name'] ?? '';
-              double height =
-                  double.tryParse(userData['height'] ?? '0.0') ?? 0.0;
-              double weight =
-                  double.tryParse(userData['weight'] ?? '0.0') ?? 0.0;
-
-              // Convert height to meters
-              double heightInMeters = height / 100;
-
-              // Calculate BMI
-              bmi = weight / (heightInMeters * heightInMeters);
-
-              if (height != 0.0 && weight != 0.0) {
-                // Calculate BMI
-                bmi = weight / (heightInMeters * heightInMeters);
-              } else {
-                print('Height or weight is zero, unable to calculate BMI');
-              }
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
+    final Client client =  Provider.of<Client>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Styles.bgColor,
@@ -118,9 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WelcomeBackWidget(name: name),
+                WelcomeBackWidget(
+                  name: client.name ?? "",
+                ),
                 const Gap(20),
-                BMIWidget(bmi: bmi),
+                BMIWidget(bmi: client.bmi),
                 const Gap(15),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),

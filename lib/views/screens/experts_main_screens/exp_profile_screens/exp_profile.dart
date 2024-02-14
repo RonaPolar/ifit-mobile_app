@@ -10,10 +10,10 @@ import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/exp_activity.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
-import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/settings.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/settings.dart';
 
 class ExpProfileScreen extends StatefulWidget {
   const ExpProfileScreen({super.key});
@@ -23,10 +23,10 @@ class ExpProfileScreen extends StatefulWidget {
 }
 
 class _ExpProfileScreenState extends State<ExpProfileScreen> {
-  List experts = [
+  List Experts = [
     {
       "name": "Dr. Otto Octavius",
-      "image": "assets/images/experts/expert1.png",
+      "image": "assets/images/Experts/Expert1.png",
       "profession": "Physician",
       "rate": "4.5",
       "mealCreated": "2",
@@ -97,7 +97,7 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                               width: 50,
                               height: 50,
                               child: Image.asset(
-                                "${experts[0]["image"]}",
+                                "${Experts[0]["image"]}",
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -108,10 +108,10 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${experts[0]["name"]}",
+                              Text("${Experts[0]["name"]}",
                                   style: Styles.title),
                               const Gap(5),
-                              Text("${experts[0]["profession"]}",
+                              Text("${Experts[0]["profession"]}",
                                   style: Styles.text15normal)
                             ],
                           ),
@@ -136,17 +136,17 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                       children: [
                         Expanded(
                             child: ProfileCell(
-                                value: "${experts[0]["rate"]}",
+                                value: "${Experts[0]["rate"]}",
                                 title: 'Star Rate')),
                         const Gap(10),
                         Expanded(
                             child: ProfileCell(
-                                value: "${experts[0]["mealCreated"]}",
+                                value: "${Experts[0]["mealCreated"]}",
                                 title: 'Meals')),
                         const Gap(10),
                         Expanded(
                             child: ProfileCell(
-                                value: "${experts[0]["workoutCreated"]}",
+                                value: "${Experts[0]["workoutCreated"]}",
                                 title: 'Workouts')),
                       ],
                     ),
