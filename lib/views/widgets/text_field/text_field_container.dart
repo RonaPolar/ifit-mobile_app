@@ -4,7 +4,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 class TextFieldContainer extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
-  final String hitText;
+  final String hintText;
   final IconData? icon;
   final String? imagePath;
   final Widget? rightIcon;
@@ -14,7 +14,7 @@ class TextFieldContainer extends StatefulWidget {
 
   const TextFieldContainer({
     Key? key,
-    required this.hitText,
+    required this.hintText,
     this.icon,
     this.rightIcon,
     this.obscureText = false,
@@ -50,12 +50,14 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(top: 15),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+          ),
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           prefixIcon: prefixIcon,
           suffixIcon: widget.rightIcon,
-          hintText: widget.hitText,
+          hintText: widget.hintText,
           hintStyle: TextStyle(
             color: Styles.fadeTextColor,
           ),

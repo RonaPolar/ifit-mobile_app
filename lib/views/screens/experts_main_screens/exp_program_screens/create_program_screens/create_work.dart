@@ -1,19 +1,22 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/widgets/text_field/text_field_container.dart';
+import 'package:provider/provider.dart';
 
 class CreateWorkout extends StatefulWidget {
-  const CreateWorkout({super.key});
+  const CreateWorkout({
+    required this.id,
+    super.key,
+  });
+
+  final String id;
 
   @override
   State<CreateWorkout> createState() => _CreateWorkoutState();
@@ -80,13 +83,16 @@ class _CreateWorkoutState extends State<CreateWorkout> {
   final TextEditingController workoutPlanName = TextEditingController();
   final TextEditingController workoutDescriptions = TextEditingController();
   final TextEditingController workoutDaysOfThePlan = TextEditingController();
-  final TextEditingController workoutMinutesitTakestoDo =
-      TextEditingController();
+  final TextEditingController workoutMinutesitTakestoDo = TextEditingController();
   final TextEditingController workoutCalories = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -95,18 +101,17 @@ class _CreateWorkoutState extends State<CreateWorkout> {
         leading: InkWell(
           onTap: () {
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ConfirmationDialog(
-                    question: "Are you sure to Quit?",
-                    onYesPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ExpProgramScreen()));
-                    },
-                  );
-                });
+              context: context,
+              builder: (context) {
+                return ConfirmationDialog(
+                  question: "Are you sure to Quit?",
+                  onYesPressed: () {
+                    Navigator.of(context)..pop()
+                      ..pop()
+                      ..pop();
+                  }
+              );
+            });
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -128,533 +133,162 @@ class _CreateWorkoutState extends State<CreateWorkout> {
           style: Styles.headline20,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(15),
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(customDocId.id),
-                    RegisterDropDown(
-                      hintText: 'Category',
-                      icon: Icons.fitness_center_outlined,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "Upper Body",
-                          child: Text("Upper Body"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Abdominal",
-                          child: Text("Abdominal"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Lower Body",
-                          child: Text("Lower Body"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Full Body",
-                          child: Text("Full Body"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedWorkoutCategory = value;
-                        });
-                      },
-                      selectedValue: selectedWorkoutCategory,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(customDocId.id),
+                  RegisterDropDown(
+                    hintText: 'Category',
+                    icon: Icons.fitness_center_outlined,
+                    items: expertProvider.workoutCategoryList.map((data) {
+                      return DropdownMenuItem<String>(
+                        value: data,
+                        child: Text(data),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      expertProvider.updateWorkoutCategory(value!);
+                    },
+                    selectedValue: expertProvider.workoutCategory,
+                  ),
+                  const Gap(10),
+                  RegisterDropDown(
+                    hintText: 'Purpose',
+                    icon: Icons.fitness_center_outlined,
+                    items: expertProvider.workoutPurposeList.map((data) {
+                      return DropdownMenuItem<String>(
+                        value: data,
+                        child: Text(data),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      expertProvider.updateWorkoutPurpose(value!);
+                    },
+                    selectedValue: expertProvider.workoutPurpose,
+                  ),
+                  const Gap(10),
+                  RegisterDropDown(
+                    hintText: 'Difficulty',
+                    icon: Icons.fitness_center_outlined,
+                    items: expertProvider.workoutDifficultyList.map((data) {
+                      return DropdownMenuItem<String>(
+                        value: data,
+                        child: Text(data),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      expertProvider.updateWorkoutDifficulty(value!);
+                    },
+                    selectedValue: expertProvider.workoutDifficulty,
+                  ),
+                  const Gap(10),
+                  TextfieldContainer(
+                    controller: ExpertProvider.planName,
+                    hitText: 'Plan Name',
+                    icon: Icons.fitness_center_outlined,
+                    obscureText: false,
+                  ),
+                  const Gap(10),
+                  SizedBox(
+                    height: 100,
+                    child: TextFieldContainer(
+                      controller: ExpertProvider.description,
+                      hintText: "Description",
                     ),
-                    const Gap(10),
-                    RegisterDropDown(
-                      hintText: 'Purpose',
-                      icon: Icons.fitness_center_outlined,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "Lose Weight",
-                          child: Text("Lose Weight"),
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Text('Workout Picture',
+                        style: Styles.title,
+                      ),
+                      const Gap(10),
+                      SizedBox(
+                        height: 25,
+                        width: 100,
+                        child: MainButton(
+                          title: 'Upload',
+                          textStyle: Styles.title.copyWith(color: Colors.white),
+                          onPressed: () {},
                         ),
-                        DropdownMenuItem<String>(
-                          value: "Gain Muscles",
-                          child: Text("Gain Muscles"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Body Toning",
-                          child: Text("Body Toning"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedWorkoutPurpose = value;
-                        });
-                      },
-                      selectedValue: selectedWorkoutPurpose,
-                    ),
-                    const Gap(10),
-                    RegisterDropDown(
-                      hintText: 'Difficulty',
-                      icon: Icons.fitness_center_outlined,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "Beginner",
-                          child: Text("Beginner"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Intermediate",
-                          child: Text("Intermediate"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Expert",
-                          child: Text("Expert"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedWorkoutDifficulty = value;
-                        });
-                      },
-                      selectedValue: selectedWorkoutDifficulty,
-                    ),
-                    const Gap(10),
-                    TextfieldContainer(
-                      controller: workoutPlanName,
-                      hitText: 'Plan Name',
-                      icon: Icons.fitness_center_outlined,
-                      obscureText: false,
-                      onItemAdded: (newItem) {},
-                    ),
-                    const Gap(10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: SizedBox(
-                          height: 100,
-                          child: TextField(
-                            controller: workoutDescriptions,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Description",
-                            ),
-                            maxLines: 5,
-                          )),
-                    ),
-                    const Gap(10),
-                    Row(
-                      children: [
-                        Text(
-                          'Workout Picture',
-                          style: Styles.title,
-                        ),
-                        const Gap(10),
-                        SizedBox(
-                            height: 25,
-                            width: 100,
-                            child: MainButton(
-                                title: 'Upload',
-                                textStyle:
-                                    Styles.title.copyWith(color: Colors.white),
-                                onPressed: () {}))
-                      ],
-                    ),
-                    const Gap(10),
-                    TextfieldContainer(
-                      controller: workoutDaysOfThePlan,
-                      hitText: 'Days of the Plan',
-                      icon: FluentSystemIcons.ic_fluent_calendar_regular,
-                      obscureText: false,
-                      onItemAdded: (newItem) {},
-                    ),
-                    const Gap(10),
-                    TextfieldContainer(
-                      controller: workoutMinutesitTakestoDo,
-                      hitText: 'Minutes it Takes to Do',
-                      icon: FluentSystemIcons.ic_fluent_timer_regular,
-                      obscureText: false,
-                      onItemAdded: (newItem) {},
-                    ),
-                    const Gap(10),
-                    TextfieldContainer(
-                      controller: workoutCalories,
-                      hitText: 'Calories',
-                      imagePath: "assets/icons/calories.png",
-                      obscureText: false,
-                      onItemAdded: (newItem) {},
-                    ),
-                    const Gap(20),
-                    Text(
-                      "Equipments Needed",
-                      style: Styles.title,
-                    ),
-                    const Gap(5),
-                    // TextfieldContainer(
-                    //   hitText: 'Equipment with Quantity',
-                    //   icon: Icons.fitness_center_outlined,
-                    //   obscureText: false,
-                    //   onItemAdded: (newItem) {
-                    //     allItems.add(newItem);
-                    //   },
-                    // ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allItemsControllers.removeLast();
-                                  });
-                                },
-                                icon: const Icon(Icons.remove)),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text("Items"),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allItemsControllers
-                                        .add(TextEditingController());
-                                  });
-                                },
-                                icon: const Icon(Icons.add))
-                          ],
-                        ),
-                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: allItemsControllers.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: TextfieldContainer(
-                                    controller: allItemsControllers[index],
-                                    hitText: 'Equipment with Quantity',
-                                    icon: Icons.fitness_center_outlined,
-                                    obscureText: false,
-                                    onItemAdded: (newItem) {},
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const Gap(20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Exercises",
-                          style: Styles.title,
-                        ),
-                        Text("Indicate how many sets",
-                            style: Styles.text15normal),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    exerciseinstructions_list.removeLast();
-                                  });
-                                },
-                                icon: const Icon(Icons.remove)),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text("New Exercise"),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    exerciseinstructions_list
-                                        .add(ExcerciseInstructions());
-                                  });
-                                },
-                                icon: const Icon(Icons.add))
-                          ],
-                        ),
-                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
-                        ListView.builder(
-                          controller: ScrollController(),
-                          shrinkWrap: true,
-                          itemCount: exerciseinstructions_list.length,
-                          itemBuilder: (context, index) {
-                            const names = ["Name", "Description", "Countings"];
-                            var controllers = [
-                              TextEditingController(
-                                  text: exerciseinstructions_list[index].name),
-                              TextEditingController(
-                                  text: exerciseinstructions_list[index]
-                                      .descriptions),
-                              TextEditingController(
-                                  text: exerciseinstructions_list[index]
-                                      .countings
-                                      .toString()),
-                            ];
-                            var keytypes = [
-                              TextInputType.name,
-                              TextInputType.text,
-                              TextInputType.number,
-                            ];
-                            var steps = <TextEditingController>[
-                              ...exerciseinstructions_list[index]
-                                  .instructions
-                                  .map((e) => TextEditingController(text: e))
-                            ];
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  TextfieldContainer(
+                    controller: ExpertProvider.daysOfThePlan,
+                    hitText: 'Days of the Plan',
+                    icon: FluentSystemIcons.ic_fluent_calendar_regular,
+                    obscureText: false,
+                  ),
+                  const Gap(10),
+                  TextfieldContainer(
+                    controller: ExpertProvider.minutes,
+                    hitText: 'Minutes it Takes to Do',
+                    icon: FluentSystemIcons.ic_fluent_timer_regular,
+                    obscureText: false,
+                  ),
+                  const Gap(10),
+                  TextfieldContainer(
+                    controller: ExpertProvider.calories,
+                    hitText: 'Calories',
+                    imagePath: "assets/icons/calories.png",
+                    obscureText: false,
+                  ),
+                  const Gap(20),
 
-                            return GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (builder) {
-                                      var SCSVscroller = ScrollController();
-                                      return StatefulBuilder(
-                                          builder: (context, thissetState) {
-                                        return AlertDialog(
-                                          title: const Text("Edit Exercise"),
-                                          content: SizedBox(
-                                            width: double.maxFinite,
-                                            height: double.maxFinite,
-                                            child: SingleChildScrollView(
-                                                controller: SCSVscroller,
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () async {
-                                                        // FilePickerResult? result = await FilePicker.platform.pickFiles();
-                                                        //
-                                                        // if (result != null) {
-                                                        //   File file = File(result.files.single.path!);
-                                                        // } else {
-                                                        //
-                                                        // }
-                                                      },
-                                                      child: Card(
-                                                          child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Container(
-                                                            width: double
-                                                                .maxFinite,
-                                                            child: Text(
-                                                                "Video file picker")),
-                                                      )),
-                                                    ),
-                                                    ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount: names.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        8.0),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(names[
-                                                                    index]),
-                                                                TextField(
-                                                                    controller:
-                                                                        controllers[
-                                                                            index],
-                                                                    keyboardType:
-                                                                        keytypes[
-                                                                            index])
-                                                              ],
-                                                            ),
-                                                          );
-                                                        }),
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              thissetState(() {
-                                                                steps
-                                                                    .removeLast();
-                                                              });
-                                                            },
-                                                            icon: const Icon(
-                                                                Icons.remove)),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  8.0),
-                                                          child: Text("Steps"),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              SCSVscroller.animateTo(
-                                                                  SCSVscroller
-                                                                      .position
-                                                                      .maxScrollExtent,
-                                                                  duration: const Duration(
-                                                                      milliseconds:
-                                                                          500),
-                                                                  curve: Curves
-                                                                      .easeIn);
-                                                              thissetState(() {
-                                                                steps.add(
-                                                                    TextEditingController());
-                                                              });
-                                                            },
-                                                            icon: const Icon(
-                                                                Icons.add)),
-                                                      ],
-                                                    ),
-                                                    ListView.builder(
-                                                        shrinkWrap: true,
-                                                        controller:
-                                                            ScrollController(),
-                                                        itemCount: steps.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        8.0),
-                                                            child: Card(
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                      "step ${index + 1}"),
-                                                                  TextField(
-                                                                    controller:
-                                                                        steps[
-                                                                            index],
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .next,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }),
-                                                  ],
-                                                )),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    exerciseinstructions_list[
-                                                            index] =
-                                                        ExcerciseInstructions()
-                                                            .fill(
-                                                                controllers[0]
-                                                                    .text,
-                                                                "null",
-                                                                int.parse(
-                                                                    controllers[
-                                                                            2]
-                                                                        .text),
-                                                                controllers[1]
-                                                                    .text,
-                                                                steps
-                                                                    .map((e) =>
-                                                                        e.text)
-                                                                    .toList());
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text("OK"))
-                                          ],
-                                        );
-                                      });
-                                    });
-                              },
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "Workout name: ${exerciseinstructions_list[index].name}"),
-                                      Text(
-                                          "Steps: ${exerciseinstructions_list[index].instructions.length}"),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                ],
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+                child: Column(
+                  children: [
+                    MainButton(
+                      title: 'Done',
+                      onPressed: () {
+                        expertProvider.addWorkoutPlan(
+                          id: widget.id,
+                        );
+                        // var equipments = <String>[];
+                        // if (allItemsControllers.isNotEmpty) {
+                        //   for (final item in allItemsControllers) {
+                        //     equipments.add(item.text);
+                        //   }
+                        // }
+                        // FirebaseFirestore.instance
+                        //     .collection('workoutPlans') //collection
+                        //     .doc() //document name
+                        //     .set(WorkoutData(
+                        //         selectedWorkoutCategory,
+                        //         selectedWorkoutPurpose,
+                        //         selectedWorkoutDifficulty,
+                        //         workoutPlanName.text,
+                        //         workoutDescriptions.text,
+                        //         workoutDaysOfThePlan.text,
+                        //         workoutDaysOfThePlan.text,
+                        //         workoutCalories.text,
+                        //         equipments, [
+                        //       ...exerciseinstructions_list.map((e) => e.toMap())
+                        //     ]).toMap());
+
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const ExpPrograms()));
+                      },
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Container(
-            padding:
-                const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
-            child: Column(
-              children: [
-                MainButton(
-                  title: 'Done',
-                  onPressed: () {
-                    var equipments = <String>[];
-                    if (allItemsControllers.isNotEmpty) {
-                      for (final item in allItemsControllers) {
-                        equipments.add(item.text);
-                      }
-                    }
-
-                    FirebaseFirestore.instance
-                        .collection('workoutPlans') //collection
-                        .doc() //document name
-                        .set(WorkoutData(
-                            selectedWorkoutCategory,
-                            selectedWorkoutPurpose,
-                            selectedWorkoutDifficulty,
-                            workoutPlanName.text,
-                            workoutDescriptions.text,
-                            workoutDaysOfThePlan.text,
-                            workoutDaysOfThePlan.text,
-                            workoutCalories.text,
-                            equipments, [
-                          ...exerciseinstructions_list.map((e) => e.toMap())
-                        ]).toMap());
-
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const ExpPrograms()));
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -775,7 +409,6 @@ class TextfieldContainer extends StatefulWidget {
     this.controller,
     this.keyboardType,
     this.imagePath,
-    required Null Function(dynamic newItem) onItemAdded,
   }) : super(key: key);
 
   @override

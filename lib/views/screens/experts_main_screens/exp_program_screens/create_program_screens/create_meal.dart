@@ -110,10 +110,10 @@ class _CreateMealState extends State<CreateMeal> {
                   return ConfirmationDialog(
                     question: "Are you sure to Quit?",
                     onYesPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ExpProgramScreen()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const ExpProgramScreen()));
                     },
                   );
                 });
@@ -208,7 +208,7 @@ class _CreateMealState extends State<CreateMeal> {
                     const Gap(10),
                     TextFieldContainer(
                         controller: workoutPlanName,
-                        hitText: 'Food Plan Name',
+                        hintText: 'Food Plan Name',
                         icon: FluentSystemIcons.ic_fluent_food_regular,
                         obscureText: false),
                     const Gap(10),
@@ -216,7 +216,7 @@ class _CreateMealState extends State<CreateMeal> {
                       height: 100,
                       child: TextFieldContainer(
                           controller: workoutDescriptions,
-                          hitText: "Descriptions",
+                          hintText: "Descriptions",
                           obscureText: false),
                     ),
                     const Gap(10),
@@ -271,25 +271,25 @@ class _CreateMealState extends State<CreateMeal> {
                     const Gap(5),
                     TextFieldContainer(
                         controller: workoutCalories,
-                        hitText: 'Calories',
+                        hintText: 'Calories',
                         imagePath: "assets/icons/calories.png",
                         obscureText: false),
                     const Gap(10),
                     TextFieldContainer(
                         controller: workoutFats,
-                        hitText: 'Fats',
+                        hintText: 'Fats',
                         imagePath: "assets/icons/fat.png",
                         obscureText: false),
                     const Gap(10),
                     TextFieldContainer(
                         controller: workoutSugar,
-                        hitText: 'Sugar',
+                        hintText: 'Sugar',
                         imagePath: "assets/icons/sugar.png",
                         obscureText: false),
                     const Gap(10),
                     TextFieldContainer(
                         controller: workoutprotein,
-                        hitText: 'Protein',
+                        hintText: 'Protein',
                         imagePath: "assets/icons/protein.png",
                         obscureText: false),
                     const Gap(20),
@@ -335,7 +335,7 @@ class _CreateMealState extends State<CreateMeal> {
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: TextFieldContainer(
                                     controller: allItemsControllers[index],
-                                    hitText: 'Equipment with Measurement',
+                                    hintText: 'Equipment with Measurement',
                                     icon: Icons.fitness_center_outlined,
                                     obscureText: false,
                                   ),
@@ -389,7 +389,7 @@ class _CreateMealState extends State<CreateMeal> {
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: TextFieldContainer(
                                     controller: allStepssControllers[index],
-                                    hitText:
+                                    hintText:
                                         'Input the Next Step to the Preparation',
                                     icon: Icons.fitness_center_outlined,
                                     obscureText: false,
@@ -464,13 +464,12 @@ class _CreateMealState extends State<CreateMeal> {
                                     equipments,
                                     steps,
                                     downloadURL,
-                                  ).toMap())
-                                  .then((value) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ExpProgramScreen())));
-                              ;
+                                  ).toMap());
+                                  // .then((value) => Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             const ExpProgramScreen())));
                             },
                           );
                         });

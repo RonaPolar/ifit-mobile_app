@@ -164,32 +164,32 @@ class _EditProfileState extends State<EditProfile> {
                         const Gap(15),
                         TextFieldContainer(
                             controller: _nameController,
-                            hitText: 'name',
+                            hintText: 'name',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
                         TextFieldContainer(
                             controller: _emailController,
-                            hitText: 'email',
+                            hintText: 'email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             obscureText: false),
                         const Gap(15),
                         TextFieldContainer(
                             controller: _phone_numberController,
-                            hitText: 'Number',
+                            hintText: 'Number',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
                         TextFieldContainer(
                             controller: _professionController,
-                            hitText: 'profession',
+                            hintText: 'profession',
                             icon: FluentSystemIcons
                                 .ic_fluent_person_accounts_regular,
                             obscureText: false),
                         const Gap(15),
                         TextFieldContainer(
                             controller: _birth_dateController,
-                            hitText: 'birthdate',
+                            hintText: 'birthdate',
                             icon: FluentSystemIcons.ic_fluent_edit_regular,
                             obscureText: false),
                         const Gap(15),
@@ -200,7 +200,7 @@ class _EditProfileState extends State<EditProfile> {
                         const Gap(15),
                         TextFieldContainer(
                             controller: _genderController,
-                            hitText: 'gender',
+                            hintText: 'gender',
                             icon: FluentSystemIcons.ic_fluent_people_regular,
                             obscureText: false),
                       ],

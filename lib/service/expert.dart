@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExpertProvider extends ChangeNotifier {
@@ -39,5 +41,70 @@ class ExpertProvider extends ChangeNotifier {
   }) {
     expertStream = getExpert(uid);
     notifyListeners();
+  }
+
+  String? workoutCategory;
+
+  List<String> workoutCategoryList = [
+    "Upper Body",
+    "Abdominal",
+    "Lower Body",
+    "Full Body"
+  ];
+
+  void updateWorkoutCategory(String value) {
+    workoutCategory = value;
+    notifyListeners();
+  }
+
+  String? workoutPurpose;
+
+  List<String> workoutPurposeList = [
+    "Lose Weight",
+    "Gain Muscles",
+    "Body Toning",
+  ];
+
+  void updateWorkoutPurpose(String value) {
+    workoutPurpose = value;
+    notifyListeners();
+  }
+
+  String? workoutDifficulty;
+
+  List<String> workoutDifficultyList = [
+    "Beginner",
+    "Intermediate",
+    "Expert",
+  ];
+
+  void updateWorkoutDifficulty(String value) {
+    workoutDifficulty = value;
+    notifyListeners();
+  }
+
+  static TextEditingController planName = TextEditingController();
+  static TextEditingController description = TextEditingController();
+  static TextEditingController daysOfThePlan = TextEditingController();
+  static TextEditingController minutes = TextEditingController();
+  static TextEditingController calories = TextEditingController();
+  
+  Future<void> addWorkoutPlan({
+    required String id,
+  }) async {
+    final WorkoutPlan workoutPlan = WorkoutPlan(
+      calories: calories.text,
+      category: workoutCategory ?? "",
+      daysOfThePlan: daysOfThePlan.text,
+      description: description.text,
+      difficulty: workoutDifficulty ?? "",
+      minutes: minutes.text,
+      planName: planName.text,
+      purpose: workoutPurpose ?? "",
+    );
+
+    await _db.collection(tWorkoutPlanPath).doc(id).set(workoutPlan.toJson())
+      .then((value) => debugPrint("Workout plan added successfully!"))
+      .onError((error, stackTrace) => "Failed: $error");
   }
 }

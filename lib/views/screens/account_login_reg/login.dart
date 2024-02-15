@@ -36,7 +36,9 @@ class _LogInState extends State<LogIn> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => isExpert ? const ExpBottomBar() : const HomeNavBar(),
+            builder: (context) => isExpert
+              ? const ExpBottomBar()
+              : const HomeNavBar(),
           ),
         );
       });
@@ -97,14 +99,14 @@ class _LogInState extends State<LogIn> {
                           ),
                           const Gap(30),
                           TextFieldContainer(
-                            hitText: 'Email',
+                            hintText: 'Email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             controller: Auth.email,
                           ),
                           const Gap(15),
                           TextFieldContainer(
                             //password eye icon
-                            hitText: 'Password',
+                            hintText: 'Password',
                             controller: Auth.password,
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
                             obscureText: !_isPasswordVisible,

@@ -74,3 +74,69 @@ class Workout {
     "days": days,
   };
 }
+
+class WorkoutPlan {
+  final String calories;
+  final String category;
+  final String daysOfThePlan;
+  final String description;
+  final String difficulty;
+  final String minutes;
+  final String planName;
+  final String purpose;
+
+  WorkoutPlan({
+    required this.calories,
+    required this.category,
+    required this.daysOfThePlan,
+    required this.description,
+    required this.difficulty,
+    required this.minutes,
+    required this.planName,
+    required this.purpose,
+  });
+
+  WorkoutPlan copyWith({
+    String? calories,
+    String? category,
+    String? daysOfThePlan,
+    String? description,
+    String? difficulty,
+    String? minutes,
+    String? planName,
+    String? purpose,
+  }) =>
+      WorkoutPlan(
+        calories: calories ?? this.calories,
+        category: category ?? this.category,
+        daysOfThePlan: daysOfThePlan ?? this.daysOfThePlan,
+        description: description ?? this.description,
+        difficulty: difficulty ?? this.difficulty,
+        minutes: minutes ?? this.minutes,
+        planName: planName ?? this.planName,
+        purpose: purpose ?? this.purpose,
+      );
+
+  factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
+    calories: json["calories"],
+    category: json["category"],
+    daysOfThePlan: json["daysOfThePlan"],
+    description: json["description"],
+    difficulty: json["difficulty"],
+    minutes: json["minutes"],
+    planName: json["planName"],
+    purpose: json["purpose"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "calories": calories,
+    "category": category,
+    "daysOfThePlan": daysOfThePlan,
+    "description": description,
+    "difficulty": difficulty,
+    "minutes": minutes,
+    "planName": planName,
+    "purpose": purpose,
+  };
+}
+

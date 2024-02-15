@@ -3,12 +3,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/exp_discover.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_profile.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/wrappers/expert.dart';
-
 
 class ExpBottomBar extends StatefulWidget {
   const ExpBottomBar({super.key,});

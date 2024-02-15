@@ -94,7 +94,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
 
                           const Gap(10),
                           TextFieldContainer(
-                              hitText: 'Number',
+                              hintText: 'Number',
                               icon: FluentSystemIcons
                                   .ic_fluent_book_number_regular,
                               obscureText: false,
@@ -139,7 +139,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                 child: TextFieldContainer(
                                     keyboardType: TextInputType.number,
                                     controller: weightController,
-                                    hitText: 'Your Weight',
+                                    hintText: 'Your Weight',
                                     icon: FluentSystemIcons
                                         .ic_fluent_data_funnel_regular,
                                     obscureText: false),
@@ -167,7 +167,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                                 child: TextFieldContainer(
                                     keyboardType: TextInputType.number,
                                     controller: heightController,
-                                    hitText: 'Your Height',
+                                    hintText: 'Your Height',
                                     icon: FluentSystemIcons
                                         .ic_fluent_arrow_sort_regular,
                                     obscureText: false),

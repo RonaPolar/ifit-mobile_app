@@ -62,3 +62,69 @@ class Meal {
     "categories": categories,
   };
 }
+
+class WorkoutMeal {
+  final String calories;
+  final String category;
+  final String description;
+  final String fats;
+  final String planName;
+  final String purpose;
+  final String sugar;
+  final String protein;
+
+  WorkoutMeal({
+    required this.calories,
+    required this.category,
+    required this.description,
+    required this.fats,
+    required this.planName,
+    required this.purpose,
+    required this.sugar,
+    required this.protein,
+  });
+
+  WorkoutMeal copyWith({
+    String? calories,
+    String? category,
+    String? description,
+    String? fats,
+    String? planName,
+    String? purpose,
+    String? sugar,
+    String? protein,
+  }) =>
+      WorkoutMeal(
+        calories: calories ?? this.calories,
+        category: category ?? this.category,
+        description: description ?? this.description,
+        fats: fats ?? this.fats,
+        planName: planName ?? this.planName,
+        purpose: purpose ?? this.purpose,
+        sugar: sugar ?? this.sugar,
+        protein: protein ?? this.protein,
+      );
+
+  factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
+    calories: json["calories"],
+    category: json["category"],
+    description: json["description"],
+    fats: json["fats"],
+    planName: json["planName"],
+    purpose: json["purpose"],
+    sugar: json["sugar"],
+    protein: json["protein"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "calories": calories,
+    "category": category,
+    "description": description,
+    "fats": fats,
+    "planName": planName,
+    "purpose": purpose,
+    "sugar": sugar,
+    "protein": protein,
+  };
+}
+

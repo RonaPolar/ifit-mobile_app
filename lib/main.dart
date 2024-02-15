@@ -20,6 +20,7 @@ import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/crea
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
 import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/screens/wrappers/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ifit/views/screens/welcome/onboarding_screen.dart';

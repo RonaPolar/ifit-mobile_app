@@ -5,17 +5,21 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/service/functions/dialog.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 
 class ExpProgramScreen extends StatefulWidget {
-  const ExpProgramScreen({super.key});
+  const ExpProgramScreen({
+    required this.expertModel,
+    super.key,
+  });
+
+  final ExpertModel expertModel;
 
   @override
   State<ExpProgramScreen> createState() => _ExpProgramScreenState();
@@ -104,6 +108,8 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ExpertModel expert = widget.expertModel;
+    final DialogService dialog = DialogService();
     List<dynamic> combinedList = [...latestWorkoutArr, ...latestMealArr];
     combinedList.shuffle(Random());
   
@@ -287,51 +293,14 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
           ),
         ],
       ),
-      
-      
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Styles.primaryColor,
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: 170, // Adjust the height as needed
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Styles.secondColor),
-                      ),
-                      onPressed: () {
-                        // Handle the first choice
-                        Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const CreateWorkout()));
-                      },
-                      child: Text(
-                        "Create a Workout Plan",
-                        style: Styles.headline20,),
-                    ),
-                    const Gap(10),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Styles.secondColor),
-                      ),
-                      onPressed: () {
-                        // Handle the first choice
-                        Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const CreateMeal()));
-                      },
-                      child: Text(
-                        "Create a Meal Plan",
-                        style: Styles.headline20,),
-                    ),
-                  ],
-                ),
-              );
-            },
+          dialog.showCreateProgram(context,
+            createWorkout: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateWorkout(id: expert.uid))),
+            createMeal: () {},
           );
         },
         child: const Icon(Icons.add, color: Colors.white, size: 28),

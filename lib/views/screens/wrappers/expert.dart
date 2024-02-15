@@ -40,7 +40,7 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
     return [
       ExpHomeScreen(expertModel: expertModel),
       ExpDiscoverScreen(),
-      ExpProgramScreen(),
+      ExpProgramScreen(expertModel: expertModel),
       ExpProfileScreen(),
     ];
   }

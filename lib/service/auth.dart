@@ -84,6 +84,8 @@ class Auth extends ChangeNotifier {
     });
   }
 
+  Stream<User?> get userStream => FirebaseAuth.instance.authStateChanges();
+
   /// EXPERTS -------------------->
   XFile? professionId;
   XFile? proofOfStudy;

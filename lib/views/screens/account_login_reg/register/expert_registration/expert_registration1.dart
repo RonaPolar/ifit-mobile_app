@@ -99,7 +99,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
           const Gap(15),
           TextFieldContainer(
             controller: Auth.birthday,
-            hitText: 'Date of Birth',
+            hintText: 'Date of Birth',
             icon: FluentSystemIcons.ic_fluent_calendar_regular,
             validator: (val) {
               if (val == null || val.isEmpty) {
@@ -111,7 +111,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
           const Gap(15),
           TextFieldContainer(
             controller: Auth.phone,
-            hitText: 'Number',
+            hintText: 'Number',
             icon: FluentSystemIcons.ic_fluent_book_number_regular,
             validator: (val) {
               if (val == null || val.isEmpty) {
@@ -123,7 +123,7 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
           const Gap(15),
           TextFieldContainer(
             controller: Auth.profession,
-            hitText: 'Profession',
+            hintText: 'Profession',
             icon: FluentSystemIcons.ic_fluent_person_accounts_regular,
             validator: (val) {
               if (val == null || val.isEmpty) {

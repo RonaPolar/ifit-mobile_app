@@ -148,21 +148,21 @@ class _RegisterState extends State<Register> {
                           const Gap(30),
                           // this is where the modification of it --> /common/widgets/textfield_container.dart';
                           TextFieldContainer(
-                            hitText: 'First Name',
+                            hintText: 'First Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
                             controller: Auth.firstName,
                           ),
                           const Gap(15),
                           TextFieldContainer(
-                            hitText: 'Last Name',
+                            hintText: 'Last Name',
                             icon: FluentSystemIcons.ic_fluent_person_regular,
                             obscureText: false,
                             controller: Auth.lastName,
                           ),
                           const Gap(15),
                           TextFieldContainer(
-                            hitText: 'Email',
+                            hintText: 'Email',
                             icon: FluentSystemIcons.ic_fluent_mail_regular,
                             obscureText: false,
                             controller: Auth.email,
@@ -170,7 +170,7 @@ class _RegisterState extends State<Register> {
                           const Gap(15),
                           TextFieldContainer(
                             //password eye icon
-                            hitText: 'Password',
+                            hintText: 'Password',
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
                             controller: Auth.password,
                             obscureText: !_isPasswordVisible,

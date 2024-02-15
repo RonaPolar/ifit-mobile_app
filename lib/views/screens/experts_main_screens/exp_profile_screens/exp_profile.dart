@@ -184,8 +184,8 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                                 FluentSystemIcons.ic_fluent_activity_regular,
                             title: 'Program Progress',
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ExpProgramScreen()));
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (context) => const ExpProgramScreen()));
                             },
                           ),
                         ],

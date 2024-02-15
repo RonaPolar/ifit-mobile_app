@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:ifit/common/utils/app_styles.dart';
 
 class DialogService {
   void showUploadImage(BuildContext context, {
@@ -32,6 +34,55 @@ class DialogService {
             ),
           );
         },
+    );
+  }
+
+  void showCreateProgram(BuildContext context, {
+    required Function() createWorkout,
+    required Function() createMeal,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Gap(5.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Styles.secondColor),
+                ),
+                onPressed: createWorkout,
+                  // Handle the first choice
+                  // Navigator.of(context)
+                  //     .push(MaterialPageRoute(builder: (context) => const CreateWorkout()));
+                child: Text(
+                  "Create a Workout Plan",
+                  style: Styles.headline20,),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Styles.secondColor),
+                ),
+                onPressed: createMeal,
+                  // Handle the first choice
+                  // Navigator.of(context)
+                  //     .push(MaterialPageRoute(builder: (context) => const CreateMeal()));
+                child: Text(
+                  "Create a Meal Plan",
+                  style: Styles.headline20,),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

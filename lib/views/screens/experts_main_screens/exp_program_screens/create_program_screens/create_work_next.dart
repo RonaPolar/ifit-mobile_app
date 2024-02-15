@@ -169,11 +169,11 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                           return ConfirmationDialog(
                             question: "Are you Done?",
                             onYesPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CreateWorkout()));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const CreateWorkout()));
                             },
                           );
                         });
