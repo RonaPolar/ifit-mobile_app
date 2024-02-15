@@ -92,7 +92,6 @@ class _CreateWorkoutState extends State<CreateWorkout> {
     final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -187,11 +186,10 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                     selectedValue: expertProvider.workoutDifficulty,
                   ),
                   const Gap(10),
-                  TextfieldContainer(
+                  TextFieldContainer(
                     controller: ExpertProvider.planName,
-                    hitText: 'Plan Name',
+                    hintText: 'Plan Name',
                     icon: Icons.fitness_center_outlined,
-                    obscureText: false,
                   ),
                   const Gap(10),
                   SizedBox(
@@ -199,6 +197,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                     child: TextFieldContainer(
                       controller: ExpertProvider.description,
                       hintText: "Description",
+                      icon: Icons.description,
                     ),
                   ),
                   const Gap(10),
@@ -220,23 +219,23 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                     ],
                   ),
                   const Gap(10),
-                  TextfieldContainer(
+                  TextFieldContainer(
                     controller: ExpertProvider.daysOfThePlan,
-                    hitText: 'Days of the Plan',
+                    hintText: 'Days of the Plan',
                     icon: FluentSystemIcons.ic_fluent_calendar_regular,
                     obscureText: false,
                   ),
                   const Gap(10),
-                  TextfieldContainer(
+                  TextFieldContainer(
                     controller: ExpertProvider.minutes,
-                    hitText: 'Minutes it Takes to Do',
+                    hintText: 'Minutes it Takes to Do',
                     icon: FluentSystemIcons.ic_fluent_timer_regular,
                     obscureText: false,
                   ),
                   const Gap(10),
-                  TextfieldContainer(
+                  TextFieldContainer(
                     controller: ExpertProvider.calories,
-                    hitText: 'Calories',
+                    hintText: 'Calories',
                     imagePath: "assets/icons/calories.png",
                     obscureText: false,
                   ),
@@ -244,17 +243,344 @@ class _CreateWorkoutState extends State<CreateWorkout> {
 
                 ],
               ),
+              Column(
+                children: [
+                  Text(
+                    "Equipments Needed",
+                    style: Styles.title,
+                  ),
+                  const Gap(5),
+                  TextFieldContainer(
+                    hintText: 'Equipment with Quantity',
+                    icon: Icons.fitness_center_outlined,
+                    obscureText: false,
+
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  allItemsControllers.removeLast();
+                                });
+                              },
+                              icon: const Icon(Icons.remove)),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Items"),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  allItemsControllers
+                                      .add(TextEditingController());
+                                });
+                              },
+                              icon: const Icon(Icons.add))
+                        ],
+                      ),
+                      // Use ListView.builder to dynamically generate TextfieldContainer widgets
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: allItemsControllers.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding:
+                                const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TextFieldContainer(
+                                  controller: allItemsControllers[index],
+                                  hintText: 'Equipment with Quantity',
+                                  icon: Icons.fitness_center_outlined,
+                                  obscureText: false,
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const Gap(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Exercises",
+                        style: Styles.title,
+                      ),
+                      Text("Indicate how many sets",
+                          style: Styles.text15normal),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  exerciseinstructions_list.removeLast();
+                                });
+                              },
+                              icon: const Icon(Icons.remove)),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("New Exercise"),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  exerciseinstructions_list
+                                      .add(ExcerciseInstructions());
+                                });
+                              },
+                              icon: const Icon(Icons.add))
+                        ],
+                      ),
+                      // Use ListView.builder to dynamically generate TextfieldContainer widgets
+                      ListView.builder(
+                        controller: ScrollController(),
+                        shrinkWrap: true,
+                        itemCount: exerciseinstructions_list.length,
+                        itemBuilder: (context, index) {
+                          const names = ["Name", "Description", "Countings"];
+                          var controllers = [
+                            TextEditingController(
+                                text: exerciseinstructions_list[index].name),
+                            TextEditingController(
+                                text: exerciseinstructions_list[index].descriptions),
+                            TextEditingController(
+                                text: exerciseinstructions_list[index]
+                                    .countings
+                                    .toString()),
+                          ];
+                          var keytypes = [
+                            TextInputType.name,
+                            TextInputType.text,
+                            TextInputType.number,
+                          ];
+                          var steps = <TextEditingController>[
+                            ...exerciseinstructions_list[index]
+                                .instructions
+                                .map((e) => TextEditingController(text: e))
+                          ];
+
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (builder) {
+                                    var SCSVscroller = ScrollController();
+                                    return StatefulBuilder(
+                                        builder: (context, thissetState) {
+                                          return AlertDialog(
+                                            title: const Text("Edit Exercise"),
+                                            content: SizedBox(
+                                              width: double.maxFinite,
+                                              height: double.maxFinite,
+                                              child: SingleChildScrollView(
+                                                  controller: SCSVscroller,
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                    MainAxisSize.max,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          // FilePickerResult? result = await FilePicker.platform.pickFiles();
+                                                          //
+                                                          // if (result != null) {
+                                                          //   File file = File(result.files.single.path!);
+                                                          // } else {
+                                                          //
+                                                          // }
+                                                        },
+                                                        child: Card(
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                              child: Container(
+                                                                  width: double
+                                                                      .maxFinite,
+                                                                  child: Text(
+                                                                      "Video file picker")),
+                                                            )),
+                                                      ),
+                                                      ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: names.length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                  8.0),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                                children: [
+                                                                  Text(names[
+                                                                  index]),
+                                                                  TextField(
+                                                                      controller:
+                                                                      controllers[
+                                                                      index],
+                                                                      keyboardType:
+                                                                      keytypes[
+                                                                      index])
+                                                                ],
+                                                              ),
+                                                            );
+                                                          }),
+                                                      Row(
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
+                                                        children: [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                thissetState(() {
+                                                                  steps
+                                                                      .removeLast();
+                                                                });
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons.remove)),
+                                                          const Padding(
+                                                            padding:
+                                                            EdgeInsets.all(
+                                                                8.0),
+                                                            child: Text("Steps"),
+                                                          ),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                SCSVscroller.animateTo(
+                                                                    SCSVscroller
+                                                                        .position
+                                                                        .maxScrollExtent,
+                                                                    duration: const Duration(
+                                                                        milliseconds:
+                                                                        500),
+                                                                    curve: Curves
+                                                                        .easeIn);
+                                                                thissetState(() {
+                                                                  steps.add(
+                                                                      TextEditingController());
+                                                                });
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons.add)),
+                                                        ],
+                                                      ),
+                                                      ListView.builder(
+                                                          shrinkWrap: true,
+                                                          controller:
+                                                          ScrollController(),
+                                                          itemCount: steps.length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                  8.0),
+                                                              child: Card(
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                                  children: [
+                                                                    Text(
+                                                                        "step ${index + 1}"),
+                                                                    TextField(
+                                                                      controller:
+                                                                      steps[
+                                                                      index],
+                                                                      textInputAction:
+                                                                      TextInputAction
+                                                                          .next,
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                    ],
+                                                  )),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      exerciseinstructions_list[
+                                                      index] =
+                                                          ExcerciseInstructions()
+                                                              .fill(
+                                                              controllers[0]
+                                                                  .text,
+                                                              "null",
+                                                              int.parse(
+                                                                  controllers[
+                                                                  2]
+                                                                      .text),
+                                                              controllers[1]
+                                                                  .text,
+                                                              steps
+                                                                  .map((e) =>
+                                                              e.text)
+                                                                  .toList());
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("OK"))
+                                            ],
+                                          );
+                                        });
+                                  });
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "Workout name: ${exerciseinstructions_list[index].name}"),
+                                    Text(
+                                        "Steps: ${exerciseinstructions_list[index].instructions.length}"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               Container(
-                padding:
-                    const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Done',
-                      onPressed: () {
-                        expertProvider.addWorkoutPlan(
+                      onPressed: () async {
+                        await expertProvider.addWorkoutPlan(
                           id: widget.id,
-                        );
+                        ).then((value) {
+                          Navigator.of(context)..pop()..pop();
+
+                        });
                         // var equipments = <String>[];
                         // if (allItemsControllers.isNotEmpty) {
                         //   for (final item in allItemsControllers) {
@@ -389,67 +715,7 @@ class BigTextField extends StatelessWidget {
   }
 }
 
-class TextfieldContainer extends StatefulWidget {
-  final TextEditingController? controller;
-  final TextInputType? keyboardType;
-  final String hitText;
-  final IconData? icon;
-  final String? imagePath;
-  final Widget? rightIcon;
-  final bool obscureText;
-  final EdgeInsets? margin;
 
-  const TextfieldContainer({
-    Key? key,
-    required this.hitText,
-    this.icon,
-    this.rightIcon,
-    required this.obscureText,
-    this.margin,
-    this.controller,
-    this.keyboardType,
-    this.imagePath,
-  }) : super(key: key);
-
-  @override
-  State<TextfieldContainer> createState() => _TextfieldContainerState();
-}
-
-class _TextfieldContainerState extends State<TextfieldContainer> {
-  @override
-  Widget build(BuildContext context) {
-    Widget? prefixIcon;
-    if (widget.icon != null) {
-      prefixIcon = Icon(widget.icon);
-    } else if (widget.imagePath != null) {
-      prefixIcon =
-          Image.asset(widget.imagePath!, scale: 10, fit: BoxFit.scaleDown);
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Styles.boxtextField,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: TextField(
-        controller: widget.controller,
-        keyboardType: widget.keyboardType,
-        obscureText: widget.obscureText,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(top: 15),
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          prefixIcon: prefixIcon,
-          suffixIcon: widget.rightIcon,
-          hintText: widget.hitText,
-          hintStyle: TextStyle(
-            color: Styles.fadeTextColor,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class DisplayTextContainer extends StatefulWidget {
   final String hitText;

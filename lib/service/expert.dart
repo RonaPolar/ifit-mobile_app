@@ -52,6 +52,21 @@ class ExpertProvider extends ChangeNotifier {
     "Full Body"
   ];
 
+  List<Map> data = [
+    {
+      "category": "upper body",
+      "subcategory":{
+        "list": [
+          {
+            "data1": "arm",
+            "data2": "chest"
+          }
+        ]
+      }
+
+    }
+  ];
+
   void updateWorkoutCategory(String value) {
     workoutCategory = value;
     notifyListeners();
@@ -107,4 +122,14 @@ class ExpertProvider extends ChangeNotifier {
       .then((value) => debugPrint("Workout plan added successfully!"))
       .onError((error, stackTrace) => "Failed: $error");
   }
+
+  String? foodCategory;
+
+  List<String> foodCategoryList = [
+    "Breakfast",
+    "Lunch",
+    "Dinner",
+    "Snacks",
+    "Drinks",
+  ];
 }

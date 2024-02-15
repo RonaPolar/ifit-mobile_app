@@ -6,16 +6,20 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/meal.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateMeal extends StatefulWidget {
-  const CreateMeal({super.key});
+  const CreateMeal({
+    required this.id,
+    super.key,
+  });
+
+  final String id;
 
   @override
   State<CreateMeal> createState() => _CreateMealState();
@@ -35,16 +39,6 @@ class _CreateMealState extends State<CreateMeal> {
   final TextEditingController workoutSugar = TextEditingController();
   final TextEditingController workoutprotein = TextEditingController();
   final TextEditingController workoutCalories = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   XFile? foodpicture;
   String downloadURL = '';
@@ -91,7 +85,8 @@ class _CreateMealState extends State<CreateMeal> {
               ),
             ),
           );
-        });
+        },
+    );
   }
 
   @override
@@ -105,18 +100,18 @@ class _CreateMealState extends State<CreateMeal> {
         leading: InkWell(
           onTap: () {
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ConfirmationDialog(
-                    question: "Are you sure to Quit?",
-                    onYesPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const ExpProgramScreen()));
-                    },
-                  );
-                });
+              context: context,
+              builder: (BuildContext context) {
+                return ConfirmationDialog(
+                  question: "Are you sure to Quit?",
+                  onYesPressed: () {
+                    Navigator.of(context)..pop()
+                      ..pop()
+                      ..pop();
+                  },
+                );
+              },
+            );
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -124,8 +119,9 @@ class _CreateMealState extends State<CreateMeal> {
             width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10)),
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: const Icon(
               Icons.close,
               size: 20,
@@ -133,8 +129,7 @@ class _CreateMealState extends State<CreateMeal> {
             ),
           ),
         ),
-        title: Text(
-          'Create Meal Plan',
+        title: Text('Create Meal Plan',
           style: Styles.headline20,
         ),
       ),

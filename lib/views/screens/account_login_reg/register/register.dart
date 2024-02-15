@@ -31,11 +31,6 @@ class _RegisterState extends State<Register> {
   String? destinationScreen = "ClientRegistration";
   String validatorError = "";
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-
   final ApiConnect apiConnect = Get.find();
 
   // Function to show the Privacy Policy dialog
@@ -65,11 +60,12 @@ class _RegisterState extends State<Register> {
     // returns true if all fields are filled and valid
     Future<bool> validateAndSendEmail() async {
       // check if all fields are filled
-      if (emailController.text == "" ||
-          passwordController.text == "" ||
-          firstNameController.text == "" ||
-          lastNameController.text == "" ||
-          selectedValue == null) {
+      if (Auth.email.text == "" ||
+          Auth.password.text == "" ||
+          Auth.firstName.text == "" ||
+          Auth.lastName.text == "" ||
+          selectedValue == null
+      ) {
         debugPrint("on register user");
         setState(() {
           validatorError = "Please fill all the fields";
@@ -79,7 +75,7 @@ class _RegisterState extends State<Register> {
         return false;
 
         // check if email is valid
-      } else if (isValidEmail(emailController.text) == false) {
+      } else if (isValidEmail(Auth.email.text) == false) {
         debugPrint("Invalid email");
         setState(() {
           validatorError = "Please enter a valid email";
@@ -100,7 +96,7 @@ class _RegisterState extends State<Register> {
       } else {
         print("Sending email to user");
         var userEmail = {
-          'email': emailController.text,
+          'email': Auth.email.text,
         };
 
         var res = await apiConnect.sendEmailToUser(userEmail);
@@ -112,197 +108,181 @@ class _RegisterState extends State<Register> {
           return false;
         }
 
-        box.write('Remail', emailController.text);
-        box.write('Rpassword', passwordController.text);
-        box.write('Rfirst_name', firstNameController.text);
-        box.write('Rlast_name', lastNameController.text);
+        box.write('Remail', Auth.email.text);
+        box.write('Rpassword', Auth.password.text);
+        box.write('Rfirst_name', Auth.firstName.text);
+        box.write('Rlast_name', Auth.lastName.text);
 
         return true;
       }
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                   children: [
-                    Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 20),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Hey there,',
-                            style: Styles.text18,
-                          ),
-                          Text(
-                            'Create an Account',
-                            style: Styles.headline25,
-                          ),
-                          const Gap(30),
-                          // this is where the modification of it --> /common/widgets/textfield_container.dart';
-                          TextFieldContainer(
-                            hintText: 'First Name',
-                            icon: FluentSystemIcons.ic_fluent_person_regular,
-                            obscureText: false,
-                            controller: Auth.firstName,
-                          ),
-                          const Gap(15),
-                          TextFieldContainer(
-                            hintText: 'Last Name',
-                            icon: FluentSystemIcons.ic_fluent_person_regular,
-                            obscureText: false,
-                            controller: Auth.lastName,
-                          ),
-                          const Gap(15),
-                          TextFieldContainer(
-                            hintText: 'Email',
-                            icon: FluentSystemIcons.ic_fluent_mail_regular,
-                            obscureText: false,
-                            controller: Auth.email,
-                          ),
-                          const Gap(15),
-                          TextFieldContainer(
-                            //password eye icon
-                            hintText: 'Password',
-                            icon: FluentSystemIcons.ic_fluent_lock_regular,
-                            controller: Auth.password,
-                            obscureText: !_isPasswordVisible,
-                            rightIcon: IconButton(
-                              icon: _isPasswordVisible
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                          const Gap(15),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Text.rich(
-                              TextSpan(
-                                text: 'Click here to learn about ',
-                                children: [
-                                  TextSpan(
-                                    text: 'Type of User',
-                                    style: TextStyle(
-                                      color: Styles.textColor,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        _showTypesOfUserDialog(); // Show Privacy Policy dialog
-                                      },
-                                  ),
-                                ],
-                              ),
-                              style: TextStyle(color: Styles.fadeTextColor),
-                            ),
-                          ),
-                          const Gap(5),
-                          RegisterDropDown(
-                            hintText: 'Type of User',
-                            icon: FluentSystemIcons.ic_fluent_people_regular,
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: "Client",
-                                child: Text("Client"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Expert",
-                                child: Text("Expert"),
-                              )
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedValue = value;
-                                box.write('Rtype', value);
-                                if (value == "Client") {
-                                  destinationScreen = "ClientRegistration";
-                                } else if (value == "Expert") {
-                                  destinationScreen = "ExpertRegistration";
-                                }
-                              });
-                            },
-                            selectedValue: selectedValue,
-                          ),
-                          const Gap(5),
-                          (validatorError == ""
-                              ? const SizedBox()
-                              : Align(
-                                  //make a condition that make if any of it wasnt filled it will display "Enter _____"
-                                  alignment: Alignment.bottomLeft,
-                                  child: Text(
-                                    validatorError,
-                                    style: Styles.text15normal.copyWith(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                )),
-                          const Gap(10),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isCheck = !_isCheck;
-                                  });
-                                },
-                                icon: _isCheck
-                                    ? const Icon(FluentSystemIcons
-                                        .ic_fluent_checkbox_checked_regular)
-                                    : const Icon(FluentSystemIcons
-                                        .ic_fluent_checkbox_unchecked_regular),
-                                color: Styles.fadeTextColor,
-                              ),
-                              Expanded(
-                                child: Text.rich(
-                                  TextSpan(
-                                    text: 'By continuing you accept our ',
-                                    children: [
-                                      TextSpan(
-                                        text: 'Privacy Policy',
-                                        style: TextStyle(
-                                          color: Styles.textColor,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            _showPrivacyPolicyDialog(); // Show Privacy Policy dialog
-                                          },
-                                      ),
-                                      const TextSpan(text: ' and '),
-                                      TextSpan(
-                                        text: 'Terms of Use',
-                                        style: TextStyle(
-                                          color: Styles.textColor,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            _showTermsOfUseDialog(); // Show Terms of Use dialog
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                  style: TextStyle(color: Styles.fadeTextColor),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(10),
-                        ],
+                    Text('Hey there,',
+                      style: Styles.text18,
+                    ),
+                    Text('Create an Account',
+                      style: Styles.headline25,
+                    ),
+                    const Gap(30),
+                    TextFieldContainer(
+                      hintText: 'First Name',
+                      icon: FluentSystemIcons.ic_fluent_person_regular,
+                      controller: Auth.firstName,
+                    ),
+                    const Gap(15),
+                    TextFieldContainer(
+                      hintText: 'Last Name',
+                      icon: FluentSystemIcons.ic_fluent_person_regular,
+                      controller: Auth.lastName,
+                    ),
+                    const Gap(15),
+                    TextFieldContainer(
+                      hintText: 'Email',
+                      icon: FluentSystemIcons.ic_fluent_mail_regular,
+                      obscureText: false,
+                      controller: Auth.email,
+                    ),
+                    const Gap(15),
+                    TextFieldContainer(
+                      //password eye icon
+                      hintText: 'Password',
+                      icon: FluentSystemIcons.ic_fluent_lock_regular,
+                      controller: Auth.password,
+                      obscureText: !_isPasswordVisible,
+                      rightIcon: IconButton(
+                        icon: _isPasswordVisible
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
                       ),
                     ),
+                    const Gap(15),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Click here to learn about ',
+                          children: [
+                            TextSpan(
+                              text: 'Type of User',
+                              style: TextStyle(
+                                color: Styles.textColor,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  _showTypesOfUserDialog(); // Show Privacy Policy dialog
+                                },
+                            ),
+                          ],
+                        ),
+                        style: TextStyle(color: Styles.fadeTextColor),
+                      ),
+                    ),
+                    const Gap(5),
+                    RegisterDropDown(
+                      hintText: 'Type of User',
+                      icon: FluentSystemIcons.ic_fluent_people_regular,
+                      items: auth.userTypeList.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: data,
+                          child: Text(data),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        auth.updateRegisterUserType(value!);
+                        // setState(() {
+                        //   selectedValue = value;
+                        //   box.write('Rtype', value);
+                        //   if (value == "Client") {
+                        //     destinationScreen = "ClientRegistration";
+                        //   } else if (value == "Expert") {
+                        //     destinationScreen = "ExpertRegistration";
+                        //   }
+                        // });
+                      },
+                      selectedValue: auth.registerUserType,
+                    ),
+                    const Gap(5),
+                    (validatorError == ""
+                        ? const SizedBox()
+                        : Align(
+                            //make a condition that make if any of it wasnt filled it will display "Enter _____"
+                            alignment: Alignment.bottomLeft,
+                            child: Text(
+                              validatorError,
+                              style: Styles.text15normal.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                          )),
+                    const Gap(10),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isCheck = !_isCheck;
+                            });
+                          },
+                          icon: _isCheck
+                              ? const Icon(FluentSystemIcons
+                                  .ic_fluent_checkbox_checked_regular)
+                              : const Icon(FluentSystemIcons
+                                  .ic_fluent_checkbox_unchecked_regular),
+                          color: Styles.fadeTextColor,
+                        ),
+                        Expanded(
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'By continuing you accept our ',
+                              children: [
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: TextStyle(
+                                    color: Styles.textColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _showPrivacyPolicyDialog(); // Show Privacy Policy dialog
+                                    },
+                                ),
+                                const TextSpan(text: ' and '),
+                                TextSpan(
+                                  text: 'Terms of Use',
+                                  style: TextStyle(
+                                    color: Styles.textColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _showTermsOfUseDialog(); // Show Terms of Use dialog
+                                    },
+                                ),
+                              ],
+                            ),
+                            style: TextStyle(color: Styles.fadeTextColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Gap(10),
                   ],
                 ),
               ),
@@ -314,7 +294,7 @@ class _RegisterState extends State<Register> {
                     MainButton(
                       title: 'Register',
                       onPressed: () async {
-                        print(destinationScreen);
+
                         // if (await validateAndSendEmail()) {
 
                           // ignore: use_build_context_synchronously
@@ -325,18 +305,14 @@ class _RegisterState extends State<Register> {
                           //     }),
                           //   ),
                           // );
-                          if (destinationScreen == "ClientRegistration") {
-                            Navigator.pushReplacement(context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                  const RegisterPart2()),
-                            );
+                          if (auth.registerUserType == "Client") {
+                            await auth.createUser().then((String? id) {
+                              Navigator.pushReplacement(context, MaterialPageRoute(
+                                builder: (context) => RegisterPart2(id: id!)),
+                              );
+                            });
+
                           } else if (destinationScreen == "ExpertRegistration") {
-                            // Services().Signup(
-                            //     firstNameController.text,
-                            //         emailController.text,
-                            //         passwordController.text)
-                            //     .then({
                             await auth.createUser().then((value) {
                               Navigator.pushReplacement(
                                 context,

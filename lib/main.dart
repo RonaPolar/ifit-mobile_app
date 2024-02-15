@@ -9,6 +9,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/service/client.dart';
+import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
 import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
@@ -86,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         title: 'I-Fit',
 
         // home: const CreateWorkout(), //for testing
-        home: widget.homeScreen, //either Onboarding or Register Screen
+        home: widget.homeScreen //either Onboarding or Register Screen
       ),
     );
   }

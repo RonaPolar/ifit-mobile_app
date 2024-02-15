@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/service/functions/dialog.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
@@ -300,7 +301,8 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
           dialog.showCreateProgram(context,
             createWorkout: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CreateWorkout(id: expert.uid))),
-            createMeal: () {},
+            createMeal: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateMeal(id: expert.uid))),
           );
         },
         child: const Icon(Icons.add, color: Colors.white, size: 28),

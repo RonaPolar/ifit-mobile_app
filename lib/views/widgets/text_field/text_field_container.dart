@@ -33,6 +33,7 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
   @override
   Widget build(BuildContext context) {
     Widget? prefixIcon;
+
     if (widget.icon != null) {
       prefixIcon = Icon(widget.icon);
     } else if (widget.imagePath != null) {
@@ -50,9 +51,6 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12.0,
-          ),
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           prefixIcon: prefixIcon,

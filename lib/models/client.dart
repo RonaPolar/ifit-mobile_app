@@ -11,8 +11,8 @@ class ClientModel {
   final String uid;
   final String userType;
   final String weight;
-  final List<dynamic> mealPlans;
-  final List<dynamic> workoutPlans;
+  final List<dynamic>? mealPlans;
+  final List<dynamic>? workoutPlans;
   final DateTime dateCreation;
 
   ClientModel({
@@ -26,8 +26,8 @@ class ClientModel {
     required this.uid,
     required this.userType,
     required this.weight,
-    required this.mealPlans,
-    required this.workoutPlans,
+    this.mealPlans,
+    this.workoutPlans,
     required this.dateCreation,
   });
 
@@ -89,8 +89,71 @@ class ClientModel {
     "uid": uid,
     "user_type": userType,
     "weight": weight,
-    "meal_plans": List<dynamic>.from(mealPlans.map((x) => x)),
-    "workout_plans": List<dynamic>.from(workoutPlans.map((x) => x)),
+    "meal_plans": mealPlans != null ? List<dynamic>.from(mealPlans!.map((x) => x)) : [],
+    "workout_plans": workoutPlans != null ? List<dynamic>.from(workoutPlans!.map((x) => x)) : [],
     "date_creation": Timestamp.fromDate(dateCreation),
   };
 }
+
+class ClientGoalModel {
+  final String level;
+  final List<String> fitnessGoals;
+  final List<String> bodyPart;
+  final List<String> goalPlan;
+  final String exerciseDuration;
+  final String exerciseInAWeek;
+  final String healthComplication;
+
+  ClientGoalModel({
+    required this.level,
+    required this.fitnessGoals,
+    required this.bodyPart,
+    required this.goalPlan,
+    required this.exerciseDuration,
+    required this.exerciseInAWeek,
+    required this.healthComplication,
+  });
+
+  ClientGoalModel copyWith({
+    String? level,
+    List<String>? fitnessGoals,
+    List<String>? bodyPart,
+    List<String>? goalPlan,
+    String? exerciseDuration,
+    String? exerciseInAWeek,
+    String? healthComplications,
+  }) =>
+      ClientGoalModel(
+        level: level ?? this.level,
+        fitnessGoals: fitnessGoals ?? this.fitnessGoals,
+        bodyPart: bodyPart ?? this.bodyPart,
+        goalPlan: goalPlan ?? this.goalPlan,
+        exerciseDuration: exerciseDuration ?? this.exerciseDuration,
+        exerciseInAWeek: exerciseInAWeek ?? this.exerciseInAWeek,
+        healthComplication: healthComplications ?? this.healthComplication,
+      );
+
+  factory ClientGoalModel.fromJson(Map<String, dynamic> json) => ClientGoalModel(
+    level: json["level"],
+    fitnessGoals: List<String>.from(json["fitnessGoals"].map((x) => x)),
+    bodyPart: List<String>.from(json["bodyPart"].map((x) => x)),
+    goalPlan: List<String>.from(json["goalPlan"].map((x) => x)),
+    exerciseDuration: json["exerciseDuration"],
+    exerciseInAWeek: json["exerciseInAWeek"],
+    healthComplication: json["healthComplications"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "level": level,
+    "fitnessGoals": List<dynamic>.from(fitnessGoals.map((x) => x)),
+    "bodyPart": List<dynamic>.from(bodyPart.map((x) => x)),
+    "goalPlan": List<dynamic>.from(goalPlan.map((x) => x)),
+    "exerciseDuration": exerciseDuration,
+    "exerciseInAWeek": exerciseInAWeek,
+    "healthComplications": healthComplication,
+  };
+}
+
+
+
+
