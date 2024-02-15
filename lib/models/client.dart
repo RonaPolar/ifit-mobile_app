@@ -14,6 +14,7 @@ class ClientModel {
   final List<dynamic>? mealPlans;
   final List<dynamic>? workoutPlans;
   final DateTime dateCreation;
+  final ClientGoalModel? clientGoalModel;
 
   ClientModel({
     required this.birthDate,
@@ -29,6 +30,7 @@ class ClientModel {
     this.mealPlans,
     this.workoutPlans,
     required this.dateCreation,
+    this.clientGoalModel,
   });
 
   ClientModel copyWith({
@@ -45,6 +47,7 @@ class ClientModel {
     List<dynamic>? mealPlans,
     List<dynamic>? workoutPlans,
     DateTime? dateCreation,
+    ClientGoalModel? clientGoalModel,
   }) =>
       ClientModel(
         birthDate: birthDate ?? this.birthDate,
@@ -60,6 +63,7 @@ class ClientModel {
         mealPlans: mealPlans ?? this.mealPlans,
         workoutPlans: workoutPlans ?? this.workoutPlans,
         dateCreation: dateCreation ?? this.dateCreation,
+        clientGoalModel: clientGoalModel ?? this.clientGoalModel,
       );
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
@@ -76,6 +80,7 @@ class ClientModel {
     mealPlans: List<dynamic>.from(json["meal_plans"].map((x) => x)),
     workoutPlans: List<dynamic>.from(json["workout_plans"].map((x) => x)),
     dateCreation: (json["date_creation"] as Timestamp).toDate(),
+    clientGoalModel: json["goal"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +97,7 @@ class ClientModel {
     "meal_plans": mealPlans != null ? List<dynamic>.from(mealPlans!.map((x) => x)) : [],
     "workout_plans": workoutPlans != null ? List<dynamic>.from(workoutPlans!.map((x) => x)) : [],
     "date_creation": Timestamp.fromDate(dateCreation),
+    "goal": clientGoalModel,
   };
 }
 
@@ -99,7 +105,7 @@ class ClientGoalModel {
   final String level;
   final List<String> fitnessGoals;
   final List<String> bodyPart;
-  final List<String> goalPlan;
+  final String goalPlan;
   final String exerciseDuration;
   final String exerciseInAWeek;
   final String healthComplication;
@@ -118,7 +124,7 @@ class ClientGoalModel {
     String? level,
     List<String>? fitnessGoals,
     List<String>? bodyPart,
-    List<String>? goalPlan,
+    String? goalPlan,
     String? exerciseDuration,
     String? exerciseInAWeek,
     String? healthComplications,
@@ -137,7 +143,7 @@ class ClientGoalModel {
     level: json["level"],
     fitnessGoals: List<String>.from(json["fitnessGoals"].map((x) => x)),
     bodyPart: List<String>.from(json["bodyPart"].map((x) => x)),
-    goalPlan: List<String>.from(json["goalPlan"].map((x) => x)),
+    goalPlan: json["goalPlan"],
     exerciseDuration: json["exerciseDuration"],
     exerciseInAWeek: json["exerciseInAWeek"],
     healthComplication: json["healthComplications"],
@@ -147,7 +153,7 @@ class ClientGoalModel {
     "level": level,
     "fitnessGoals": List<dynamic>.from(fitnessGoals.map((x) => x)),
     "bodyPart": List<dynamic>.from(bodyPart.map((x) => x)),
-    "goalPlan": List<dynamic>.from(goalPlan.map((x) => x)),
+    "goalPlan": goalPlan,
     "exerciseDuration": exerciseDuration,
     "exerciseInAWeek": exerciseInAWeek,
     "healthComplications": healthComplication,

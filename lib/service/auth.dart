@@ -129,7 +129,7 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> goalPlan = [];
+  String? goalPlan;
 
   List<String> goalPlanList = [
     "Body exercises",
@@ -137,12 +137,8 @@ class Auth extends ChangeNotifier {
     "Food restrictions"
   ];
 
-  void updateGoalPlan(String value) {
-    if (!goalPlan.contains(value)) {
-      goalPlan.add(value);
-    } else {
-      goalPlan.remove(value);
-    }
+  void updateGoalPlan(String? value) {
+    goalPlan = value;
     notifyListeners();
   }
 
@@ -205,7 +201,7 @@ class Auth extends ChangeNotifier {
       level: goalDifficulty!,
       fitnessGoals: fitnessGoal,
       bodyPart: specificBody,
-      goalPlan: goalPlan,
+      goalPlan: goalPlan!,
       exerciseDuration: goalDuration!,
       exerciseInAWeek: goalInAWeek!,
       healthComplication: healthComplication!,
