@@ -11,6 +11,8 @@ class TextFieldContainer extends StatefulWidget {
   final bool obscureText;
   final EdgeInsets? margin;
   final String? Function(String?)? validator;
+  final int? maxLines;
+  final String? Function(String?)? onChanged;
 
   const TextFieldContainer({
     Key? key,
@@ -23,6 +25,8 @@ class TextFieldContainer extends StatefulWidget {
     this.keyboardType,
     this.imagePath,
     this.validator,
+    this.maxLines,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -50,6 +54,7 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
+        maxLines: widget.maxLines,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -60,6 +65,7 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
             color: Styles.fadeTextColor,
           ),
         ),
+        onChanged: widget.onChanged,
         validator: widget.validator,
       ),
     );

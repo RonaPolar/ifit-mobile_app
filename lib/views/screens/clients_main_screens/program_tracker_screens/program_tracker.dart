@@ -5,7 +5,6 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/my_program.dart';
@@ -106,9 +105,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       elevation: 0,
       leading: InkWell(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-            builder: (context) => const HomeNavBar()));
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //   builder: (context) => const HomeNavBar()));
         },
         child: Container(
           margin: const EdgeInsets.all(12),

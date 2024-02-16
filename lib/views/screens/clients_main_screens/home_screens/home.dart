@@ -1,14 +1,11 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
@@ -26,7 +23,12 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    required this.clientModel,
+    super.key,
+  });
+
+  final ClientModel clientModel;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -49,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Fetch data based on the provided UID when the widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final Client client =  Provider.of<Client>(context, listen: false);
-      client.fetchData();
+      final ClientProvider clientProvider = Provider.of<ClientProvider>(context, listen: false);
+      clientProvider.getBmi(client: widget.clientModel);
       getStaticData();
     });
 
@@ -68,10 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
-    final Client client =  Provider.of<Client>(context);
+    final ClientProvider clientProvider =  Provider.of<ClientProvider>(context);
+    final ClientModel client = widget.clientModel;
 
     return SafeArea(
       child: Scaffold(
@@ -83,10 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WelcomeBackWidget(
-                  name: client.name ?? "",
+                  name: client.name,
                 ),
                 const Gap(20),
-                BMIWidget(bmi: client.bmi),
+                BMIWidget(bmi: clientProvider.bmi),
                 const Gap(15),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),

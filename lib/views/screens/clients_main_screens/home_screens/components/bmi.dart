@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 
 class BMIWidget extends StatelessWidget {
   const BMIWidget({
@@ -55,8 +54,8 @@ class BMIWidget extends StatelessWidget {
                     child: MainButton(
                       title: "View More",
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ProfileNavBar()));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => const ProfileNavBar()));
                       },
                       textStyle: Styles.seeMore.copyWith(
                         color: Colors.white,

@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:ifit/service/functions/dialog.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ExpertProvider extends ChangeNotifier {
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Stream<List<ExpertModel>>? expertListStream;
@@ -30,7 +29,7 @@ class ExpertProvider extends ChangeNotifier {
   Stream<ExpertModel>? expertStream;
 
   Stream<ExpertModel> getExpert(String uid) {
-    return _db.collection("experts").doc(uid).snapshots().map((doc) {
+    return _db.collection(tExpertPath).doc(uid).snapshots().map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       return ExpertModel.fromJson(data);
     });
@@ -47,8 +46,21 @@ class ExpertProvider extends ChangeNotifier {
 
   List<String> workoutCategoryList = [
     "Upper Body",
-    "Abdominal",
+    "Shoulders",
+    "Arms",
+    "Biceps",
+    "Triceps",
+    "Forearms",
+    "Chest",
+    "Upper Back",
+    "Lower Back",
+    "Abdominals",
     "Lower Body",
+    "Glutes",
+    "Legs",
+    "Quadriceps",
+    "Hamstrings",
+    "Calves",
     "Full Body"
   ];
 
@@ -100,27 +112,158 @@ class ExpertProvider extends ChangeNotifier {
 
   static TextEditingController planName = TextEditingController();
   static TextEditingController description = TextEditingController();
-  static TextEditingController daysOfThePlan = TextEditingController();
   static TextEditingController minutes = TextEditingController();
   static TextEditingController calories = TextEditingController();
-  
+
+  XFile? workoutPicture;
+
+  Future<void> uploadWorkoutPicture(BuildContext context) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        workoutPicture = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  DateTime? daysOfThePlan;
+
+  void updateDaysOfThePlan(DateTime? value) {
+    daysOfThePlan = value;
+    notifyListeners();
+  }
+
+  List<TextEditingController> equipmentsText = [];
+
+  void updateEquipmentsText(bool add) {
+    if (add) {
+      equipmentsText.add(TextEditingController());
+    } else if(equipmentsText.isNotEmpty) {
+      equipmentsText.removeAt(equipmentsText.length - 1);
+    }
+    notifyListeners();
+  }
+
+  int sets = 0;
+
+  void updateSets(bool add) {
+    if (add) {
+      sets++;
+    } else if (sets > 0) {
+      sets--;
+    }
+    notifyListeners();
+  }
+
+  static TextEditingController exerciseTitle = TextEditingController();
+  static TextEditingController exerciseVideo = TextEditingController();
+  static TextEditingController exerciseDescription = TextEditingController();
+
+  List<TextEditingController> steps = [];
+
+  void updateSteps(bool add) {
+    if (add) {
+      steps.add(TextEditingController());
+    } else if (steps.isNotEmpty) {
+      steps.removeAt(steps.length - 1);
+    }
+    notifyListeners();
+  }
+
+  List<ExerciseElement> exerciseList = [];
+
+  void addExercise() {
+
+    final ExerciseElement exercise = ExerciseElement(
+      url: exerciseVideo.text,
+      title: exerciseTitle.text,
+      description: exerciseDescription.text,
+      steps: steps.map((e) => e.text).toList(),
+    );
+
+    exerciseList.add(exercise);
+    clearExerciseForm();
+
+    notifyListeners();
+  }
+
+  void clearExerciseForm() {
+    exerciseTitle.clear();
+    exerciseVideo.clear();
+    exerciseDescription.clear();
+    steps = [];
+    notifyListeners();
+  }
+
+  void removeExercise() {
+    exerciseList.removeAt(exerciseList.length - 1);
+    notifyListeners();
+  }
+
+
   Future<void> addWorkoutPlan({
     required String id,
   }) async {
-    final WorkoutPlan workoutPlan = WorkoutPlan(
-      calories: calories.text,
-      category: workoutCategory ?? "",
-      daysOfThePlan: daysOfThePlan.text,
-      description: description.text,
-      difficulty: workoutDifficulty ?? "",
-      minutes: minutes.text,
-      planName: planName.text,
-      purpose: workoutPurpose ?? "",
-    );
+    // final WorkoutPlan workoutPlan = WorkoutPlan(
+    //   category: workoutCategory ?? "",
+    //   purpose: workoutPurpose ?? "",
+    //   difficulty: workoutDifficulty ?? "",
+    //   planName: planName.text,
+    //   description: description.text,
+    //   workoutPicture: workoutPicture!.path,
+    //   daysOfThePlan: daysOfThePlan!,
+    //   minutes: minutes.text,
+    //   calories: calories.text,
+    //
+    //   equipments: equipmentsText.map((e) => e.text).toList(),
+    //   exercise: Exercise(
+    //     exercises: exerciseList,
+    //     sets: sets,
+    //   ),
+    //   rating: 0,
+    // );
 
-    await _db.collection(tWorkoutPlanPath).doc(id).set(workoutPlan.toJson())
-      .then((value) => debugPrint("Workout plan added successfully!"))
-      .onError((error, stackTrace) => "Failed: $error");
+    // final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+    // final List objects = data["workoutPlans"];
+
+    print(equipmentsText.map((e) => e.text).toList());
+
+    // if (objects.isEmpty) {
+    //   await _db.collection(tWorkoutPlanPath).doc(id).set({
+    //     "workoutPlans": [workoutPlan.toJson()],
+    //   })
+    //     .then((value) => debugPrint("Workout plan added successfully!"))
+    //     .onError((error, stackTrace) => "Failed: $error");
+    // } else {
+    //   objects.add(workoutPlan.toJson());
+    //   await _db.collection(tWorkoutPlanPath).doc(id).set({
+    //     "workoutPlans": objects,
+    //   })
+    //     .then((value) => debugPrint("Workout plan added successfully!"))
+    //     .onError((error, stackTrace) => "Failed: $error");
+    //
+    // }
+
+
+  }
+
+  void clearWorkoutPlanForm() {
+    workoutCategory = null;
+    workoutPurpose = null;
+    workoutDifficulty = null;
+    planName.clear();
+    description.clear();
+    workoutPicture = null;
+    daysOfThePlan = null;
+    minutes.clear();
+    calories.clear();
+    equipmentsText = [];
+    exerciseList = [];
+    sets = 0;
+    notifyListeners();
   }
 
   String? foodCategory;

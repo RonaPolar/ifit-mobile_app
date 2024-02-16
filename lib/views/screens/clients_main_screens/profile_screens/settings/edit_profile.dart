@@ -8,7 +8,6 @@ import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -266,8 +265,8 @@ class _EditProfileState extends State<EditProfile> {
                       builder: (BuildContext context) {
                         return ConfirmationDialog(
                           onYesPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ProfileNavBar()));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) => const ProfileNavBar()));
                           },
                         );
                       });

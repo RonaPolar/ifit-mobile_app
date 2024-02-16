@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -7,7 +6,6 @@ import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
-import 'package:ifit/views/screens/account_login_reg/services.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:provider/provider.dart';
@@ -38,43 +36,10 @@ class _LogInState extends State<LogIn> {
           MaterialPageRoute(
             builder: (context) => isExpert
               ? const ExpBottomBar()
-              : const HomeNavBar(),
+              : const MainBottomBar(),
           ),
         );
       });
-
-
-
-
-      // Services()
-        // .SignIn(emailController.text, passwordController.text)
-        // .then((value) {
-          // FirebaseFirestore.instance
-          // .collection('Experts')
-          // .where('email', isEqualTo: emailController.text)
-          // .get()
-          // .then((QuerySnapshot querySnapshot) {
-          //     Navigator.pushReplacement(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => const ExpHome(),
-          //       ),
-          //     );
-          // });
-      //
-      //     FirebaseFirestore.instance
-      //         .collection('clients')
-      //         .where('email', isEqualTo: emailController.text)
-      //         .get()
-      //         .then((QuerySnapshot querySnapshot) {
-      //       Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => const HomeNavBar(),
-      //         ),
-      //       );
-      //     });
-      // });
     }
 
     return Scaffold(
@@ -89,8 +54,7 @@ class _LogInState extends State<LogIn> {
                   shrinkWrap: true,
                   children: [
                     Container(
-                      padding:
-                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
                           Text('Hey there,',
@@ -112,6 +76,7 @@ class _LogInState extends State<LogIn> {
                             controller: Auth.password,
                             icon: FluentSystemIcons.ic_fluent_lock_regular,
                             obscureText: !_isPasswordVisible,
+                            maxLines: _isPasswordVisible ? null : 1,
                             rightIcon: IconButton(
                               icon: _isPasswordVisible
                                   ? const Icon(Icons.visibility)

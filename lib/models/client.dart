@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClientModel {
-  final String birthDate;
+  final DateTime birthDate;
+  final DateTime dateCreation;
   final String email;
   final String gender;
+  final ClientGoalModel? clientGoalModel;
   final String height;
   final String name;
   final String phoneNumber;
-  final String photoUrl;
+  final String? photoUrl;
   final String uid;
   final String userType;
   final String weight;
-  final List<dynamic>? mealPlans;
-  final List<dynamic>? workoutPlans;
-  final DateTime dateCreation;
-  final ClientGoalModel? clientGoalModel;
+
 
   ClientModel({
     required this.birthDate,
@@ -27,14 +26,12 @@ class ClientModel {
     required this.uid,
     required this.userType,
     required this.weight,
-    this.mealPlans,
-    this.workoutPlans,
     required this.dateCreation,
     this.clientGoalModel,
   });
 
   ClientModel copyWith({
-    String? birthDate,
+    DateTime? birthDate,
     String? email,
     String? gender,
     String? height,
@@ -44,8 +41,6 @@ class ClientModel {
     String? uid,
     String? userType,
     String? weight,
-    List<dynamic>? mealPlans,
-    List<dynamic>? workoutPlans,
     DateTime? dateCreation,
     ClientGoalModel? clientGoalModel,
   }) =>
@@ -60,14 +55,12 @@ class ClientModel {
         uid: uid ?? this.uid,
         userType: userType ?? this.userType,
         weight: weight ?? this.weight,
-        mealPlans: mealPlans ?? this.mealPlans,
-        workoutPlans: workoutPlans ?? this.workoutPlans,
         dateCreation: dateCreation ?? this.dateCreation,
         clientGoalModel: clientGoalModel ?? this.clientGoalModel,
       );
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
-    birthDate: json["birth_date"],
+    birthDate: (json["birth_date"] as Timestamp).toDate(),
     email: json["email"],
     gender: json["gender"],
     height: json["height"],
@@ -77,14 +70,12 @@ class ClientModel {
     uid: json["uid"],
     userType: json["user_type"],
     weight: json["weight"],
-    mealPlans: List<dynamic>.from(json["meal_plans"].map((x) => x)),
-    workoutPlans: List<dynamic>.from(json["workout_plans"].map((x) => x)),
     dateCreation: (json["date_creation"] as Timestamp).toDate(),
-    clientGoalModel: json["goal"],
+    clientGoalModel: ClientGoalModel.fromJson(json["goal"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "birth_date": birthDate,
+    "birth_date": Timestamp.fromDate(birthDate),
     "email": email,
     "gender": gender,
     "height": height,
@@ -94,10 +85,8 @@ class ClientModel {
     "uid": uid,
     "user_type": userType,
     "weight": weight,
-    "meal_plans": mealPlans != null ? List<dynamic>.from(mealPlans!.map((x) => x)) : [],
-    "workout_plans": workoutPlans != null ? List<dynamic>.from(workoutPlans!.map((x) => x)) : [],
     "date_creation": Timestamp.fromDate(dateCreation),
-    "goal": clientGoalModel,
+    "goal": clientGoalModel?.toJson(),
   };
 }
 

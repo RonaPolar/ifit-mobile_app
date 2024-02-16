@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 
 class WorkoutCongrats extends StatefulWidget {
   const WorkoutCongrats({super.key});
@@ -59,12 +58,10 @@ class _WorkoutCongratsState extends State<WorkoutCongrats> {
                     MainButton(
                       title: 'Back to Home',
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeNavBar(),
-                          ),
-                        );
+                        // Navigator.pushReplacement(context, MaterialPageRoute(
+                        //     builder: (context) => const HomeNavBar(),
+                        //   ),
+                        // );
                       },
                     ),
                   ],

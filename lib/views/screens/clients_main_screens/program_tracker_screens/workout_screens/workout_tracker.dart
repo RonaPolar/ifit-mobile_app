@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_category.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
@@ -92,8 +91,8 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.push(context,MaterialPageRoute(
-              builder: (context) => const ProgramTrackerNavbar()));
+            // Navigator.push(context,MaterialPageRoute(
+            //   builder: (context) => const ProgramTrackerNavbar()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),

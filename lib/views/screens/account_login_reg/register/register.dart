@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/widgets/verification_text_box.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
@@ -14,7 +13,6 @@ import 'package:ifit/views/screens/account_login_reg/register/Expert_registratio
 import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_terms.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ifit/views/screens/account_login_reg/services.dart';
 import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
@@ -160,6 +158,7 @@ class _RegisterState extends State<Register> {
                       icon: FluentSystemIcons.ic_fluent_lock_regular,
                       controller: Auth.password,
                       obscureText: !_isPasswordVisible,
+                      maxLines: _isPasswordVisible ? null : 1,
                       rightIcon: IconButton(
                         icon: _isPasswordVisible
                             ? const Icon(Icons.visibility)
@@ -295,6 +294,8 @@ class _RegisterState extends State<Register> {
                       title: 'Register',
                       onPressed: () async {
 
+                        print(auth.registerUserType);
+
                         // if (await validateAndSendEmail()) {
 
                           // ignore: use_build_context_synchronously
@@ -312,13 +313,11 @@ class _RegisterState extends State<Register> {
                               );
                             });
 
-                          } else if (destinationScreen == "ExpertRegistration") {
+                          } else if (auth.registerUserType == "Expert") {
                             await auth.createUser().then((value) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    const ExpertRegistration1()),
+                              Navigator.pushReplacement(context, MaterialPageRoute(
+                                  builder: (context) =>
+                                  const ExpertRegistration1()),
                               );
                             });
                             // });

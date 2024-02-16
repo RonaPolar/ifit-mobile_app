@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
-        ChangeNotifierProvider<Client>(create: (_) => Client()),
+        ChangeNotifierProvider<ClientProvider>(create: (_) => ClientProvider()),
         ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
       ],
       child: MaterialApp(

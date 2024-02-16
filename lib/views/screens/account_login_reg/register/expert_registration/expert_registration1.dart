@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/date/date_picker.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/account_login_reg/register/Expert_registration/Expert_reg_success.dart';
@@ -35,12 +35,12 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
       backgroundColor: Styles.bgColor,
       body: SafeArea(
         child: Form(
-            key: formKey,
+          key: formKey,
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildFormFields(auth),
-                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: MainButton(
@@ -61,10 +61,11 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
-  Widget _buildFormFields(auth) {
+  Widget _buildFormFields(Auth auth) {
     return Container(
       padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
       child: Column(
@@ -79,16 +80,12 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
           RegisterDropDown(
             hintText: 'Gender',
             icon: FluentSystemIcons.ic_fluent_people_regular,
-            items: const [
-              DropdownMenuItem<String>(
-                value: "Male",
-                child: Text("Male"),
-              ),
-              DropdownMenuItem<String>(
-                value: "Female",
-                child: Text("Female"),
-              )
-            ],
+            items: auth.genderList.map((data) {
+              return DropdownMenuItem<String>(
+                value: data,
+                child: Text(data),
+              );
+            }).toList(),
             onChanged: (value) {
               setState(() {
                 auth.gender = value;
@@ -97,16 +94,9 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
             selectedValue: auth.gender,
           ),
           const Gap(15),
-          TextFieldContainer(
-            controller: Auth.birthday,
+          DatePickerField(
+            onDateSelected: auth.updateDateOfBirth,
             hintText: 'Date of Birth',
-            icon: FluentSystemIcons.ic_fluent_calendar_regular,
-            validator: (val) {
-              if (val == null || val.isEmpty) {
-                return "This field is required";
-              }
-              return null;
-            },
           ),
           const Gap(15),
           TextFieldContainer(
@@ -212,16 +202,16 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
             style: TextStyle(fontSize: 20),
           ),
           const Gap(10),
-          Align(
-            // make a condition that make if any of it wasnt filled it will display "Enter _____"
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              'You must upload documents needed',
-              style: Styles.text15normal.copyWith(
-                color: Colors.red,
-              ),
-            ),
-          ),
+          // Align(
+          //   // make a condition that make if any of it wasnt filled it will display "Enter _____"
+          //   alignment: Alignment.bottomLeft,
+          //   child: Text(
+          //     'You must upload documents needed',
+          //     style: Styles.text15normal.copyWith(
+          //       color: Colors.red,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

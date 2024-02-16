@@ -114,10 +114,23 @@ class Auth extends ChangeNotifier {
 
   /// TODO: update this to latest
   List<String> specificBodyList = [
-    'Upper body',
-    'Abdominal',
-    'Lower body',
-    'Full body'
+    "Upper Body",
+    "Shoulders",
+    "Arms",
+    "Biceps",
+    "Triceps",
+    "Forearms",
+    "Chest",
+    "Upper Back",
+    "Lower Back",
+    "Abdominals",
+    "Lower Body",
+    "Glutes",
+    "Legs",
+    "Quadriceps",
+    "Hamstrings",
+    "Calves",
+    "Full Body"
   ];
 
   void updateSpecificBody(String value) {
@@ -266,7 +279,6 @@ class Auth extends ChangeNotifier {
         final img = await ImagePicker().pickImage(
           source: ImageSource.gallery,
         );
-
         professionId = img;
         notifyListeners();
       },

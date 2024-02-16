@@ -10,7 +10,6 @@ import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/toggle_switch.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
@@ -86,8 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomeNavBar()));
+            // Navigator.of(context).push(
+            //     MaterialPageRoute(builder: (context) => const HomeNavBar()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),

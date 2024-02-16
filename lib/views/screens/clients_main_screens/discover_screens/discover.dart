@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/widgets/search.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
@@ -15,9 +14,6 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/compone
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/new_arrival.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/popular.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/my_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -66,9 +62,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-              builder: (context) => const HomeNavBar()));
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //   builder: (context) => const HomeNavBar()));
             },
             child: Container(
               margin: const EdgeInsets.all(12),

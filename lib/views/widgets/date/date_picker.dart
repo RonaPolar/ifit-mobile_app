@@ -3,9 +3,15 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:intl/intl.dart';
 
 class DatePickerField extends StatefulWidget {
-  final ValueChanged<DateTime?> onDateSelected;
 
-  const DatePickerField({super.key, required this.onDateSelected});
+  const DatePickerField({
+    required this.hintText,
+    required this.onDateSelected,
+    super.key,
+  });
+
+  final ValueChanged<DateTime?> onDateSelected;
+  final String hintText;
 
   @override
   _DatePickerFieldState createState() => _DatePickerFieldState();
@@ -26,7 +32,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
       child: TextFormField(
         controller: _controller,
         decoration: InputDecoration(
-          labelText: 'Date of Birth',
+          labelText: widget.hintText,
           contentPadding: const EdgeInsets.only(top: 15),
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,

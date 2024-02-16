@@ -4,7 +4,6 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
 
@@ -120,8 +119,8 @@ class _ProgressTrackerScreenState extends State<ProgressTrackerScreen> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomeNavBar()));
+            // Navigator.of(context).push(
+            //     MaterialPageRoute(builder: (context) => const HomeNavBar()));
           },
           child: Container(
             margin: const EdgeInsets.all(12),

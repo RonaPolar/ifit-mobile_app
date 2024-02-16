@@ -119,6 +119,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                   // const TextfieldContainer(hitText: 'Date of Birth', icon: FluentSystemIcons.ic_fluent_calendar_regular, obscureText: false),
                   DatePickerField(
                     onDateSelected: auth.updateDateOfBirth,
+                    hintText: 'Date of Birth',
                   ),
                   const Gap(15),
                   Row(
