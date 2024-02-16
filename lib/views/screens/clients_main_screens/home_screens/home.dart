@@ -142,27 +142,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 200,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.workoutPlanList.length,
-                    itemBuilder: (context, index) {
-                      final WorkoutPlan workoutPlan = widget.workoutPlanList[index][0];
-                      return InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => WorkoutDetails(dObj: workoutPlan)));
-                        },
-                        child: BigContainer(
-                          image: workoutPlan.workoutPicture,
-                          title: workoutPlan.planName,
-                          bottomText:
-                              "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
+                Row(
+                  children: widget.workoutPlanList.map((data) {
+                    return Expanded(
+                      child: SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final WorkoutPlan workoutPlan = data[index];
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => WorkoutDetails(dObj: workoutPlan)));
+                              },
+                              child: BigContainer(
+                                image: workoutPlan.workoutPicture,
+                                title: workoutPlan.planName,
+                                bottomText:
+                                "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  }).toList(),
                 ),
+
                 const Gap(15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

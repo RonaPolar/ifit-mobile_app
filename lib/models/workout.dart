@@ -92,6 +92,8 @@ class WorkoutPlan {
   final List<String> equipments;
   final Exercise exercise;
 
+  final String expertName;
+
   WorkoutPlan({
     required this.category,
     required this.description,
@@ -105,6 +107,7 @@ class WorkoutPlan {
     required this.purpose,
     required this.equipments,
     required this.exercise,
+    required this.expertName,
   });
 
   WorkoutPlan copyWith({
@@ -121,6 +124,7 @@ class WorkoutPlan {
     String? name,
     List<String>? equipments,
     Exercise? exercise,
+    String? expertName,
   }) =>
       WorkoutPlan(
         category: category ?? this.category,
@@ -135,6 +139,7 @@ class WorkoutPlan {
         purpose: purpose ?? this.purpose,
         equipments: equipments ?? this.equipments,
         exercise: exercise ?? this.exercise,
+        expertName: expertName ?? this.expertName,
       );
 
   factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
@@ -150,6 +155,7 @@ class WorkoutPlan {
     purpose: json["purpose"],
     equipments: List<String>.from(json["equipments"].map((x) => x)),
     exercise: Exercise.fromJson(json["exercise"]),
+    expertName: json["expertName"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -165,6 +171,7 @@ class WorkoutPlan {
     "purpose": purpose,
     "equipments": List<dynamic>.from(equipments.map((x) => x)),
     "exercise": exercise.toJson(),
+    "expertName": expertName,
   };
 }
 

@@ -213,6 +213,8 @@ class ExpertProvider extends ChangeNotifier {
 
 
     final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+    final auth = await _db.collection(tExpertPath).doc(id).get();
+    final String expertName = auth.get("name");
 
     await uploadWorkoutPhoto(id).then((value) async {
 
@@ -232,6 +234,7 @@ class ExpertProvider extends ChangeNotifier {
           exercises: exerciseList,
         ),
         rating: 0,
+        expertName: expertName,
       );
 
       final bool hasWorkoutPlans = !data.data()!.containsKey("workoutPlans");

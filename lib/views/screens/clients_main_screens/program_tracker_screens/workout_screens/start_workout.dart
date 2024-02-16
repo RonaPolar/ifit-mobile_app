@@ -2,6 +2,8 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/video_player.dart';
@@ -9,7 +11,12 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class StartWorkout extends StatefulWidget {
-  const StartWorkout({super.key});
+  const StartWorkout({
+    required this.exercise,
+    super.key,
+  });
+
+  final Exercise exercise;
 
   @override
   State<StartWorkout> createState() => _StartWorkoutState();
@@ -68,10 +75,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                 return ConfirmationDialog(
                   question: "Are you sure to Quit?",
                   onYesPressed: () {
-                    Navigator.push(context,MaterialPageRoute(
-                      builder: (context) => const WorkoutTrackerScreen()));
+                    Navigator.of(context)..pop()..pop();
                   },
-            );});
+                );
+              },
+            );
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -159,26 +167,27 @@ class _StartWorkoutState extends State<StartWorkout> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      exercisesArr[0]["title"].toString(),
+                      widget.exercise.exercises[0].title,
                       style: Styles.text18.copyWith(
                           fontWeight: FontWeight.w700),
                     ),
                     const Gap(2),
                     ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: stepArr.length,
-                    itemBuilder: (context, index) {
-                      var sObj = stepArr[index];
-                      return ExerStepsDottedLine(
-                        sObj: sObj,
-                        isLast: stepArr.last == sObj,
-                      );
-                    }),
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.exercise.exercises[0].steps.length,
+                      itemBuilder: (context, index) {
+                        final String step = widget.exercise.exercises[0].steps[index];
+                        return ExerStepsDottedLine(
+                          index: index,
+                          step: step,
+                          isLast: stepArr.last == step,
+                        );
+                      },
+                    ),
                   ],
                 ),
-                
               ],
             ),
           )
