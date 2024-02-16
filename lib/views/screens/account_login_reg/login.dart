@@ -23,6 +23,7 @@ class _LogInState extends State<LogIn> {
   final passwordController = TextEditingController();
 
   bool _isInvalidCredentials = false;
+
   @override
   Widget build(BuildContext context) {
     final Auth auth = Provider.of<Auth>(context);

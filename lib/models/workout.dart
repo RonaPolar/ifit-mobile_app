@@ -149,7 +149,7 @@ class WorkoutPlan {
     minutes: json["minutes"],
     purpose: json["purpose"],
     equipments: List<String>.from(json["equipments"].map((x) => x)),
-    exercise: json["exercise"],
+    exercise: Exercise.fromJson(json["exercise"]),
   );
 
   Map<String, dynamic> toJson() => {

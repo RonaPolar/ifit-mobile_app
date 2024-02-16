@@ -7,6 +7,7 @@ import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/schedule.dart';
@@ -25,10 +26,12 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     required this.clientModel,
+    required this.workoutPlanList,
     super.key,
   });
 
   final ClientModel clientModel;
+  final List<List<WorkoutPlan>> workoutPlanList;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -66,9 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
       recommendWorkout = (jsonDecode(workout)["workout"] as List).map((e) => Workout.fromJson(e)).toList();
       recommendMeal = (jsonDecode(meal)["meal"] as List).map((e) => Meal.fromJson(e)).toList();
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 WelcomeBackWidget(
                   name: client.name,
                 ),
@@ -144,20 +146,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 200,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: recommendWorkout.length,
+                    itemCount: widget.workoutPlanList.length,
                     itemBuilder: (context, index) {
-                      var wObj = recommendWorkout[index];
+                      final WorkoutPlan workoutPlan = widget.workoutPlanList[index][0];
                       return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => WorkoutDetails(dObj: wObj)));
+                          builder: (context) => WorkoutDetails(dObj: workoutPlan)));
                         },
                         child: BigContainer(
-                          image: wObj.image,
-                          title: wObj.name,
+                          image: workoutPlan.workoutPicture,
+                          title: workoutPlan.planName,
                           bottomText:
-                              "${wObj.duration} minutes | ${wObj.kcal} kcal",
-                        ));
+                              "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
+                        ),
+                      );
                     }),
                 ),
                 const Gap(15),

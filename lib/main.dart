@@ -49,7 +49,11 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(MyApp(homeScreen: homeScreen));
+  runApp(
+    MyApp(
+      homeScreen: homeScreen,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

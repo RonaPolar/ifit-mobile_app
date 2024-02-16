@@ -2,6 +2,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/views/widgets/program_category.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/widgets/search.dart';

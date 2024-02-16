@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/discover.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_tracker.dart';
+import 'package:ifit/views/screens/wrappers/workout_plan.dart';
 import 'package:provider/provider.dart';
 
 class ClientAuthWrapper extends StatefulWidget {
@@ -33,9 +35,15 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
   }
 
 
-  List<Widget> bodyList(ClientModel clientModel) {
+  List<Widget> bodyList({
+    required ClientModel clientModel,
+    required List<List<WorkoutPlan>> workoutPlan,
+  }) {
     return [
-      HomeScreen(clientModel: clientModel),
+      HomeScreen(
+        clientModel: clientModel,
+        workoutPlanList: workoutPlan,
+      ),
       DiscoverScreen(),
       ProgramTrackerScreen(),
       ProfileScreen(),
@@ -51,10 +59,17 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       stream: client.clientStream,
       builder: (context, snapshot) {
 
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
 
-          return bodyList(data)[widget.index];
+        if (snapshot.hasData) {
+          final client = snapshot.data!;
+
+          return WorkoutPlanWrapper(
+            child: (data) {
+              final List<List<WorkoutPlan>> workoutPlan = data;
+
+              return bodyList(clientModel: client, workoutPlan: workoutPlan)[widget.index];
+            }
+          );
         } else if (snapshot.hasError) {
           return Center(
             child: Text("Something went wrong: ${snapshot.error}"),

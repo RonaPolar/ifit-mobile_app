@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
@@ -330,12 +331,12 @@ class _ExpertProfileState extends State<ExpertProfile> {
                             // It's a workout item
                             return InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WorkoutDetails(dObj: item),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => WorkoutDetails(dObj: item),
+                                //   ),
+                                // );
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),

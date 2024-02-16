@@ -20,7 +20,7 @@ class WorkoutDetails extends StatefulWidget {
     super.key,
   });
 
-  final Workout dObj;
+  final WorkoutPlan dObj;
 
 
   @override
@@ -164,7 +164,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
-                child: Image.asset(widget.dObj.image.toString()),
+                child: Image.asset(widget.dObj.workoutPicture.toString()),
               ),
             ),
           ];
@@ -200,7 +200,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.dObj.name.toString(),
+                                widget.dObj.planName.toString(),
                                 style: Styles.text18.copyWith(
                                     fontWeight: FontWeight.w700),
                               ),
@@ -267,7 +267,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                 child: Row(
                                   children: [
                                     const Icon(Icons.star_sharp, color: Colors.red,),
-                                    Text("${widget.dObj.rate.toString()} stars"),
+                                    Text("${widget.dObj.rating.toString()} stars"),
                                   ],
                                 ),
                               ),
@@ -282,7 +282,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.accessibility_new_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.exercise} exercises"),
+                                  // Text("${widget.dObj.exercise} exercises"),
                                 ],
                               ),
                             ),
@@ -297,7 +297,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${widget.dObj.days} days"),
+                                  Text("${widget.dObj.daysOfThePlan} days"),
                                 ],
                               ),
                             ),
@@ -312,7 +312,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${widget.dObj.duration} mins"),
+                                  Text("${widget.dObj.minutes} mins"),
                                 ],
                               ),
                             ),
@@ -327,7 +327,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.local_fire_department_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.kcal} calories"),
+                                  Text("${widget.dObj.calories} calories"),
                                 ],
                               ),
                             ),

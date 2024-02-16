@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
@@ -115,6 +116,8 @@ class _RegisterState extends State<Register> {
       }
     }
 
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
@@ -122,6 +125,12 @@ class _RegisterState extends State<Register> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              ElevatedButton(
+                onPressed: () {
+                  clientProvider.updateWorkoutPlanListStream();
+                },
+                child: Text("tap"),
+              ),
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(

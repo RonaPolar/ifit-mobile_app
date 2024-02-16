@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/workout.dart';
 
 class ClientProvider extends ChangeNotifier {
 
@@ -47,46 +48,24 @@ class ClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchData() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final FirebaseFirestore db = FirebaseFirestore.instance;
-    final User? user = auth.currentUser;
+  Stream<List<List<WorkoutPlan>>>? workoutPlanListStream;
 
-    try {
-      if (user != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('clients')
-            .where('email', isEqualTo: user.email)
-            .get();
+  Stream<List<List<WorkoutPlan>>> getWorkoutPlanList() {
 
-        if (querySnapshot.docs.isNotEmpty) {
-          var userData = querySnapshot.docs.first.data() as Map<String, dynamic>?;
+    final data = _db.collection(tWorkoutPlanPath).snapshots().map(workoutPlanFromSnapshot);
 
-          if (userData != null) {
-            name = userData['name'] ?? '';
-            double height =
-                double.tryParse(userData['height'] ?? '0.0') ?? 0.0;
-            double weight =
-                double.tryParse(userData['weight'] ?? '0.0') ?? 0.0;
+    return data;
+  }
 
-            // Convert height to meters
-            double heightInMeters = height / 100;
+  List<List<WorkoutPlan>> workoutPlanFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((data) {
+      final map = (data.data() as Map<String, dynamic>)["workoutPlans"];
+      return (map as List).map((data) => WorkoutPlan.fromJson(data)).toList();
+    }).toList();
+  }
 
-            // Calculate BMI
-            bmi = weight / (heightInMeters * heightInMeters);
-
-            if (height != 0.0 && weight != 0.0) {
-              // Calculate BMI
-              bmi = weight / (heightInMeters * heightInMeters);
-            } else {
-              print('Height or weight is zero, unable to calculate BMI');
-            }
-          }
-        }
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
+  void updateWorkoutPlanListStream() {
+    workoutPlanListStream = getWorkoutPlanList();
     notifyListeners();
   }
 

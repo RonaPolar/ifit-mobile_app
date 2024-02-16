@@ -112,7 +112,6 @@ class Auth extends ChangeNotifier {
 
   List<String> specificBody = [];
 
-  /// TODO: update this to latest
   List<String> specificBodyList = [
     "Upper Body",
     "Shoulders",

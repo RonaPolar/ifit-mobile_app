@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/expert.dart';
@@ -207,47 +210,67 @@ class ExpertProvider extends ChangeNotifier {
   Future<void> addWorkoutPlan({
     required String id,
   }) async {
-    // final WorkoutPlan workoutPlan = WorkoutPlan(
-    //   category: workoutCategory ?? "",
-    //   purpose: workoutPurpose ?? "",
-    //   difficulty: workoutDifficulty ?? "",
-    //   planName: planName.text,
-    //   description: description.text,
-    //   workoutPicture: workoutPicture!.path,
-    //   daysOfThePlan: daysOfThePlan!,
-    //   minutes: minutes.text,
-    //   calories: calories.text,
-    //
-    //   equipments: equipmentsText.map((e) => e.text).toList(),
-    //   exercise: Exercise(
-    //     exercises: exerciseList,
-    //     sets: sets,
-    //   ),
-    //   rating: 0,
-    // );
-
-    // final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
-    // final List objects = data["workoutPlans"];
-
-    print(equipmentsText.map((e) => e.text).toList());
-
-    // if (objects.isEmpty) {
-    //   await _db.collection(tWorkoutPlanPath).doc(id).set({
-    //     "workoutPlans": [workoutPlan.toJson()],
-    //   })
-    //     .then((value) => debugPrint("Workout plan added successfully!"))
-    //     .onError((error, stackTrace) => "Failed: $error");
-    // } else {
-    //   objects.add(workoutPlan.toJson());
-    //   await _db.collection(tWorkoutPlanPath).doc(id).set({
-    //     "workoutPlans": objects,
-    //   })
-    //     .then((value) => debugPrint("Workout plan added successfully!"))
-    //     .onError((error, stackTrace) => "Failed: $error");
-    //
-    // }
 
 
+    final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+
+    await uploadWorkoutPhoto(id).then((value) async {
+
+      final WorkoutPlan workoutPlan = WorkoutPlan(
+        category: workoutCategory ?? "",
+        purpose: workoutPurpose ?? "",
+        difficulty: workoutDifficulty ?? "",
+        planName: planName.text,
+        description: description.text,
+        workoutPicture: workoutPhotoUrl!,
+        daysOfThePlan: daysOfThePlan!,
+        minutes: minutes.text,
+        calories: calories.text,
+        equipments: equipmentsText.map((e) => e.text).toList(),
+        exercise: Exercise(
+          sets: sets,
+          exercises: exerciseList,
+        ),
+        rating: 0,
+      );
+
+      final bool hasWorkoutPlans = !data.data()!.containsKey("workoutPlans");
+
+      if (hasWorkoutPlans) {
+        await _db.collection(tWorkoutPlanPath).doc(id).set({
+          "workoutPlans": [
+            workoutPlan.toJson(),
+          ],
+        })
+          .then((value) => debugPrint("Workout plan added successfully!"))
+          .onError((error, stackTrace) => "Failed: $error");
+      } else {
+        final List objects = data["workoutPlans"];
+
+        objects.add(workoutPlan.toJson());
+        await _db.collection(tWorkoutPlanPath).doc(id).set({
+          "workoutPlans": objects,
+        })
+          .then((value) => debugPrint("Workout plan added successfully!"))
+          .onError((error, stackTrace) => "Failed: $error");
+      }
+    });
+
+
+  }
+
+  String? workoutPhotoUrl;
+
+  Future<void> uploadWorkoutPhoto(String id) async {
+    final file = File(workoutPicture!.path);
+    final ref = FirebaseStorage.instance.ref()
+      .child(tWorkoutPlanPath)
+      .child(id)
+      .child(workoutPicture!.name);
+    await ref.putFile(file);
+
+    workoutPhotoUrl = await ref.getDownloadURL();
+    notifyListeners();
   }
 
   void clearWorkoutPlanForm() {
@@ -263,6 +286,7 @@ class ExpertProvider extends ChangeNotifier {
     equipmentsText = [];
     exerciseList = [];
     sets = 0;
+    workoutPhotoUrl = null;
     notifyListeners();
   }
 
