@@ -195,24 +195,23 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                     ],
                   ),
                   ListView.builder( //WorkoutRowContainer Content
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: what2TrainArr.length,
-                      itemBuilder: (context, index) {
-                        var what2TrainObj = what2TrainArr[index];
-                        return What2Container(wObj: what2TrainObj, 
-                          onPressed: (obj) {  //wObj
-                              Navigator.push( //there will be major changes
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WorkoutCategory(wObj: what2TrainObj)),
-                              );
-                            },
-                          );
-                      }),
-            
-            
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: what2TrainArr.length,
+                    itemBuilder: (context, index) {
+                      var what2TrainObj = what2TrainArr[index];
+                      return What2Container(wObj: what2TrainObj,
+                        onPressed: (obj) {  //wObj
+                            // Navigator.push( //there will be major changes
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => WorkoutCategory(wObj: what2TrainObj)),
+                            // );
+                          },
+                        );
+                    },
+                  ),
                 ],  //Main children
               ),
             ),

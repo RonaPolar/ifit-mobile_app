@@ -485,6 +485,3 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
   }
 }
 
-
-//Workout Exercises
-

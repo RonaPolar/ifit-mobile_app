@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ifit/models/workout.dart';
 
 class ClientModel {
   final DateTime birthDate;
@@ -13,6 +14,7 @@ class ClientModel {
   final String uid;
   final String userType;
   final String weight;
+  final List<WorkoutPlan> workoutPlanList;
 
 
   ClientModel({
@@ -28,6 +30,7 @@ class ClientModel {
     required this.weight,
     required this.dateCreation,
     this.clientGoalModel,
+    required this.workoutPlanList,
   });
 
   ClientModel copyWith({
@@ -43,6 +46,7 @@ class ClientModel {
     String? weight,
     DateTime? dateCreation,
     ClientGoalModel? clientGoalModel,
+    List<WorkoutPlan>? workoutPlanList,
   }) =>
       ClientModel(
         birthDate: birthDate ?? this.birthDate,
@@ -57,6 +61,7 @@ class ClientModel {
         weight: weight ?? this.weight,
         dateCreation: dateCreation ?? this.dateCreation,
         clientGoalModel: clientGoalModel ?? this.clientGoalModel,
+        workoutPlanList: workoutPlanList ?? this.workoutPlanList,
       );
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
@@ -72,6 +77,9 @@ class ClientModel {
     weight: json["weight"],
     dateCreation: (json["date_creation"] as Timestamp).toDate(),
     clientGoalModel: ClientGoalModel.fromJson(json["goal"]),
+    workoutPlanList: json["workoutPlans"] != null
+        ? List<WorkoutPlan>.from(json["workoutPlans"].map((x) => x))
+        : [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -87,6 +95,7 @@ class ClientModel {
     "weight": weight,
     "date_creation": Timestamp.fromDate(dateCreation),
     "goal": clientGoalModel?.toJson(),
+    "workoutPlans": List<dynamic>.from(workoutPlanList.map((x) => x)),
   };
 }
 

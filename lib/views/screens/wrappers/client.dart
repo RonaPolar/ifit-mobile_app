@@ -58,8 +58,7 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
         expertList: expertModel,
       ),
       ProgramTrackerScreen(
-        workoutMeals: workoutMeal,
-        workoutPlans: workoutPlan,
+        clientModel: clientModel,
       ),
       ProfileScreen(),
     ];

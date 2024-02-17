@@ -38,8 +38,7 @@ class _WorkoutCongratsState extends State<WorkoutCongrats> {
                                textAlign: TextAlign.center,
                               ),
                             const Gap(10),
-                            Text(
-                              'Exercises is king and nutrition is queen. Combine the two and you will have a kingdom\n-Jack Lalanne',
+                            Text('Exercises is king and nutrition is queen. Combine the two and you will have a kingdom\n-Jack Lalanne',
                                style: Styles.text15normal,
                                textAlign: TextAlign.center,
                               ),
