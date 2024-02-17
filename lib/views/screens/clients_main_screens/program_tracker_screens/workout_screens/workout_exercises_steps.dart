@@ -1,14 +1,20 @@
-import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
-import 'package:ifit/views/widgets/video_player.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/video.dart';
 import 'package:readmore/readmore.dart';
 
 class WorkoutExercisesSteps extends StatefulWidget {
-  final Map eObj;
-  const WorkoutExercisesSteps({super.key, required this.eObj});
+  const WorkoutExercisesSteps({
+    super.key,
+    required this.eObj,
+    required this.index,
+  });
+
+  final ExerciseElement eObj;
+  final int index;
 
   @override
   State<WorkoutExercisesSteps> createState() => _WorkoutExercisesStepsState();
@@ -77,18 +83,17 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const VidPlayer(
-                  videoAssetPath: 'assets/videos/warmup.mp4',
+                ExerciseVideoWidget(
+                  urlVideo: widget.eObj.url,
                 ),
                 const Gap(20),
                 Text(
-                  widget.eObj["title"].toString(),
+                  widget.eObj.title.toString(),
                   style: Styles.text18.copyWith(
                       fontWeight: FontWeight.w700),
                 ),
                 const Gap(2),
-                Text(
-                  widget.eObj["value"].toString(),
+                Text("${widget.index + 1}",
                   style: Styles.normal.copyWith(
                   ),
                 ),
@@ -99,8 +104,7 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
                       fontWeight: FontWeight.w700),
                 ),
                 const Gap(10),
-                ReadMoreText(
-                  'A jumping jack, also known as a star jump and called a side-straddle hop in the US military, is a physical jumping exercise performed by jumping to a position with the legs spread wide and the hands going overhead, sometimes in a clap, and then returning to a position with the feet together and the arms at the sides.',
+                ReadMoreText(widget.eObj.description,
                   style: Styles.seeMore.copyWith(
                     fontWeight: FontWeight.normal
                   ),
@@ -110,9 +114,11 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
                   trimCollapsedText: '  Show more',
                   trimExpandedText: ' Show less',
                   moreStyle: Styles.seeMore.copyWith(
-                      color: Colors.blue),
+                      color: Colors.blue,
+                  ),
                   lessStyle: Styles.seeMore.copyWith(
-                      color: Colors.blue),
+                      color: Colors.blue,
+                  ),
                 ),
                 const Gap(20),
                 Row(
@@ -124,7 +130,7 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
                           fontWeight: FontWeight.w700),
                     ),
                     Text(
-                      "${stepArr.length} Steps",
+                      "${widget.eObj.steps.length} Steps",
                       style: Styles.normal.copyWith(
                           fontWeight: FontWeight.bold),
                     ),
@@ -136,13 +142,14 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: stepArr.length,
+                    itemCount: widget.eObj.steps.length,
                     itemBuilder: (context, index) {
-                      var sObj = stepArr[index];
-                      // return ExerStepsDottedLine(
-                      //   step: sObj,
-                      //   isLast: stepArr.last == sObj,
-                      // );
+                      var sObj = widget.eObj.steps[index];
+                      return ExerStepsDottedLine(
+                        index: index,
+                        step: sObj,
+                        isLast: widget.eObj.steps.last == sObj,
+                      );
                     },
                 ),
                 

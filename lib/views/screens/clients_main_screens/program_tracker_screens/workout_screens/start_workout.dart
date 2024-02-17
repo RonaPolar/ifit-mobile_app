@@ -4,11 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/video.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/widgets/video_player.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_exercises_steps.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class StartWorkout extends StatefulWidget {
   const StartWorkout({
@@ -87,8 +85,9 @@ class _StartWorkoutState extends State<StartWorkout> {
             width: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10)),
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: const Icon(
               Icons.close,
               size: 20,
@@ -134,7 +133,6 @@ class _StartWorkoutState extends State<StartWorkout> {
                   ),
                 ),
 
-                
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -159,8 +157,11 @@ class _StartWorkoutState extends State<StartWorkout> {
                 ),
                 const Gap(15),
 
-                VidPlayer(
-                  videoAssetPath: exercisesArr[0]["video"].toString(),
+                // VidPlayer(
+                //   videoAssetPath: exercisesArr[0]["video"].toString(),
+                // ),
+                ExerciseVideoWidget(
+                  urlVideo: widget.exercise.exercises[0].url,
                 ),
                 const Gap(20),
                 Column(

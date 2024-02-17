@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 
 class ClientProvider extends ChangeNotifier {
@@ -51,9 +52,7 @@ class ClientProvider extends ChangeNotifier {
   Stream<List<List<WorkoutPlan>>>? workoutPlanListStream;
 
   Stream<List<List<WorkoutPlan>>> getWorkoutPlanList() {
-
     final data = _db.collection(tWorkoutPlanPath).snapshots().map(workoutPlanFromSnapshot);
-
     return data;
   }
 
@@ -66,6 +65,25 @@ class ClientProvider extends ChangeNotifier {
 
   void updateWorkoutPlanListStream() {
     workoutPlanListStream = getWorkoutPlanList();
+    notifyListeners();
+  }
+
+  Stream<List<List<WorkoutMeal>>>? workoutMealListStream;
+
+  Stream<List<List<WorkoutMeal>>> getWorkoutMealList() {
+    final data = _db.collection(tWorkoutMealPath).snapshots().map(workoutMealFromSnapshot);
+    return data;
+  }
+
+  List<List<WorkoutMeal>> workoutMealFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((data) {
+      final map = (data.data() as Map<String, dynamic>)["workoutMeals"];
+      return (map as List).map((data) => WorkoutMeal.fromJson(data)).toList();
+    }).toList();
+  }
+
+  void updateWorkoutMealListStream() {
+    workoutMealListStream = getWorkoutMealList();
     notifyListeners();
   }
 

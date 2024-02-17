@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 
 class ExercisesRow extends StatelessWidget {
   final ExerciseElement exerciseElement;
-  final Function(Map obj) onPressed;
+  final Function() onPressed;
 
   const ExercisesRow({
     Key? key,
@@ -48,7 +47,7 @@ class ExercisesRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: onPressed,
             icon: const Icon(Icons.navigate_next),
           )
         ],

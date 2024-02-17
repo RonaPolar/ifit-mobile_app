@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/container/little.dart';
-import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 
 class PopularWidget extends StatelessWidget {
   const PopularWidget({
@@ -59,12 +56,12 @@ class PopularWidget extends StatelessWidget {
                 final mealItem = item as Meal;
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MealDetails(dObj: item),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MealDetails(dObj: item),
+                    //   ),
+                    // );
                   },
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),

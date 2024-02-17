@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
@@ -95,7 +96,7 @@ class ExpertProvider extends ChangeNotifier {
     "Body Toning",
   ];
 
-  void updateWorkoutPurpose(String value) {
+  void updateWorkoutPurpose(String? value) {
     workoutPurpose = value;
     notifyListeners();
   }
@@ -114,7 +115,7 @@ class ExpertProvider extends ChangeNotifier {
   }
 
   static TextEditingController planName = TextEditingController();
-  static TextEditingController description = TextEditingController();
+  static TextEditingController workoutDescription = TextEditingController();
   static TextEditingController minutes = TextEditingController();
   static TextEditingController calories = TextEditingController();
 
@@ -211,7 +212,6 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
-
     final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
     final auth = await _db.collection(tExpertPath).doc(id).get();
     final String expertName = auth.get("name");
@@ -223,7 +223,7 @@ class ExpertProvider extends ChangeNotifier {
         purpose: workoutPurpose ?? "",
         difficulty: workoutDifficulty ?? "",
         planName: planName.text,
-        description: description.text,
+        description: workoutDescription.text,
         workoutPicture: workoutPhotoUrl!,
         daysOfThePlan: daysOfThePlan!,
         minutes: minutes.text,
@@ -258,8 +258,6 @@ class ExpertProvider extends ChangeNotifier {
           .onError((error, stackTrace) => "Failed: $error");
       }
     });
-
-
   }
 
   String? workoutPhotoUrl;
@@ -281,7 +279,7 @@ class ExpertProvider extends ChangeNotifier {
     workoutPurpose = null;
     workoutDifficulty = null;
     planName.clear();
-    description.clear();
+    workoutDescription.clear();
     workoutPicture = null;
     daysOfThePlan = null;
     minutes.clear();
@@ -295,11 +293,142 @@ class ExpertProvider extends ChangeNotifier {
 
   String? foodCategory;
 
-  List<String> foodCategoryList = [
+  final List<String> foodCategoryList = [
     "Breakfast",
     "Lunch",
     "Dinner",
     "Snacks",
-    "Drinks",
+    "Drinks"
   ];
+
+  void updateFoodCategory(String? value) {
+    foodCategory = value;
+    notifyListeners();
+  }
+
+  static TextEditingController foodPlanName = TextEditingController();
+  static TextEditingController foodDescription = TextEditingController();
+
+  XFile? workoutMeal;
+
+  Future<void> uploadWorkoutMeal(BuildContext context) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        workoutMeal = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  static TextEditingController mealCalories = TextEditingController();
+  static TextEditingController mealFats = TextEditingController();
+  static TextEditingController mealSugar = TextEditingController();
+  static TextEditingController mealProtein = TextEditingController();
+
+  List<TextEditingController> ingredientsList = [];
+
+  void updateIngredientsList(bool add) {
+    if (add) {
+      ingredientsList.add(TextEditingController());
+    } else if (ingredientsList.isNotEmpty) {
+      ingredientsList.removeAt(ingredientsList.length - 1);
+    }
+    notifyListeners();
+  }
+
+  List<TextEditingController> mealPreparationsList = [];
+
+  void updateMealPreparationsList(bool add) {
+    if (add) {
+      mealPreparationsList.add(TextEditingController());
+    } else if (mealPreparationsList.isNotEmpty) {
+      mealPreparationsList.removeAt(mealPreparationsList.length - 1);
+    }
+    notifyListeners();
+  }
+
+  String? workoutMealPhoto;
+
+  Future<void> uploadWorkoutMealPhoto(String id) async {
+    final file = File(workoutMeal!.path);
+    final ref = FirebaseStorage.instance.ref()
+        .child(tWorkoutMealPath)
+        .child(id)
+        .child(workoutMeal!.name);
+    await ref.putFile(file);
+
+    workoutMealPhoto = await ref.getDownloadURL();
+    notifyListeners();
+  }
+
+  Future<void> addWorkoutMeal({
+    required String id,
+  }) async {
+
+    final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+    final auth = await _db.collection(tExpertPath).doc(id).get();
+    final String expertName = auth.get("name");
+
+    await uploadWorkoutMealPhoto(id).then((value) async {
+      final WorkoutMeal workoutMeal = WorkoutMeal(
+        foodCategory: foodCategory ?? "",
+        purpose: workoutPurpose ?? "",
+        foodPlanName: foodPlanName.text,
+        description: foodDescription.text,
+        foodPhoto: workoutMealPhoto!,
+        calories: mealCalories.text,
+        fats: mealFats.text,
+        sugar: mealSugar.text,
+        protein: mealSugar.text,
+        rating: 0,
+        expertName: expertName,
+        ingredients: ingredientsList.map((e) => e.text).toList(),
+        stepPrep: mealPreparationsList.map((e) => e.text).toList(),
+      );
+
+      final bool hasWorkoutMeals = !data.data()!.containsKey("workoutMeals");
+
+      if (hasWorkoutMeals) {
+        await _db.collection(tWorkoutMealPath).doc(id).set({
+          "workoutMeals": [
+            workoutMeal.toJson(),
+          ],
+        })
+          .then((value) => debugPrint("Workout meal added successfully!"))
+          .onError((error, stackTrace) => "Failed: $error");
+      } else {
+        final List objects = data["workoutMeals"];
+
+        objects.add(workoutMeal.toJson());
+        await _db.collection(tWorkoutMealPath).doc(id).set({
+          "workoutMeals": objects,
+        })
+          .then((value) => debugPrint("Workout meal added successfully!"))
+          .onError((error, stackTrace) => "Failed: $error");
+      }
+    });
+  }
+
+  void clearWorkoutMealForm() {
+    foodCategory = null;
+    workoutPurpose = null;
+    foodPlanName.clear();
+    foodDescription.clear();
+    workoutMeal = null;
+    workoutMealPhoto = null;
+    mealCalories.clear();
+    mealFats.clear();
+    mealSugar.clear();
+    mealProtein.clear();
+    ingredientsList = [];
+    mealPreparationsList = [];
+    notifyListeners();
+  }
+
+
+
+
 }

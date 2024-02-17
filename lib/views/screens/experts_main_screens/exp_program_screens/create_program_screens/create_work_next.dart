@@ -1,12 +1,8 @@
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/widgets/text_field/text_field_container.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 
 class CreateWorkoutNext extends StatefulWidget {
   const CreateWorkoutNext({super.key});
@@ -140,24 +136,23 @@ class _CreateWorkoutNextState extends State<CreateWorkoutNext> {
                         hintText: 'Input the Step 1 to the Preparation',
                       ),
                     ),
-                    AddsubButton(
-                      title: 'Steps',
-                      add: SizedBox(
-                          height: 100,
-                          child: BigTextField(
-                              controller: workoutDescriptions,
-                              hintText:
-                                  'Input the Next Step to the Preparation')),
-                      subtract: const Column(),
-                    ),
+                    // AddsubButton(
+                    //   title: 'Steps',
+                    //   add: SizedBox(
+                    //       height: 100,
+                    //       child: BigTextField(
+                    //           controller: workoutDescriptions,
+                    //           hintText:
+                    //               'Input the Next Step to the Preparation')),
+                    //   subtract: const Column(),
+                    // ),
                   ],
                 )
               ],
             ),
           ),
           Container(
-            padding:
-                const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
                 MainButton(

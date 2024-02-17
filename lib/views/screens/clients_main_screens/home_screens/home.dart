@@ -8,7 +8,6 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/container/big.dart';
-import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/schedule.dart';
 import 'package:ifit/models/workout.dart';
@@ -27,11 +26,13 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({
     required this.clientModel,
     required this.workoutPlanList,
+    required this.workoutMealList,
     super.key,
   });
 
   final ClientModel clientModel;
   final List<List<WorkoutPlan>> workoutPlanList;
+  final List<List<WorkoutMeal>> workoutMealList;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -85,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 WelcomeBackWidget(
                   name: client.name,
                 ),
@@ -128,92 +128,117 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Gap(10),
                 ActivityTodayWidget(schedArr: schedArr),
                 const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Workout Recommendation", style: Styles.title),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => const WorkoutTrackerScreen()),
-                        );
-                      },
-                      child: Text("See More", style: Styles.seeMore),
-                    )
-                  ],
-                ),
-                Row(
-                  children: widget.workoutPlanList.map((data) {
-                    return Expanded(
-                      child: SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final WorkoutPlan workoutPlan = data[index];
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => WorkoutDetails(dObj: workoutPlan)));
-                              },
-                              child: BigContainer(
-                                image: workoutPlan.workoutPicture,
-                                title: workoutPlan.planName,
-                                bottomText:
-                                "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-
+                _buildWorkoutRecommendation(clientProvider),
                 const Gap(15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Meal Recommendation", style: Styles.title),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MealTrackerScreen()),
-                        );
-                      },
-                      child: Text("See More", style: Styles.seeMore),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 200,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: recommendMeal.length,
-                      itemBuilder: (context, index) {
-                        var mObj = recommendMeal[index];
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => MealDetails(dObj: mObj)),
-                              );
-                            },
-                            child: BigContainer(
-                              image: mObj.image,
-                              title: mObj.name,
-                              bottomText:
-                                  "${mObj.categories} | ${mObj.kcal} kcal",
-                            ));
-                      }),
-                ),
+                _buildMealRecommendation(clientProvider),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWorkoutRecommendation(ClientProvider clientProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Workout Recommendation", style: Styles.title),
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => const WorkoutTrackerScreen()),
+                );
+              },
+              child: Text("See More", style: Styles.seeMore),
+            )
+          ],
+        ),
+        Row(
+          children: widget.workoutPlanList.map((data) {
+            return Expanded(
+              child: SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final WorkoutPlan workoutPlan = data[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => WorkoutDetails(dObj: workoutPlan)));
+                      },
+                      child: BigContainer(
+                        image: workoutPlan.workoutPicture,
+                        title: workoutPlan.planName,
+                        bottomText:
+                        "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMealRecommendation(ClientProvider clientProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Meal Recommendation", style: Styles.title),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MealTrackerScreen()),
+                );
+              },
+              child: Text("See More", style: Styles.seeMore),
+            )
+          ],
+        ),
+        Row(
+          children: widget.workoutMealList.map((data) {
+            return Expanded(
+              child: SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final WorkoutMeal mObj = data[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => MealDetails(dObj: mObj)),
+                        );
+                      },
+                      child: BigContainer(
+                        image: mObj.foodPhoto,
+                        title: mObj.foodPlanName,
+                        bottomText:
+                        "${mObj.purpose} | ${mObj.calories} kcal",
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }

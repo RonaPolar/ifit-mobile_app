@@ -64,67 +64,98 @@ class Meal {
 }
 
 class WorkoutMeal {
-  final String calories;
-  final String category;
-  final String description;
-  final String fats;
-  final String planName;
+  final String foodCategory;
   final String purpose;
+  final String foodPlanName;
+  final String description;
+  final String foodPhoto;
+  final String calories;
+  final String fats;
   final String sugar;
   final String protein;
+  final String expertName;
+  final List<String> ingredients;
+  final List<String> stepPrep;
+  final double rating;
 
   WorkoutMeal({
-    required this.calories,
-    required this.category,
-    required this.description,
-    required this.fats,
-    required this.planName,
+    required this.foodCategory,
     required this.purpose,
+    required this.foodPlanName,
+    required this.description,
+    required this.foodPhoto,
+    required this.calories,
+    required this.fats,
     required this.sugar,
     required this.protein,
+    required this.expertName,
+    required this.ingredients,
+    required this.stepPrep,
+    required this.rating,
   });
 
   WorkoutMeal copyWith({
-    String? calories,
-    String? category,
-    String? description,
-    String? fats,
-    String? planName,
+    String? foodCategory,
     String? purpose,
+    String? foodPlanName,
+    String? description,
+    String? foodPhoto,
+    String? calories,
+    String? fats,
     String? sugar,
     String? protein,
+    String? expertName,
+    List<String>? ingredients,
+    List<String>? stepPrep,
+    double? rating,
   }) =>
       WorkoutMeal(
-        calories: calories ?? this.calories,
-        category: category ?? this.category,
-        description: description ?? this.description,
-        fats: fats ?? this.fats,
-        planName: planName ?? this.planName,
+        foodCategory: foodCategory ?? this.foodCategory,
         purpose: purpose ?? this.purpose,
+        foodPlanName: foodPlanName ?? this.foodPlanName,
+        description: description ?? this.description,
+        foodPhoto: foodPhoto ?? this.foodPhoto,
+        calories: calories ?? this.calories,
+        fats: fats ?? this.fats,
         sugar: sugar ?? this.sugar,
         protein: protein ?? this.protein,
+        expertName: expertName ?? this.expertName,
+        ingredients: ingredients ?? this.ingredients,
+        stepPrep: stepPrep ?? this.stepPrep,
+        rating: rating ?? this.rating,
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
-    calories: json["calories"],
-    category: json["category"],
-    description: json["description"],
-    fats: json["fats"],
-    planName: json["planName"],
+    foodCategory: json["foodCategory"],
     purpose: json["purpose"],
+    foodPlanName: json["foodPlanName"],
+    description: json["description"],
+    foodPhoto: json["foodPhoto"],
+    calories: json["calories"],
+    fats: json["fats"],
     sugar: json["sugar"],
     protein: json["protein"],
+    expertName: json["expertName"],
+    ingredients: List<String>.from(json["ingredients"].map((x) => x)),
+    stepPrep: List<String>.from(json["stepPrep"].map((x) => x)),
+    rating: double.parse(json["rating"].toString()),
   );
 
   Map<String, dynamic> toJson() => {
-    "calories": calories,
-    "category": category,
-    "description": description,
-    "fats": fats,
-    "planName": planName,
+    "foodCategory": foodCategory,
     "purpose": purpose,
+    "foodPlanName": foodPlanName,
+    "description": description,
+    "foodPhoto": foodPhoto,
+    "calories": calories,
+    "fats": fats,
     "sugar": sugar,
     "protein": protein,
+    "expertName": expertName,
+    "ingredients": List<dynamic>.from(ingredients.map((x) => x)),
+    "stepPrep": List<dynamic>.from(stepPrep.map((x) => x)),
+    "rating": rating,
   };
 }
+
 

@@ -50,6 +50,8 @@
           <string>sms</string>
           <string>tel</string>
         </array>
+        <key>io.flutter.embedded_views_preview</key>
+        <string>YES</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>

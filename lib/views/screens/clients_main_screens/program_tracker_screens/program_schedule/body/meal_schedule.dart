@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/more_icon.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 
 class MealSchedule extends StatefulWidget {
   const MealSchedule({super.key});
@@ -17,8 +16,6 @@ class MealSchedule extends StatefulWidget {
 class _MealScheduleState extends State<MealSchedule> {
   final CalendarAgendaController _calendarAgendaControllerAppBar =
       CalendarAgendaController();
-
-  late DateTime _selectedDateAppBBar;
 
   List<Map<String, dynamic>> mealSched = [
     {
@@ -124,14 +121,6 @@ class _MealScheduleState extends State<MealSchedule> {
     },
   ];
 
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDateAppBBar = DateTime.now();
-    // setDayEventWorkoutList();
-  }
-
   @override
   Widget build(BuildContext context) {
     // var media = MediaQuery.of(context).size;
@@ -163,9 +152,7 @@ class _MealScheduleState extends State<MealSchedule> {
                 lastDate: DateTime.now().add(const Duration(days: 60)),
       
                 onDateSelected: (date) {
-                  _selectedDateAppBBar = date;
-                  // setDayEventWorkoutList();
-                  // setState(() {});
+                  final DateTime now = DateTime.now();
                 },
       
                 selectedDayLogo: Container(
@@ -349,7 +336,7 @@ class _MealScheduleState extends State<MealSchedule> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      AddSchedule(date: _selectedDateAppBBar)));
+                      AddSchedule()));
         },
         child: Container(
           width: 55,
@@ -435,7 +422,7 @@ class _SchedMealRowState extends State<SchedMealRow> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddSchedule(date: DateTime.now()),
+                      builder: (context) => AddSchedule(),
                     ),
                   );
                 } else if (selectedOption == 'Remove') {

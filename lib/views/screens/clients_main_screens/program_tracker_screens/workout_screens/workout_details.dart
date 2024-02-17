@@ -161,7 +161,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                   ),
                 ),
               ),
-              
+
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
@@ -223,7 +223,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                       style: Styles.text12.copyWith(
                                         color: Colors.blue,
                                       ),
-                                      
+
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                         /// TODO: ADD TO FAVORITES
@@ -239,7 +239,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                     ),
                                   ],
                                 ),
-                              ),  
+                              ),
                             ],
                           ),
                           Container(
@@ -247,7 +247,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: const FavoriteButton()),
                         ],
                       ),
-                      
+
                     ],
                   ),
                   const Gap(15),
@@ -378,7 +378,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddSchedule(date: DateTime.now()),
+                              builder: (context) => AddSchedule(),
                             ),
                           );
                         }),
@@ -442,11 +442,14 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       var sObj = widget.dObj.exercise.exercises[index];
                       return ExercisesRow(
                         exerciseElement: sObj,
-                        onPressed: (obj) {
+                        onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WorkoutExercisesSteps(eObj: obj)
+                              builder: (context) => WorkoutExercisesSteps(
+                                eObj: sObj,
+                                index: index,
+                              )
                             ),
                           );
                         },

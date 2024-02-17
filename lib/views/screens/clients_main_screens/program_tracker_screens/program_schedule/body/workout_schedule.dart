@@ -229,7 +229,7 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                    builder: (context) => AddSchedule(date: _selectedDateAppBBar),
+                                                                    builder: (context) => AddSchedule(),
                                                                   ),
                                                                 );
                                                               } else if (selectedOption == 'Remove') {
@@ -335,7 +335,7 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    AddSchedule(date: _selectedDateAppBBar)));
+                    AddSchedule()));
         },
         child: Container(
           width: 55,

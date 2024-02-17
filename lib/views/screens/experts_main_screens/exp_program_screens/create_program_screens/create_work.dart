@@ -139,7 +139,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                   SizedBox(
                     height: 100,
                     child: TextFieldContainer(
-                      controller: ExpertProvider.description,
+                      controller: ExpertProvider.workoutDescription,
                       hintText: "Description",
                       icon: Icons.description,
                     ),
@@ -207,8 +207,8 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                         await expertProvider.addWorkoutPlan(
                           id: widget.id,
                         ).then((value) {
-                          // expertProvider.clearWorkoutPlanForm();
-                          // Navigator.of(context).pop();
+                          expertProvider.clearWorkoutPlanForm();
+                          Navigator.of(context).pop();
                         });
                       },
                     ),

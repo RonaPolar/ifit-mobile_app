@@ -34,9 +34,6 @@ class _WorkoutPlanWrapperState extends State<WorkoutPlanWrapper> {
     return StreamBuilder<List<List<WorkoutPlan>>>(
       stream: clientProvider.workoutPlanListStream,
       builder: (context, snapshot) {
-
-        print(snapshot.data);
-
         if (snapshot.hasData) {
           final data = snapshot.data!;
 

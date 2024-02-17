@@ -125,12 +125,12 @@ class _RegisterState extends State<Register> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  clientProvider.updateWorkoutPlanListStream();
-                },
-                child: Text("tap"),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     clientProvider.updateWorkoutPlanListStream();
+              //   },
+              //   child: Text("tap"),
+              // ),
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(

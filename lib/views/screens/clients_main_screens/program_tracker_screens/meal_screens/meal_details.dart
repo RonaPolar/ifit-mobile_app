@@ -1,10 +1,9 @@
-import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -20,7 +19,7 @@ class MealDetails extends StatefulWidget {
     super.key,
   });
 
-  final Meal dObj;
+  final WorkoutMeal dObj;
 
   @override
   State<MealDetails> createState() => _MealDetailsState();
@@ -117,7 +116,7 @@ class _MealDetailsState extends State<MealDetails> {
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
-                child: Image.asset(widget.dObj.image),
+                child: Image.network(widget.dObj.foodPhoto),
               ),
             ),
           ];
@@ -154,7 +153,7 @@ class _MealDetailsState extends State<MealDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.dObj.name,
+                                  widget.dObj.foodPlanName,
                                   style: Styles.text18.copyWith(
                                       fontWeight: FontWeight.w700),
                                 ),
@@ -166,7 +165,7 @@ class _MealDetailsState extends State<MealDetails> {
                                         style: Styles.text12
                                       ),
                                       TextSpan(
-                                        text: "${discoverExperts[0]["name"]}",
+                                        text: widget.dObj.expertName,
                                         style: Styles.text12.copyWith(
                                           color: Colors.blue,
                                         ),
@@ -178,7 +177,9 @@ class _MealDetailsState extends State<MealDetails> {
                                                 builder: (context) => ExpertProfile(
                                                   exObj: exObj,
                                                   combinedList: [],
-                                                )),);
+                                                ),
+                                              ),
+                                           );
                                           },
                                       ),
                                     ],
@@ -187,8 +188,9 @@ class _MealDetailsState extends State<MealDetails> {
                               ],
                             ),
                             Container(
-                                padding: EdgeInsets.zero,
-                                child: const FavoriteButton()),
+                              padding: EdgeInsets.zero,
+                              child: const FavoriteButton(),
+                            ),
                           ],
                         ),
                       ),
@@ -216,8 +218,7 @@ class _MealDetailsState extends State<MealDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Styles.secondColor.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(12),
@@ -225,14 +226,14 @@ class _MealDetailsState extends State<MealDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.star_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.rate} stars"),
+                                  Text("${widget.dObj.rating} stars"),
                                 ],
                               ),
                             ),
                             const Gap(5), 
                             NutritionDescriptions(
                               imagePath: "assets/icons/calories.png", 
-                              label: "${widget.dObj.kcal} calories"), 
+                              label: "${widget.dObj.calories} calories"),
                             const Gap(5),  
                             NutritionDescriptions(
                               imagePath: "assets/icons/fat.png", 
@@ -244,38 +245,36 @@ class _MealDetailsState extends State<MealDetails> {
                             const Gap(5),
                             NutritionDescriptions(
                               imagePath: "assets/icons/protein.png", 
-                              label: "${widget.dObj.proteins} proteins"),
+                              label: "${widget.dObj.protein} proteins"),
                           ],
                         ),
                       ),
-                      
-
                       const Gap(20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Descriptions',
+                            Text('Descriptions',
                               style:  Styles.text18.copyWith(
                                   fontWeight: FontWeight.w700),
                               ),
                             const Gap(10),
-                            ReadMoreText(
-                            "Pancakes are some people's favorite breakfast, who doesn't like pancakes? Especially with the real honey splash on top of the pancakes, of course everyone loves that!",
-                            style: Styles.seeMore.copyWith(
-                              fontWeight: FontWeight.normal
-                            ),
-                            trimLines: 3,
-                            colorClickableText: Colors.blue,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: '  Show more',
-                            trimExpandedText: ' Show less',
-                            moreStyle:  Styles.seeMore.copyWith(
-                                color: Colors.blue),
-                            lessStyle:  Styles.seeMore.copyWith(
-                                color: Colors.blue),
+                            ReadMoreText(widget.dObj.description,
+                              style: Styles.seeMore.copyWith(
+                                fontWeight: FontWeight.normal
+                              ),
+                              trimLines: 3,
+                              colorClickableText: Colors.blue,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: '  Show more',
+                              trimExpandedText: ' Show less',
+                              moreStyle:  Styles.seeMore.copyWith(
+                                  color: Colors.blue,
+                              ),
+                              lessStyle:  Styles.seeMore.copyWith(
+                                  color: Colors.blue,
+                              ),
                             ),
                           ],
                         ),
@@ -298,13 +297,11 @@ class _MealDetailsState extends State<MealDetails> {
                           title: 'Schedule Meal',
                           iconData: FluentSystemIcons.ic_fluent_calendar_regular,
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddSchedule(date: DateTime.now()),
-                              ),
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => const AddSchedule()),
                             );
-                          }),
+                          },
+                      ),
                     ),
                   ),
 
@@ -323,7 +320,7 @@ class _MealDetailsState extends State<MealDetails> {
                                   fontWeight: FontWeight.w700),
                             ),
                             Text(
-                              "${itemsArr.length} Items",
+                              "${widget.dObj.ingredients.length} Items",
                               style: Styles.normal.copyWith(
                                   fontWeight: FontWeight.w700),
                             )
@@ -331,32 +328,23 @@ class _MealDetailsState extends State<MealDetails> {
                         ),
                         const Gap(5),
                         ListView.builder(
-                            padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: itemsArr.length,
-                            itemBuilder: (context, index) {
-                              var yObj = itemsArr[index];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text( yObj["item"].toString(),
-                                        style: Styles.normal.copyWith(
-                                          ),
-                                        ),
-                                      Text( yObj["value"].toString(),
-                                        style: Styles.normal.copyWith(
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            }),
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: widget.dObj.ingredients.length,
+                          itemBuilder: (context, index) {
+                            final String yObj = widget.dObj.ingredients[index];
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(yObj,
+                                  style: Styles.normal.copyWith(
+                                    ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -374,11 +362,6 @@ class _MealDetailsState extends State<MealDetails> {
                               style:  Styles.text18.copyWith(
                                   fontWeight: FontWeight.w700),
                             ),
-                            Text(
-                              "${stepArr.length} Sets",
-                              style:  Styles.normal.copyWith(
-                                  fontWeight: FontWeight.w700),
-                            )
                           ],
                         ),
                         const Gap(10),
@@ -386,169 +369,65 @@ class _MealDetailsState extends State<MealDetails> {
                           padding: EdgeInsets.zero,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: stepArr.length,
+                          itemCount: widget.dObj.stepPrep.length,
                           itemBuilder: (context, index) {
-                            var sObj = stepArr[index];
-                            return MealStepsDottedLine(
-                              sObj: sObj,
-                              isLast: stepArr.last == sObj,
-                            );
-                          }),
-                  
+                            final String sObj = widget.dObj.stepPrep[index];
+                            // return MealStepsDottedLine(
+                            //   sObj: sObj,
+                            //   isLast: stepArr.last == sObj,
+                            //   index: index,
+                            // );
+                          },
+                        ),
+
                         Container(
-                          padding: const EdgeInsets.only(top: 5,
-                              bottom: 10),
+                          padding: const EdgeInsets.only(top: 5, bottom: 10),
                           child: Column(
                             children: [
-                              Visibility(
-                                visible: isContainerVisible,
-                                child: SizedBox(
-                                  width: 200,
-                                  child: MainButton(
-                                  title: "Are you Done?",
-                                  buttonColor: Styles.secondColor,
-                                  onPressed: () {
-                                    showDialog(context: context,
-                                      builder: (BuildContext context) {
-                                        return ConfirmationDialog(
-                                          onYesPressed: () {
-                                            setState(() {
-                                              buttonText = "Start Now";
-                                              isContainerVisible = false;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                    );});
-                                  },
-                                  ),
-                                ),
-                              ),
+                              // Visibility(
+                              //   visible: isContainerVisible,
+                              //   child: SizedBox(
+                              //     width: 200,
+                              //     child: MainButton(
+                              //     title: "Are you Done?",
+                              //     buttonColor: Styles.secondColor,
+                              //     onPressed: () {
+                              //       showDialog(context: context,
+                              //         builder: (BuildContext context) {
+                              //           return ConfirmationDialog(
+                              //             onYesPressed: () {
+                              //                 Navigator.pop(context);
+                              //               },
+                              //             );
+                              //           },
+                              //         );
+                              //       },
+                              //     ),
+                              //   ),
+                              // ),
                               const Gap(10),
                               MainButton(
                                 title: buttonText,
                                 onPressed: () {
-                                  setState(() {
-                                    buttonText = 'Preparing...';
-                                    isContainerVisible = !isContainerVisible;
-                                  });
+                                  Navigator.of(context).pop();
                                 },
                               ),
-                              
-                              
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-
-                ], //Main children
+                ],
               ),
             ),
           ),
-        ), //Main top
-      ),
-    );
-  }
-}
-
-
-// Nutrition Descriptions Widget
-class NutritionDescriptions extends StatelessWidget {
-  final String imagePath;
-  final String label;
-
-  const NutritionDescriptions({
-    Key? key,
-    required this.imagePath,
-    required this.label,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Styles.secondColor.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            imagePath,
-            scale: 10,
-            fit: BoxFit.contain,
-          ),
-          const Gap(2),
-          Text(label),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-class MealStepsDottedLine extends StatelessWidget {
-  final Map sObj;
-  final bool isLast;
-  const MealStepsDottedLine({super.key, required this.sObj, this.isLast = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 18,
-              height: 18,
-              decoration: BoxDecoration(
-                color: Styles.secondColor.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(9),
-              ),
-              alignment: Alignment.center,
-              child: Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 3),
-                borderRadius: BorderRadius.circular(8),
-              ),) ,
-            ),
-            if (!isLast)
-              DottedDashedLine(
-                  height: 70,
-                  width: 0,
-                  dashColor: Styles.secondColor.withOpacity(0.5),
-                  axis: Axis.vertical)
-          ],
         ),
-        const Gap(5), //gap between text and line
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //waterArry
-              Text(
-                "Step ${ sObj["no"].toString()}",
-                style: Styles.normal.copyWith(
-                  color: Styles.secondColor),
-                ),
-              Text(
-                sObj["detail"].toString(),
-                style: Styles.seeMore.copyWith(
-                 fontWeight: FontWeight.normal),
-                ),
-              const Gap(5),
-            ],
-          ),
-        )
-      ],
+      ),
     );
   }
 }
+
+
+
+

@@ -9,8 +9,7 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 
 
 class AddSchedule extends StatefulWidget {
-  final DateTime date;
-  const AddSchedule({super.key, required this.date});
+  const AddSchedule({super.key});
 
   @override
   State<AddSchedule> createState() => _AddScheduleState();
@@ -19,6 +18,9 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   @override
   Widget build(BuildContext context) {
+
+    final DateTime now = DateTime.now();
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -69,7 +71,7 @@ class _AddScheduleState extends State<AddSchedule> {
                           ),
                           const Gap(5),
                           Text(
-                            dateToString(widget.date, formatStr: "E, dd MMMM yyyy"),
+                            dateToString(now, formatStr: "E, dd MMMM yyyy"),
                             style: Styles.normal.copyWith(
                               fontSize: 18
                               ),

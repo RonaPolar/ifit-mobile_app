@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/discover.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_tracker.dart';
+import 'package:ifit/views/screens/wrappers/workout_meal.dart';
 import 'package:ifit/views/screens/wrappers/workout_plan.dart';
 import 'package:provider/provider.dart';
 
@@ -38,11 +40,13 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
   List<Widget> bodyList({
     required ClientModel clientModel,
     required List<List<WorkoutPlan>> workoutPlan,
+    required List<List<WorkoutMeal>> workoutMeal,
   }) {
     return [
       HomeScreen(
         clientModel: clientModel,
         workoutPlanList: workoutPlan,
+        workoutMealList: workoutMeal,
       ),
       DiscoverScreen(),
       ProgramTrackerScreen(),
@@ -59,7 +63,6 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       stream: client.clientStream,
       builder: (context, snapshot) {
 
-
         if (snapshot.hasData) {
           final client = snapshot.data!;
 
@@ -67,7 +70,17 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
             child: (data) {
               final List<List<WorkoutPlan>> workoutPlan = data;
 
-              return bodyList(clientModel: client, workoutPlan: workoutPlan)[widget.index];
+              return WorkoutMealWrapper(
+                child: (data) {
+                  final List<List<WorkoutMeal>> workoutMeal = data;
+
+                  return bodyList(
+                    clientModel: client,
+                    workoutPlan: workoutPlan,
+                    workoutMeal: workoutMeal,
+                  )[widget.index];
+                }
+              );
             }
           );
         } else if (snapshot.hasError) {

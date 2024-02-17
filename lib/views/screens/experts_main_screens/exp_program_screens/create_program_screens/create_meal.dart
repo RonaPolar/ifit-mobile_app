@@ -1,17 +1,15 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/models/meal.dart';
+import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class CreateMeal extends StatefulWidget {
   const CreateMeal({
@@ -26,71 +24,11 @@ class CreateMeal extends StatefulWidget {
 }
 
 class _CreateMealState extends State<CreateMeal> {
-  String? selectedValue;
-  String? selectedFoodCategory;
-  String? selectedFoodPurpose;
-
-  List<TextEditingController> allItemsControllers = [];
-  List<TextEditingController> allStepssControllers = [];
-
-  final TextEditingController workoutPlanName = TextEditingController();
-  final TextEditingController workoutDescriptions = TextEditingController();
-  final TextEditingController workoutFats = TextEditingController();
-  final TextEditingController workoutSugar = TextEditingController();
-  final TextEditingController workoutprotein = TextEditingController();
-  final TextEditingController workoutCalories = TextEditingController();
-
-  XFile? foodpicture;
-  String downloadURL = '';
-
-  final ImagePicker picker = ImagePicker();
-
-  //we can upload image from camera or from gallery based on parameter
-  Future getImage(ImageSource source) async {
-    var img = await picker.pickImage(source: source);
-
-    setState(() {
-      foodpicture = img;
-    });
-
-    print(img!.path);
-  }
-
-  void myAlert() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: const Text('Please choose media to select'),
-            content: SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    //if user click this button, user can upload image from gallery
-                    onPressed: () {
-                      Navigator.pop(context);
-                      getImage(ImageSource.gallery);
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(Icons.image),
-                        Text('From Gallery'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -133,460 +71,248 @@ class _CreateMealState extends State<CreateMeal> {
           style: Styles.headline20,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(15),
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RegisterDropDown(
+                hintText: 'Food Category',
+                icon: FluentSystemIcons.ic_fluent_food_regular,
+                items: expertProvider.foodCategoryList.map((data) {
+                  return DropdownMenuItem<String>(
+                    value: data,
+                    child: Text(data),
+                  );
+                }).toList(),
+                onChanged: expertProvider.updateFoodCategory,
+                selectedValue: expertProvider.foodCategory,
+              ),
+              const Gap(10),
+              RegisterDropDown(
+                hintText: 'Purpose',
+                icon: Icons.fitness_center_outlined,
+                items: expertProvider.workoutPurposeList.map((data) {
+                  return DropdownMenuItem<String>(
+                    value: data,
+                    child: Text(data),
+                  );
+                }).toList(),
+                onChanged: expertProvider.updateWorkoutPurpose,
+                selectedValue: expertProvider.workoutPurpose,
+              ),
+              const Gap(10),
+              TextFieldContainer(
+                controller: ExpertProvider.foodPlanName,
+                hintText: 'Food Plan Name',
+                icon: FluentSystemIcons.ic_fluent_food_regular,
+              ),
+              const Gap(10),
+              SizedBox(
+                height: 100,
+                child: TextFieldContainer(
+                  controller: ExpertProvider.foodDescription,
+                  hintText: "Description",
+                  icon: Icons.description,
+                ),
+              ),
+              const Gap(10),
+              Row(
+                children: [
+                  Text('Food Picture',
+                    style: Styles.title,
+                  ),
+                  const Gap(10),
+                  SizedBox(
+                    height: 25,
+                    width: 100,
+                    child: MainButton(
+                      title: 'Upload',
+                      textStyle: Styles.title.copyWith(color: Colors.white),
+                      onPressed: () {
+                        expertProvider.uploadWorkoutMeal(context);
+                      },
+                    ),
+                  ),
+                  const Gap(15),
+                ],
+              ),
+              const Gap(15),
+              Container(
+                child: expertProvider.workoutMeal != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(File(expertProvider.workoutMeal!.path),
+                          fit: BoxFit.cover,
+                          width: 100,
+                          height: 100,
+                        ),
+                      ),
+                    )
+                  : const Text("No Image",
+                      style: TextStyle(fontSize: 20),
+                ),
+              ),
+              const Gap(20),
+              Text("Nutritions",
+                style: Styles.title,
+              ),
+              const Gap(5),
+              TextFieldContainer(
+                  controller: ExpertProvider.mealCalories,
+                  hintText: 'Calories',
+                  imagePath: "assets/icons/calories.png",
+              ),
+              const Gap(10),
+              TextFieldContainer(
+                  controller: ExpertProvider.mealFats,
+                  hintText: 'Fats',
+                  imagePath: "assets/icons/fat.png",
+              ),
+              const Gap(10),
+              TextFieldContainer(
+                  controller: ExpertProvider.mealSugar,
+                  hintText: 'Sugar',
+                  imagePath: "assets/icons/sugar.png",
+              ),
+              const Gap(10),
+              TextFieldContainer(
+                  controller: ExpertProvider.mealProtein,
+                  hintText: 'Protein',
+                  imagePath: "assets/icons/protein.png",
+              ),
+              const Gap(20),
+              Text("Ingredients Needed",
+                style: Styles.title,
+              ),
+              const Gap(5),
+              _buildIngredients(expertProvider),
+              const Gap(20),
+              Text(
+                "Step by Step Preparations",
+                style: Styles.title,
+              ),
+              const Gap(5),
+              _buildStepPreparations(expertProvider),
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
                   children: [
-                    RegisterDropDown(
-                      hintText: 'Food Category',
-                      icon: FluentSystemIcons.ic_fluent_food_regular,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "Breakfast",
-                          child: Text("Breakfast"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Lunch",
-                          child: Text("Lunch"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Dinner",
-                          child: Text("Dinner"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Snacks",
-                          child: Text("Snacks"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Drinks",
-                          child: Text("Drinks"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedFoodCategory = value;
+                    MainButton(
+                      title: 'Done',
+                      onPressed: () {
+                        expertProvider.addWorkoutMeal(id: widget.id).then((value) {
+                          Navigator.of(context)..pop()..pop();
+                          expertProvider.clearWorkoutMealForm();
                         });
                       },
-                      selectedValue: selectedFoodCategory,
-                    ),
-                    const Gap(10),
-                    RegisterDropDown(
-                      hintText: 'Purpose',
-                      icon: Icons.fitness_center_outlined,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "Lose Weight",
-                          child: Text("Lose Weight"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Gain Muscles",
-                          child: Text("Gain Muscles"),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "Body Toning",
-                          child: Text("Body Toning"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedFoodPurpose = value;
-                        });
-                      },
-                      selectedValue: selectedFoodPurpose,
-                    ),
-                    const Gap(10),
-                    TextFieldContainer(
-                        controller: workoutPlanName,
-                        hintText: 'Food Plan Name',
-                        icon: FluentSystemIcons.ic_fluent_food_regular,
-                        obscureText: false),
-                    const Gap(10),
-                    SizedBox(
-                      height: 100,
-                      child: TextFieldContainer(
-                          controller: workoutDescriptions,
-                          hintText: "Descriptions",
-                          obscureText: false),
-                    ),
-                    const Gap(10),
-                    Row(
-                      children: [
-                        Text(
-                          'Food Picture',
-                          style: Styles.title,
-                        ),
-                        const Gap(10),
-                        SizedBox(
-                            height: 25,
-                            width: 100,
-                            child: MainButton(
-                                title: 'Upload',
-                                textStyle:
-                                    Styles.title.copyWith(color: Colors.white),
-                                onPressed: () {
-                                  myAlert();
-                                })),
-                        const Gap(15),
-                      ],
-                    ),
-                    const Gap(15),
-                    Container(
-                      alignment: Alignment.center,
-                      child: foodpicture != null
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.file(
-                                  //to show image, you type like this.
-                                  File(foodpicture!.path),
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ),
-                            )
-                          : const Text(
-                              "No Image",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                    ),
-                    const Gap(20),
-                    Text(
-                      "Nutritions",
-                      style: Styles.title,
-                    ),
-                    const Gap(5),
-                    TextFieldContainer(
-                        controller: workoutCalories,
-                        hintText: 'Calories',
-                        imagePath: "assets/icons/calories.png",
-                        obscureText: false),
-                    const Gap(10),
-                    TextFieldContainer(
-                        controller: workoutFats,
-                        hintText: 'Fats',
-                        imagePath: "assets/icons/fat.png",
-                        obscureText: false),
-                    const Gap(10),
-                    TextFieldContainer(
-                        controller: workoutSugar,
-                        hintText: 'Sugar',
-                        imagePath: "assets/icons/sugar.png",
-                        obscureText: false),
-                    const Gap(10),
-                    TextFieldContainer(
-                        controller: workoutprotein,
-                        hintText: 'Protein',
-                        imagePath: "assets/icons/protein.png",
-                        obscureText: false),
-                    const Gap(20),
-                    Text(
-                      "Ingrediets Needed",
-                      style: Styles.title,
-                    ),
-                    const Gap(5),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allItemsControllers.removeLast();
-                                  });
-                                },
-                                icon: const Icon(Icons.remove)),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text("Ingredients"),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allItemsControllers
-                                        .add(TextEditingController());
-                                  });
-                                },
-                                icon: const Icon(Icons.add))
-                          ],
-                        ),
-                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: allItemsControllers.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: TextFieldContainer(
-                                    controller: allItemsControllers[index],
-                                    hintText: 'Equipment with Measurement',
-                                    icon: Icons.fitness_center_outlined,
-                                    obscureText: false,
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const Gap(20),
-                    Text(
-                      "Step by Step Preparations",
-                      style: Styles.title,
-                    ),
-                    const Gap(5),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allStepssControllers.removeLast();
-                                  });
-                                },
-                                icon: const Icon(Icons.remove)),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text("Steps"),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    allStepssControllers
-                                        .add(TextEditingController());
-                                  });
-                                },
-                                icon: const Icon(Icons.add))
-                          ],
-                        ),
-                        // Use ListView.builder to dynamically generate TextfieldContainer widgets
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: allStepssControllers.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: TextFieldContainer(
-                                    controller: allStepssControllers[index],
-                                    hintText:
-                                        'Input the Next Step to the Preparation',
-                                    icon: Icons.fitness_center_outlined,
-                                    obscureText: false,
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Container(
-            padding:
-                const EdgeInsets.only(right: 20, left: 20, bottom: 30, top: 20),
-            child: Column(
-              children: [
-                MainButton(
-                  title: 'Done',
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ConfirmationDialog(
-                            question: "Are you sure to create?",
-                            onYesPressed: () async {
-                              var equipments = <String>[];
-                              if (allItemsControllers.isNotEmpty) {
-                                for (final item in allItemsControllers) {
-                                  equipments.add(item.text);
-                                }
-                              }
-
-                              var steps = <String>[];
-                              if (allStepssControllers.isNotEmpty) {
-                                for (final item in allStepssControllers) {
-                                  steps.add(item.text);
-                                }
-                              }
-
-                              final path = 'foodpicture';
-                              final file = File(foodpicture!.path);
-
-                              final ref = FirebaseStorage.instance
-                                  .ref()
-                                  .child(path)
-                                  .child(foodpicture!.name);
-                              await ref.putFile(file);
-
-                              downloadURL = await ref.getDownloadURL();
-
-                              setState(() {
-                                downloadURL = downloadURL;
-                              });
-
-                              FirebaseFirestore.instance
-                                  .collection('workoutMeal') //collection
-                                  .doc() //document name
-                                  .set(WorkoutData(
-                                    selectedFoodCategory,
-                                    selectedFoodPurpose,
-                                    workoutPlanName.text,
-                                    workoutDescriptions.text,
-                                    workoutCalories.text,
-                                    workoutFats.text,
-                                    workoutSugar.text,
-                                    workoutprotein.text,
-                                    equipments,
-                                    steps,
-                                    downloadURL,
-                                  ).toMap());
-                                  // .then((value) => Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             const ExpProgramScreen())));
-                            },
-                          );
-                        });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
-}
 
-//Button for Add and Subtract
-class AddsubButton extends StatefulWidget {
-  final String title;
-  final Widget add;
-  final Widget subtract;
-  final VoidCallback? onSubtract;
-  const AddsubButton({
-    super.key,
-    required this.title,
-    required this.add,
-    required this.subtract,
-    this.onSubtract,
-  });
-
-  @override
-  State<AddsubButton> createState() => _AddsubButtonState();
-}
-
-class _AddsubButtonState extends State<AddsubButton> {
-  List<Widget> steps = [];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildIngredients(ExpertProvider expertProvider) {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
+              onPressed: () {
+                expertProvider.updateIngredientsList(false);
+              },
               icon: const Icon(Icons.remove),
-              onPressed: () {
-                setState(() {
-                  if (steps.isNotEmpty) {
-                    steps.removeLast();
-                  }
-                  if (steps.isEmpty) {
-                    steps.removeAt(0);
-                  }
-                  if (widget.onSubtract != null) {
-                    widget.onSubtract!();
-                  }
-                });
-              },
             ),
-            Text(widget.title, style: Styles.text15bold),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Ingredients"),
+            ),
             IconButton(
-              icon: const Icon(Icons.add),
               onPressed: () {
-                setState(() {
-                  steps.add(
-                    Column(
-                      children: [const Gap(5), widget.add],
-                    ),
-                  );
-                });
+                expertProvider.updateIngredientsList(true);
               },
-            ),
+              icon: const Icon(Icons.add),
+            )
           ],
         ),
-        const Gap(5),
-        Column(
-          children: [...steps],
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: expertProvider.ingredientsList.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFieldContainer(
+                    controller: expertProvider.ingredientsList[index],
+                    hintText: 'Equipment with Measurement',
+                    icon: Icons.fastfood_rounded,
+                    obscureText: false,
+                  ),
+                )
+              ],
+            );
+          },
         ),
       ],
     );
   }
-}
 
-class WorkoutData {
-  String? workoutCategory;
-  String? workoutPurpose;
-  String? workoutPlanName;
-  String? workoutDescriptions;
-  String? workoutCalories;
-  String? workoutFats;
-  String? workoutSugar;
-  String? workoutprotein;
-  List<String>? equipments;
-  List<String>? steps;
-  String? downloadURL;
-
-  WorkoutData(
-    this.workoutCategory,
-    this.workoutPurpose,
-    this.workoutPlanName,
-    this.workoutDescriptions,
-    this.workoutFats,
-    this.workoutSugar,
-    this.workoutprotein,
-    this.workoutCalories,
-    this.equipments,
-    this.steps,
-    this.downloadURL,
-  );
-
-  Map<String, dynamic> toMap() {
-    return {
-      'workoutCategory': workoutCategory ?? "",
-      'workoutPurpose': workoutPurpose ?? "",
-      'workoutPlanName': workoutPlanName ?? "",
-      'workoutDescriptions': workoutDescriptions ?? "",
-      'workoutFats': workoutFats ?? "",
-      'workoutSugar': workoutSugar ?? "",
-      'workoutprotein': workoutprotein ?? "",
-      'workoutCalories': workoutCalories ?? 0.0,
-      'equipments': equipments ?? [],
-      'steps': steps ?? [],
-      'foodpicture': downloadURL ?? 0.0,
-    };
+  Widget _buildStepPreparations(ExpertProvider expertProvider) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                expertProvider.updateMealPreparationsList(false);
+              },
+              icon: const Icon(Icons.remove),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Steps"),
+            ),
+            IconButton(
+              onPressed: () {
+                expertProvider.updateMealPreparationsList(true);
+              },
+              icon: const Icon(Icons.add),
+            )
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: expertProvider.mealPreparationsList.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFieldContainer(
+                    controller: expertProvider.mealPreparationsList[index],
+                    hintText: 'Input the Next Step to the Preparation',
+                    icon: Icons.fitness_center_outlined,
+                    obscureText: false,
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ],
+    );
   }
 }
