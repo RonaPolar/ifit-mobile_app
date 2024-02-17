@@ -4,6 +4,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -18,65 +19,39 @@ import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({
+    required this.clientModel,
+    super.key,
+  });
+
+  final ClientModel clientModel;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String name = "";
-  String height = "";
-  String weight = "";
-  int age = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch data based on the provided UID when the widget initializes
-    fetchData();
-  }
+  int calculateAge() {
+    final DateTime now = DateTime.now();
+    int age = now.year - widget.clientModel.birthDate.year;
+    final birthday = widget.clientModel.birthDate;
 
-  Future<void> fetchData() async {
-    try {
-      var user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('clients')
-            .where('email', isEqualTo: user.email)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          var userData =
-              querySnapshot.docs.first.data() as Map<String, dynamic>?;
-
-          if (userData != null) {
-            // Use the outer 'name' variable
-            setState(() {
-              name = userData['name'] ?? '';
-              height = userData['height'] ?? '';
-              weight = userData['weight'] ?? '';
-
-              String birthdateString = userData['birth_date'] ?? '';
-              DateTime birthdate = DateTime.parse(birthdateString);
-
-              DateTime currentDate = DateTime.now();
-              Duration difference = currentDate.difference(birthdate);
-
-              age = difference.inDays ~/ 365; // Approximate age in years
-              print(age);
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
+    if (now.month < birthday.month
+        || now.month == birthday.month
+            && now.day < birthday.day) {
+      age--;
     }
+    return age;
+
   }
 
-  bool positive = false;
+
+
   @override
   Widget build(BuildContext context) {
+    final ClientModel clientModel = widget.clientModel;
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -123,10 +98,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: Styles
-                                  .primaryColor, // Replace with your desired border color
-                              width:
-                                  2.0, // Replace with your desired border width
+                              color: Styles.primaryColor,
+                              width: 2.0, // Replace with your desired border width
                             ),
                           ),
                           child: ClipRRect(
@@ -134,10 +107,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: SizedBox(
                               width: 50,
                               height: 50,
-                              child: Image.asset(
-                                'assets/icons/profile_pic.png',
+                              child: clientModel.photoUrl != null
+                                  ? Image.network(widget.clientModel.photoUrl!,
                                 fit: BoxFit.fill,
-                              ),
+                              ) : Image.asset("assets/images/3rdSlide.png"),
                             ),
                           ),
                         ),
@@ -146,26 +119,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${name}", style: Styles.title),
+                              Text(widget.clientModel.name,
+                                style: Styles.title,
+                              ),
                               const Gap(5),
                               Text("Lose a Fat Program",
-                                  style: Styles.text15normal)
+                                style: Styles.text15normal,
+                              )
                             ],
                           ),
                         ),
                         SizedBox(
-                            width: 80,
-                            height: 30,
-                            child: MainButton(
-                              title: "Edit",
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const EditProfile()));
-                              },
-                              textStyle: Styles.seeMore.copyWith(
-                                color: Colors.white,
-                              ),
-                            )),
+                          width: 80,
+                          height: 30,
+                          child: MainButton(
+                            title: "Edit",
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const EditProfile()));
+                            },
+                            textStyle: Styles.seeMore.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     const Gap(10),
@@ -173,14 +150,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Expanded(
                             child: ProfileCell(
-                                value: '${height} cm', title: 'Height')),
+                                value: '${widget.clientModel.height} cm', title: 'Height')),
                         const Gap(10),
                         Expanded(
                             child: ProfileCell(
-                                value: '${weight} kg', title: 'Weight')),
+                                value: '${widget.clientModel.weight} kg', title: 'Weight')),
                         const Gap(10),
                         Expanded(
-                            child: ProfileCell(value: '${age}', title: 'Age')),
+                            child: ProfileCell(value: '${calculateAge()}', title: 'Age')),
                       ],
                     ),
                     const Gap(15),

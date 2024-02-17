@@ -14,7 +14,6 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:readmore/readmore.dart';
 
 class WorkoutDetails extends StatefulWidget {
-
   const WorkoutDetails({
     required this.dObj,
     super.key,
@@ -22,115 +21,11 @@ class WorkoutDetails extends StatefulWidget {
 
   final WorkoutPlan dObj;
 
-
   @override
   State<WorkoutDetails> createState() => _WorkoutDetailsState();
 }
 
 class _WorkoutDetailsState extends State<WorkoutDetails> {
-  List itemsArr = [
-    {
-      "item": "1x of 6lbs Kettlebell",
-    },
-    {
-      "item": "Skipping Rope",
-    },
-    {
-      "item": "2x of 18lbs Dumbbell",
-    },
-  ];
-
-    List exercisesArr = [
-    {
-      "name": "Set 1",
-      "set": [
-        {"image": "assets/images/exercises/WarmUp.png", "title": "Stretching", "value": "05:00"},
-        {
-          "image": "assets/images/exercises/JumpingJack.png",
-          "title": "Jumping Jack",
-          "value": "12x"
-        },
-        {"image": "assets/images/exercises/Skipping.png", "title": "Skipping", "value": "15x"},
-        {"image": "assets/images/exercises/Squats.png", "title": "Squats", "value": "20x"},
-        {
-          "image": "assets/images/exercises/ArmRaises.png",
-          "title": "Arm Raises",
-          "value": "00:53"
-        },
-        {
-          "image": "assets/images/exercises/RestandDrink.png",
-          "title": "Rest and Drink",
-          "value": "02:00"
-        },
-      ],
-    },
-    {
-      "name": "Set 2",
-      "set": [
-        {"image": "assets/images/exercises/WarmUp.png", "title": "Warm Up", "value": "05:00"},
-          {
-            "image": "assets/images/exercises/JumpingJack.png",
-            "title": "Jumping Jack",
-            "value": "12x"
-          },
-          {"image": "assets/images/exercises/Skipping.png", "title": "Skipping", "value": "15x"},
-          {"image": "assets/images/exercises/Squats.png", "title": "Squats", "value": "20x"},
-          {
-            "image": "assets/images/exercises/ArmRaises.png",
-            "title": "Arm Raises",
-            "value": "00:53"
-          },
-          {
-            "image": "assets/images/exercises/RestandDrink.png",
-            "title": "Rest and Drink",
-            "value": "02:00"
-          },
-      ],
-    },
-      {
-      "name": "Set 3",
-      "set": [
-        {"image": "assets/images/exercises/WarmUp.png", 
-          "title": "Warm Up", 
-          "value": "05:00"
-        },
-        {"image": "assets/images/exercises/JumpingJack.png",
-          "title": "Jumping Jack",
-          "value": "12x"
-        },
-        {"image": "assets/images/exercises/Skipping.png", 
-          "title": "Skipping", 
-          "value": "15x"
-        },
-        {"image": "assets/images/exercises/Squats.png", 
-          "title": "Squats", 
-          "value": "20x"},
-        {"image": "assets/images/exercises/ArmRaises.png",
-          "title": "Arm Raises",
-          "value": "00:53"
-        },
-        {"image": "assets/images/exercises/RestandDrink.png",
-          "title": "Rest and Drink",
-          "value": "02:00"
-        },
-      ],
-    }
-  ];
-
-  List discoverExperts = [
-    {
-      "name": "Dr. Otto Octavius",
-      "image": "assets/images/Experts/Expert1.png",
-      "profession": "Physician",
-      "rate": "4.5",
-      "mealCreated": "2",
-      "workoutCreated": "3",
-      "descriptions": "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
-    },
-    
-  ];
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -141,7 +36,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
             SliverAppBar(
               backgroundColor: Colors.transparent,
               centerTitle: true,
-              // pinned: true,
               elevation: 0,
               expandedHeight: 300,
               leading: InkWell(
@@ -226,7 +120,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                         /// TODO: ADD TO FAVORITES
-                                           var exObj = discoverExperts[0];
+                                        //    var exObj = discoverExperts[0];
                                            // Navigator.push(context,
                                            //    MaterialPageRoute(
                                            //      builder: (context) => ExpertProfile(exObj: exObj,
@@ -242,21 +136,21 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             ],
                           ),
                           Container(
-                              padding: EdgeInsets.zero,
-                              child: const FavoriteButton()),
+                            padding: EdgeInsets.zero,
+                            child: const FavoriteButton(),
+                          ),
                         ],
                       ),
-
                     ],
                   ),
                   const Gap(15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                      'Descriptions',
+                      Text('Descriptions',
                       style:  Styles.text18.copyWith(
-                          fontWeight: FontWeight.w700),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const Gap(10),
                       SingleChildScrollView(
@@ -341,7 +235,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                           ],
                         ),
                       ),
-
                       const Gap(10),
                       ReadMoreText(widget.dObj.description,
                         style: Styles.seeMore.copyWith(
@@ -361,7 +254,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       ),
                     ],
                   ),
-
                   const Gap(30),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -371,34 +263,33 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: NextNavigation(
-                        title: 'Schedule Workout',
-                        iconData: FluentSystemIcons.ic_fluent_calendar_regular,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddSchedule(),
-                            ),
-                          );
-                        }),
+                      title: 'Schedule Workout',
+                      iconData: FluentSystemIcons.ic_fluent_calendar_regular,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddSchedule(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-
-
                   const Gap(30),
                   Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "You'll Need",
+                          Text("You'll Need",
                             style: Styles.text18.copyWith(
-                                fontWeight: FontWeight.w700),
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                          Text(
-                            "${widget.dObj.equipments.length} Items",
-                            style: Styles.normal.copyWith(
-                                fontWeight: FontWeight.w700),
+                        Text(
+                          "${widget.dObj.equipments.length} Items",
+                          style: Styles.normal.copyWith(
+                            fontWeight: FontWeight.w700),
                           )
                         ],
                       ),

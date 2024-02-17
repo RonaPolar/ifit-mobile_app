@@ -60,7 +60,9 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       ProgramTrackerScreen(
         clientModel: clientModel,
       ),
-      ProfileScreen(),
+      ProfileScreen(
+        clientModel: clientModel,
+      ),
     ];
   }
 

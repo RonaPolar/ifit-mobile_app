@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -11,7 +9,6 @@ import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 
 class ExpHomeScreen extends StatefulWidget {
@@ -27,20 +24,6 @@ class ExpHomeScreen extends StatefulWidget {
 }
 
 class _ExpHomeScreenState extends State<ExpHomeScreen> {
-  List Experts = [
-    {
-      "name": "Dr. Otto Octavius",
-      "image": "assets/images/Experts/Expert1.png",
-      "profession": "Physician",
-      "rate": "4.5",
-      "mealCreated": "2",
-      "workoutCreated": "3",
-      "descriptions":
-          "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
-    },
-  ];
-
-  String name = ""; // Declare the variable outside of initState
 
   @override
   Widget build(BuildContext context) {

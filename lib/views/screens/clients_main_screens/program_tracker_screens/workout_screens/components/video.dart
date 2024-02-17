@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class ExerciseVideoWidget extends StatefulWidget {
-  const ExerciseVideoWidget({
+  ExerciseVideoWidget({
     required this.urlVideo,
     super.key,
   });
@@ -18,7 +18,8 @@ class ExerciseVideoWidget extends StatefulWidget {
 class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
 
   final GlobalKey webViewKey = GlobalKey();
-  InAppWebViewController? webViewController;
+  late InAppWebViewController controller;
+
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
     crossPlatform: InAppWebViewOptions(
       useShouldOverrideUrlLoading: true,
@@ -44,9 +45,11 @@ class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
       ),
       onRefresh: () async {
         if (Platform.isAndroid) {
-          webViewController?.reload();
+          controller.reload();
         } else if (Platform.isIOS) {
-          webViewController?.loadUrl(urlRequest: URLRequest(url: await webViewController?.getUrl()));
+          controller.loadUrl(urlRequest: URLRequest(
+            url: await controller.getUrl()),
+          );
         }
       }
     );
@@ -61,15 +64,16 @@ class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
   Widget build(BuildContext context) {
 
     return SizedBox(
-      height: 300,
+      height: 400,
       child: InAppWebView(
         key: webViewKey,
-        initialUrlRequest:
-        URLRequest(url: Uri.parse(widget.urlVideo)),
+        initialUrlRequest: URLRequest(
+          url: Uri.parse(widget.urlVideo),
+        ),
         initialOptions: options,
         pullToRefreshController: pullToRefreshController,
-        onWebViewCreated: (controller) {
-          webViewController = controller;
+        onWebViewCreated: (value) {
+          controller = value;
         },
         // onLoadStart: (controller, url) {
         //   setState(() {

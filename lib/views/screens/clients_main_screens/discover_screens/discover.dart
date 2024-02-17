@@ -126,50 +126,52 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       //     ),
       //   ],
       // ),
-      body: ListView(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top:15, right:15, left:15),
-                child: Text("Daily Discover",
-                  style: Styles.title
-                ),
-              ),
-              const Gap(10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.only(right: 5, top: 10, bottom: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 3
-                    )
-                  ),
-                  child: Column(
-                    children: [
-                      NewArrivalWidget(combinedList: combinedList),
-                      const Gap(10),
-                      PopularWidget(combinedList: combinedList),
-                    ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top:15, right:15, left:15),
+                  child: Text("Daily Discover",
+                    style: Styles.title
                   ),
                 ),
-              ),
-              const Gap(15),
-              ExpertListWidget(
-                discoverExperts: widget.expertList,
-                combinedList: combinedList,
-                workoutMeals: widget.workoutMealList,
-                workoutPlans: widget.workoutPlanList,
-              ),
-              const Gap(10)
-            ],//main Children
+                const Gap(10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 3
+                      )
+                    ),
+                    child: Column(
+                      children: [
+                        NewArrivalWidget(combinedList: combinedList),
+                        const Gap(10),
+                        PopularWidget(combinedList: combinedList),
+                      ],
+                    ),
+                  ),
+                ),
+                const Gap(15),
+                ExpertListWidget(
+                  discoverExperts: widget.expertList,
+                  combinedList: combinedList,
+                  workoutMeals: widget.workoutMealList,
+                  workoutPlans: widget.workoutPlanList,
+                ),
+                const Gap(10)
+              ],//main Children
+            ),
           ),
-        ],
-
+        ),
       ),
     );
   }

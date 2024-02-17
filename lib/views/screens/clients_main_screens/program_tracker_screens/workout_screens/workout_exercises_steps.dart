@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
@@ -21,6 +22,7 @@ class WorkoutExercisesSteps extends StatefulWidget {
 }
 
 class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
+  late InAppWebViewController controller;
   List stepArr = [
     {
       "no": "01",
@@ -48,8 +50,10 @@ class _WorkoutExercisesStepsState extends State<WorkoutExercisesSteps> {
     },
   ];
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(

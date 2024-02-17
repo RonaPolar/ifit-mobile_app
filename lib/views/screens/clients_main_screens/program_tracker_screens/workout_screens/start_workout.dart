@@ -1,4 +1,3 @@
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
@@ -22,43 +21,11 @@ class StartWorkout extends StatefulWidget {
 
 class _StartWorkoutState extends State<StartWorkout> {
   bool isPlaying = false;
+  int index = 0;
 
   @override
   Widget build(BuildContext context) {
-  List exercisesArr = [
-    {
-          "video": "assets/videos/warmup.mp4",
-          "title": "Stretching",
-          "value": "05:00"
-    },
-  ];
-
-    List stepArr = [
-    {
-      "no": "01",
-      "title": "Spread Your Arms",
-      "detail":
-          "To make the gestures feel more relaxed, stretch your arms as you start this movement. No bending of hands."
-    },
-    {
-      "no": "02",
-      "title": "Rest at The Toe",
-      "detail":
-          "The basis of this movement is jumping. Now, what needs to be considered is that you have to use the tips of your feet"
-    },
-    {
-      "no": "03",
-      "title": "Adjust Foot Movement",
-      "detail":
-          "Jumping Jack is not just an ordinary jump. But, you also have to pay close attention to leg movements."
-    },
-    {
-      "no": "04",
-      "title": "Clapping Both Hands",
-      "detail":
-          "This cannot be taken lightly. You see, without realizing it, the clapping of your hands helps you to keep your rhythm while doing the Jumping Jack"
-    },
-  ];
+    print(widget.exercise.exercises[1]);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -103,36 +70,36 @@ class _StartWorkoutState extends State<StartWorkout> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: isPlaying 
-                          ? const Icon(FluentSystemIcons.ic_fluent_play_filled) 
-                          : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
-                        onPressed: () {
-                          setState(() {
-                            isPlaying = !isPlaying;
-                            // Add your logic for play/pause functionality here
-                          });
-                        },
-                      ),
-                      Text(
-                        exercisesArr[0]["value"].toString(),
-                        style: Styles.normal.copyWith(
-                          color: Colors.black,
-                          fontSize: 18
-                        )),
-                      IconButton(icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
-                      onPressed: (){
-                        
-                      },),
-                    ],
-                  ),
-                ),
-
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal:20),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       IconButton(
+                //         icon: isPlaying
+                //           ? const Icon(FluentSystemIcons.ic_fluent_play_filled)
+                //           : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
+                //         onPressed: () {
+                //           setState(() {
+                //             isPlaying = !isPlaying;
+                //             // Add your logic for play/pause functionality here
+                //           });
+                //         },
+                //       ),
+                //       Text("asdsa",
+                //         style: Styles.normal.copyWith(
+                //           color: Colors.black,
+                //           fontSize: 18
+                //         ),
+                //       ),
+                //       IconButton(icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
+                //       onPressed: (){
+                //
+                //         },
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -141,9 +108,18 @@ class _StartWorkoutState extends State<StartWorkout> {
                       SizedBox(
                         width: 120,
                         height: 35,
-                        child: MainButton(title: "Skip", 
-                          textStyle: Styles.text18.copyWith(color: Colors.white), 
-                          onPressed: () { },)),
+                        child: MainButton(
+                          title: "Skip",
+                          textStyle: Styles.text18.copyWith(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              index++;
+                            });
+                          },
+                        ),
+                      ),
                       const Gap(5),
                       //Comes only when the Exercise is not TIME
                       // SizedBox(      
@@ -155,35 +131,32 @@ class _StartWorkoutState extends State<StartWorkout> {
                     ],
                   ),
                 ),
-                const Gap(15),
-
-                // VidPlayer(
-                //   videoAssetPath: exercisesArr[0]["video"].toString(),
-                // ),
+                const Gap(30),
                 ExerciseVideoWidget(
-                  urlVideo: widget.exercise.exercises[0].url,
+                  urlVideo: widget.exercise.exercises[index].url,
                 ),
                 const Gap(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.exercise.exercises[0].title,
+                      widget.exercise.exercises[index].title,
                       style: Styles.text18.copyWith(
-                          fontWeight: FontWeight.w700),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const Gap(2),
                     ListView.builder(
                       padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: widget.exercise.exercises[0].steps.length,
+                      itemCount: widget.exercise.exercises.length,
                       itemBuilder: (context, index) {
-                        final String step = widget.exercise.exercises[0].steps[index];
+                        final String step = widget.exercise.exercises[this.index].steps[index];
                         return ExerStepsDottedLine(
                           index: index,
                           step: step,
-                          isLast: stepArr.last == step,
+                          isLast: step == widget.exercise.exercises[this.index].steps.last,
                         );
                       },
                     ),
