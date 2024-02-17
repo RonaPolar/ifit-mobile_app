@@ -14,6 +14,7 @@ class PopularWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +33,7 @@ class PopularWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               var item = combinedList[index];
 
-              if (item is Workout) {
+              if (item is WorkoutPlan) {
                 // It's a workout item
                 return InkWell(
                   onTap: () {
@@ -45,15 +46,15 @@ class PopularWidget extends StatelessWidget {
                   },
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
-                    image: item.image,
-                    title: item.name,
-                    bottomText: "${item.duration} minutes | ${item.kcal} kcal",
+                    image: item.workoutPicture,
+                    title: item.planName,
+                    bottomText: "${item.minutes} minutes | ${item.calories} kcal",
                   ),
                 );
               } else {
                 // It's a meal item
 
-                final mealItem = item as Meal;
+                final mealItem = item as WorkoutMeal;
                 return InkWell(
                   onTap: () {
                     // Navigator.push(
@@ -65,9 +66,9 @@ class PopularWidget extends StatelessWidget {
                   },
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
-                    image: mealItem.image,
-                    title: mealItem.name,
-                    bottomText: "${item.categories} | ${item.kcal} kcal",
+                    image: mealItem.foodPhoto,
+                    title: mealItem.foodPlanName,
+                    bottomText: "${item.purpose} | ${item.calories} kcal",
                   ),
                 );
               }

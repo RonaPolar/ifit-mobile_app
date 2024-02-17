@@ -34,11 +34,13 @@ class _SquareContainerState extends State<SquareContainer> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            widget.image,
+          Image.network(widget.image,
             width: double.maxFinite,
             height: 100,
             fit: BoxFit.contain,
+            errorBuilder: (context, object, stackTract) {
+              return const Icon(Icons.question_mark_rounded);
+            },
           ),
           const Gap(5),
           Text(

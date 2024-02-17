@@ -304,7 +304,7 @@ class _CreateMealState extends State<CreateMeal> {
                   child: TextFieldContainer(
                     controller: expertProvider.mealPreparationsList[index],
                     hintText: 'Input the Next Step to the Preparation',
-                    icon: Icons.fitness_center_outlined,
+                    icon: Icons.local_printshop_rounded,
                     obscureText: false,
                   ),
                 )

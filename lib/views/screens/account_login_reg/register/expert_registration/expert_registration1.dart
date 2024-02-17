@@ -123,6 +123,18 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
             },
           ),
           const Gap(15),
+          TextFieldContainer(
+            controller: Auth.description,
+            hintText: 'Description',
+            icon: FluentSystemIcons.ic_fluent_text_description_filled,
+            validator: (val) {
+              if (val == null || val.isEmpty) {
+                return "This field is required";
+              }
+              return null;
+            },
+          ),
+          const Gap(15),
           Row(
             children: [
               Text('Profession ID',

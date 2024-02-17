@@ -22,6 +22,7 @@ class Auth extends ChangeNotifier {
   static TextEditingController birthday = TextEditingController();
   static TextEditingController phone = TextEditingController();
   static TextEditingController profession = TextEditingController();
+  static TextEditingController description = TextEditingController();
 
 
   String? registerUserType;
@@ -317,6 +318,7 @@ class Auth extends ChangeNotifier {
         "birth_date": birthday.text,
         "phone_number": phone.text,
         "profession": profession.text,
+        "description": description.text,
       });
     });
   }

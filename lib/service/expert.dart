@@ -389,9 +389,9 @@ class ExpertProvider extends ChangeNotifier {
         stepPrep: mealPreparationsList.map((e) => e.text).toList(),
       );
 
-      final bool hasWorkoutMeals = !data.data()!.containsKey("workoutMeals");
+      final Map<String, dynamic>? hasWorkoutMeals = data.data();
 
-      if (hasWorkoutMeals) {
+      if (hasWorkoutMeals == null) {
         await _db.collection(tWorkoutMealPath).doc(id).set({
           "workoutMeals": [
             workoutMeal.toJson(),

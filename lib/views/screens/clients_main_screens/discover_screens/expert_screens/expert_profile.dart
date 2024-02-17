@@ -10,20 +10,20 @@ import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/service/Expert.dart';
-import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExpertProfile extends StatefulWidget {
   const ExpertProfile({
     required this.exObj,
-    required this.combinedList,
+    required this.workoutMeals,
+    required this.workoutPlans,
     super.key,
   });
 
-  final Expert exObj;
-  final List combinedList;
+  final ExpertModel exObj;
+  final List<WorkoutMeal> workoutMeals;
+  final List<WorkoutPlan> workoutPlans;
 
   @override
   State<ExpertProfile> createState() => _ExpertProfileState();
@@ -111,10 +111,8 @@ class _ExpertProfileState extends State<ExpertProfile> {
   @override
   Widget build(BuildContext context) {
     String buttonText = isFollowing ? 'Following' : 'Follow';
-    List<dynamic> combinedList = [...popularWorkoutArr, ...popularMealArr];
+    List<dynamic> combinedList = [...widget.workoutPlans, ...widget.workoutMeals];
     combinedList.shuffle(Random());
-
-    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
 
     return Container(
       color: Colors.red,
@@ -147,7 +145,11 @@ class _ExpertProfileState extends State<ExpertProfile> {
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
-                child: Image.asset(widget.exObj.image),
+                child: Image.network(widget.exObj.professionId,
+                  errorBuilder: (context, object, stackTrace,) {
+                    return const Icon(Icons.question_mark_rounded);
+                  },
+                ),
               ),
             ),
           ];
@@ -157,7 +159,10 @@ class _ExpertProfileState extends State<ExpertProfile> {
           decoration: BoxDecoration(
             color: Styles.bgColor,
             borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+          ),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
@@ -168,10 +173,10 @@ class _ExpertProfileState extends State<ExpertProfile> {
                     width: 50,
                     height: 4,
                     decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(3)),
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
-
                   const Gap(20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,10 +187,10 @@ class _ExpertProfileState extends State<ExpertProfile> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                widget.exObj.name,
+                              Text(widget.exObj.name,
                                 style: Styles.text18.copyWith(
-                                    fontWeight: FontWeight.w700),
+                                    fontWeight: FontWeight.w700,
+                                ),
                               ),
                               RichText(
                                 text: TextSpan(
@@ -211,23 +216,20 @@ class _ExpertProfileState extends State<ExpertProfile> {
                             child: MainButton(title: buttonText,
                               textStyle: Styles.seeMore.copyWith(color: Colors.white), 
                               onPressed: (){
-                                setState(() {
-                                    isFollowing = !isFollowing;
-                                  });
+                                // setState(() {
+                                //     isFollowing = !isFollowing;
+                                //   });
                               }),
                           ),
                         ],
                       ),
-                      
                     ],
                   ),
-
                   const Gap(15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                      'Descriptions',
+                      Text('Descriptions',
                       style:  Styles.text18.copyWith(
                           fontWeight: FontWeight.w700),
                       ),
@@ -247,7 +249,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.star_sharp, color: Colors.red,),
-                                  Text("${widget.exObj.rate} stars"),
+                                  Text("${widget.exObj.rating} stars"),
                                 ],
                               ),
                             ),
@@ -261,8 +263,8 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${widget.exObj.mealCreated} Meals Created"),
+                                  const Icon(Icons.fastfood_rounded, color: Colors.red,),
+                                  Text("${widget.workoutMeals.length} Meals Created"),
                                 ],
                               ),
                             ),
@@ -277,17 +279,15 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.local_fire_department_sharp, color: Colors.red,),
-                                  Text("${widget.exObj.workoutCreated} Workouts Created"),
+                                  Text("${widget.workoutPlans.length} Workouts Created"),
                                 ],
                               ),
                             ),
                           ],
                         ),
                       ),
-
                       const Gap(10),
-                      ReadMoreText(
-                        widget.exObj.descriptions,
+                      ReadMoreText(widget.exObj.description,
                         style: Styles.seeMore.copyWith(
                           fontWeight: FontWeight.normal
                         ),
@@ -303,28 +303,25 @@ class _ExpertProfileState extends State<ExpertProfile> {
                         ),
                       ],
                     ),
-
                   const Gap(20),
                   Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Programs Created",
-                          style: Styles.title
-                        ),
+                        style: Styles.title
+                      ),
                       GridView.builder(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Adjust the number of columns as per your design
+                          crossAxisCount: 2,
                         ),
-                        itemCount: widget.combinedList.length,
+                        itemCount: combinedList.length,
                         itemBuilder: (context, index) {
-                          dynamic item = widget.combinedList[index];
+                          final dynamic item = combinedList[index];
 
-                          print(combinedList);
-
-                          if (item is Workout) {
+                          if (item is WorkoutPlan) {
                             // It's a workout item
                             return InkWell(
                               onTap: () {
@@ -337,15 +334,15 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
-                                image: item.image,
-                                title: item.name,
-                                bottomText: "${item.duration} minutes | ${item.kcal} kcal",
+                                image: item.workoutPicture,
+                                title: item.planName,
+                                bottomText: "${item.minutes} minutes | ${item.calories} kcal",
                                 viewColor: Colors.grey.shade200,
                               ),
                             );
                           } else {
                             // It's a meal item
-                            final mealItem = item as Meal;
+                            final mealItem = item as WorkoutMeal;
                             return InkWell(
                               onTap: () {
                                 // Navigator.push(
@@ -357,9 +354,9 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
-                                image: mealItem.image,
-                                title: mealItem.name,
-                                bottomText: "${mealItem.categories} | ${mealItem.kcal} kcal",
+                                image: mealItem.foodPhoto,
+                                title: mealItem.foodPlanName,
+                                bottomText: "${mealItem.purpose} | ${mealItem.calories} kcal",
                                 viewColor: Colors.grey.shade200,
                               ),
                             );

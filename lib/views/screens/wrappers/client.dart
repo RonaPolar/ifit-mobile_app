@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/client.dart';
@@ -7,6 +8,7 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/discove
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_tracker.dart';
+import 'package:ifit/views/screens/wrappers/expert_list.dart';
 import 'package:ifit/views/screens/wrappers/workout_meal.dart';
 import 'package:ifit/views/screens/wrappers/workout_plan.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +43,7 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
     required ClientModel clientModel,
     required List<List<WorkoutPlan>> workoutPlan,
     required List<List<WorkoutMeal>> workoutMeal,
+    required List<ExpertModel> expertModel,
   }) {
     return [
       HomeScreen(
@@ -48,8 +51,16 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
         workoutPlanList: workoutPlan,
         workoutMealList: workoutMeal,
       ),
-      DiscoverScreen(),
-      ProgramTrackerScreen(),
+      DiscoverScreen(
+        clientModel: clientModel,
+        workoutMealList: workoutMeal,
+        workoutPlanList: workoutPlan,
+        expertList: expertModel,
+      ),
+      ProgramTrackerScreen(
+        workoutMeals: workoutMeal,
+        workoutPlans: workoutPlan,
+      ),
       ProfileScreen(),
     ];
   }
@@ -74,11 +85,19 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
                 child: (data) {
                   final List<List<WorkoutMeal>> workoutMeal = data;
 
-                  return bodyList(
-                    clientModel: client,
-                    workoutPlan: workoutPlan,
-                    workoutMeal: workoutMeal,
-                  )[widget.index];
+                  return ExpertListWrapper(
+                    child: (data) {
+                      final List<ExpertModel> expertModel = data.where((element) => element.verified == true).toList();
+
+                      return bodyList(
+                        clientModel: client,
+                        workoutPlan: workoutPlan,
+                        workoutMeal: workoutMeal,
+                        expertModel: expertModel
+                      )[widget.index];
+                    }
+
+                  );
                 }
               );
             }

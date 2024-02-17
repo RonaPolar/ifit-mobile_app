@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/body/to_rate_program.dart';
 
 class ToRateExpertScreen extends StatefulWidget {
@@ -60,15 +59,15 @@ class _ToRateExpertScreenState extends State<ToRateExpertScreen> {
                     var exObj = discoverExperts[index];
                     return InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                ExpertProfile(exObj: exObj,
-                                  combinedList: [],
-                                ),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //       ExpertProfile(exObj: exObj,
+                          //         combinedList: [],
+                          //       ),
+                          //   ),
+                          // );
                         },
                         child: ToRateRow(image: exObj["image"], 
                         title: exObj["name"], 

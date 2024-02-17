@@ -91,8 +91,7 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            // Navigator.push(context,MaterialPageRoute(
-            //   builder: (context) => const ProgramTrackerNavbar()));
+            Navigator.of(context).pop();
           },
           child: Container(
             margin: const EdgeInsets.all(12),

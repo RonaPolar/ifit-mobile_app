@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/container/little.dart';
@@ -29,9 +31,11 @@ class NewArrivalWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: combinedList.length,
             itemBuilder: (context, index) {
+              combinedList.shuffle(Random());
               dynamic item = combinedList[index];
 
-              if (item is Workout) {
+
+              if (item is WorkoutPlan) {
                 // It's a workout item
                 return InkWell(
                   onTap: () {
@@ -43,14 +47,14 @@ class NewArrivalWidget extends StatelessWidget {
                   },
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
-                    image: item.image,
-                    title: item.name,
-                    bottomText: "${item.duration} minutes | ${item.kcal} kcal",
+                    image: item.workoutPicture,
+                    title: item.planName,
+                    bottomText: "${item.minutes} minutes | ${item.calories} kcal",
                   ),
                 );
               } else {
 
-                final mealItem = item as Meal;
+                final mealItem = item as WorkoutMeal;
                 // It's a meal item
                 return InkWell(
                   onTap: () {
@@ -63,9 +67,9 @@ class NewArrivalWidget extends StatelessWidget {
                   },
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
-                    image: mealItem.image,
-                    title: mealItem.name,
-                    bottomText: "${item.categories} | ${item.kcal} kcal",
+                    image: mealItem.foodPhoto,
+                    title: mealItem.foodPlanName,
+                    bottomText: "${item.purpose} | ${item.calories} kcal",
                   ),
                 );
               }

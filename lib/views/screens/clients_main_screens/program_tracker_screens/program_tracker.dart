@@ -2,6 +2,8 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
@@ -14,7 +16,15 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class ProgramTrackerScreen extends StatefulWidget {
-  const ProgramTrackerScreen({super.key});
+  const ProgramTrackerScreen({
+    required this.workoutPlans,
+    required this.workoutMeals,
+    super.key,
+  });
+
+  final List<List<WorkoutPlan>> workoutPlans;
+  final List<List<WorkoutMeal>> workoutMeals;
+
 
   @override
   State<ProgramTrackerScreen> createState() => _ProgramTrackerScreenState();
@@ -94,8 +104,6 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       "progress": 0.5,
     },
   ];
-  
-    // var media = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -103,35 +111,37 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       backgroundColor: Colors.white,
       centerTitle: true,
       elevation: 0,
-      leading: InkWell(
-        onTap: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //   builder: (context) => const HomeNavBar()));
-        },
-        child: Container(
-          margin: const EdgeInsets.all(12),
-            height: 30,
-            width: 30,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10)),
-          child: const Icon(
-            FluentSystemIcons.ic_fluent_chevron_left_filled,
-            size: 20,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      automaticallyImplyLeading: false,
+      // leading: InkWell(
+      //   onTap: () {
+      //     // Navigator.of(context).push(
+      //     //   MaterialPageRoute(
+      //     //   builder: (context) => const HomeNavBar()));
+      //   },
+      //   child: Container(
+      //     margin: const EdgeInsets.all(12),
+      //       height: 30,
+      //       width: 30,
+      //     alignment: Alignment.center,
+      //     decoration: BoxDecoration(
+      //         color: Colors.grey.shade200,
+      //         borderRadius: BorderRadius.circular(10)),
+      //     child: const Icon(
+      //       FluentSystemIcons.ic_fluent_chevron_left_filled,
+      //       size: 20,
+      //       color: Colors.black,
+      //     ),
+      //   ),
+      // ),
       title: Text('Program Tracker',
-      style: Styles.headline20,),
+        style: Styles.headline20,
+      ),
       actions: [
           InkWell(
             onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                builder: (context) => const OngoingPrograms()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const OngoingPrograms()),
+              );
             },
             child: Container(
               margin: const EdgeInsets.all(12),
@@ -139,8 +149,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
               width: 30,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10)),
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: const Icon(FluentSystemIcons.ic_fluent_person_regular,
                 size: 20,
                 color: Colors.black,
@@ -149,207 +160,187 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Styles.secondColor.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(15),),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Daily Schedule',
-                        style: Styles.text15bold
-                      ),
-                      SizedBox(
-                        width: 80,
-                        height: 30,
-                          child: MainButton(
-                            title: "Check",
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Styles.secondColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Daily Schedule',
+                      style: Styles.text15bold
+                    ),
+                    SizedBox(
+                      width: 80,
+                      height: 30,
+                        child: MainButton(
+                          title: "Check",
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                              builder: (context) => const MealSched()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const MealSched()),
+                            );
                           },
                           textStyle: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            ),
-                          )),                    
-                        ],
+                          ),
+                        ),
                       ),
+                    ],
                   ),
               ),
-
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.grey.shade500,
-                      width: 1, // Adjust the border width as needed
-                    ),
-                    bottom: BorderSide(
-                      color: Colors.grey.shade500,
-                      width: 1, // Adjust the border width as needed
-                    ),
+            ),
+        
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.grey.shade500,
+                  ),
+                  bottom: BorderSide(
+                    color: Colors.grey.shade500,
                   ),
                 ),
-                width: double.maxFinite,
-                alignment: Alignment.center,
-                // color: Styles.secondColor.withOpacity(0.3),
-                child: Row(
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButtonText(
+                    iconData: FluentSystemIcons.ic_fluent_timer_filled,
+                    title: 'Ongoing',
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const OngoingPrograms()));
+                    },
+                  ),
+                  IconButtonText(
+                    iconData: FluentSystemIcons.ic_fluent_heart_filled,
+                    title: 'Favorites',
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const FavoritesProgram()));
+                    },
+                  ),
+                  IconButtonText(
+                    iconData: FluentSystemIcons.ic_fluent_checkmark_circle_filled,
+                    title: 'Finished',
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const FinishedProgram()));
+                    },
+                  ),
+                  IconButtonText(
+                    iconData: FluentSystemIcons.ic_fluent_star_filled,
+                    title: 'Rate',
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ToRateProgram()));
+                    },
+                  ),
+                ],
+              )
+            ),
+            const Gap(10),
+            Container(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButtonText(iconData: FluentSystemIcons.ic_fluent_timer_filled, title: 'Ongoing',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const OngoingPrograms()));
-                      },),
-                    IconButtonText(iconData: FluentSystemIcons.ic_fluent_heart_filled, title: 'Favorites',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const FavoritesProgram()));
-                      },),
-                    IconButtonText(iconData: FluentSystemIcons.ic_fluent_checkmark_circle_filled, title: 'Finished',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const FinishedProgram()));
-                      },),
-                    IconButtonText(iconData: FluentSystemIcons.ic_fluent_star_filled, title: 'Rate',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const ToRateProgram()));
-                      },),
-                  ],
-                )
-              ),           
+                    Text("Workout Tracker",
+                      style: Styles.title
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const WorkoutTrackerScreen()));
+                      },
+                      child: Text("See More",
+                          style: Styles.seeMore
+                        ),
+                      )
+                    ],
+                  ),
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      var wObj = latestWorkoutArr[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => WorkoutDetails(dObj: wObj)));
+                          },
+                          child: ProgramRow(image: wObj["image"],
+                            title: wObj["name"],
+                            bottomText: "${wObj["duration"]} minutes | ${wObj["kcal"]} Calories",
+                            progress: wObj["progress"] as double?,
+                            progressText: wObj["days"],
+                            showToggleSwitch: false,
+                        ),
+                      );
+                    },
+                  ),
 
-              const Gap(10),
-              Container(
-                padding: const EdgeInsets.all(15),
-                child: Column(
+                  const Gap(10),
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Workout Tracker",
-                        style: Styles.title
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WorkoutTrackerScreen()
-                                ),
-                              );
-                        },
-                        child: Text(
-                          "See More",
-                          style: Styles.seeMore
-                          ),
-                        )
-                      ],
+                    Text("Meal Tracker",
+                      style: Styles.title
                     ),
-                    ListView.builder( //MealRowContainer Content
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 2, //recommendWorkoutArr.length
-                      itemBuilder: (context, index) {
-                        var wObj = latestWorkoutArr[index];
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WorkoutDetails(dObj: wObj)),
-                              );
-                            },
-                            child: ProgramRow(image: wObj["image"], 
-                              title: wObj["name"], 
-                              bottomText: "${wObj["duration"]} minutes | ${wObj["kcal"]} Calories",
-                              progress: wObj["progress"] as double?,
-                              progressText: wObj["days"],
-                              showToggleSwitch: false,
-                              ));
-                      }),
-
-                    const Gap(10),
-                    Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Meal Tracker",
-                        style: Styles.title
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MealTrackerScreen()
-                                ),
-                              );
-                        },
-                        child: Text(
-                          "See More",
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const MealTrackerScreen()));
+                      },
+                      child: Text("See More",
                           style: Styles.seeMore
-                          ),
-                        )
-                      ],
-                    ),
-                    ListView.builder( //MealRowContainer Content
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 2, //recommendWorkoutArr.length
-                        itemBuilder: (context, index) {
-                          var mObj = latestMealArr[index];
-                          return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MealDetails(dObj: mObj)),
-                                );
-                              },
-                              child: ProgramRow(image: mObj["image"], 
-                                title: mObj["name"], 
-                                bottomText: "${mObj["categories"]} | ${mObj["kcal"]} Calories",
-                                progress: mObj["progress"] as double?,
-                                progressText: mObj["days"],
-                                showToggleSwitch: false,
-                                ));
-                        }),
-                  ],
-                ),
+                        ),
+                      )
+                    ],
+                  ),
+                  ListView.builder( //MealRowContainer Content
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 2, //recommendWorkoutArr.length
+                    itemBuilder: (context, index) {
+                      var mObj = latestMealArr[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => MealDetails(dObj: mObj)));
+                        },
+                        child: ProgramRow(image: mObj["image"],
+                          title: mObj["name"],
+                          bottomText: "${mObj["categories"]} | ${mObj["kcal"]} Calories",
+                          progress: mObj["progress"] as double?,
+                          progressText: mObj["days"],
+                          showToggleSwitch: false,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-                
-                
-
-            ],  //main Children
-          ),
-
-        ],
+            ),
+          ],  //main Children
+        ),
       ),
     );
   }
-  }
+}

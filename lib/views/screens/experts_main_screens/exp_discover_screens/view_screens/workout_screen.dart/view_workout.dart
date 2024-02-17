@@ -6,7 +6,6 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:readmore/readmore.dart';
 
 class ViewWorkoutDetails extends StatefulWidget {
@@ -215,11 +214,11 @@ class _ViewWorkoutDetailsState extends State<ViewWorkoutDetails> {
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                            var exObj = discoverExperts[0];
-                                           Navigator.push(context,
-                                              MaterialPageRoute(
-                                                builder: (context) => ExpertProfile(exObj: exObj,
-                                                combinedList: [],
-                                                )),);
+                                           // Navigator.push(context,
+                                           //    MaterialPageRoute(
+                                           //      builder: (context) => ExpertProfile(exObj: exObj,
+                                           //      combinedList: [],
+                                           //      )),);
                                         },
                                     ),
                                   ],

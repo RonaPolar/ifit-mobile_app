@@ -6,13 +6,11 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
-import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/schedule.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/client.dart';
-import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/activity.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/bmi.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/welcome_back.dart';
@@ -92,37 +90,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Gap(20),
                 BMIWidget(bmi: clientProvider.bmi),
                 const Gap(15),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Styles.secondColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Today Target',
-                        style: Styles.text15bold.copyWith(
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 80,
-                        height: 30,
-                        child: MainButton(
-                          title: "Check",
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ActivityTracker()));
-                          },
-                          textStyle: Styles.seeMore.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                /// TODO: REVERT IT ONCE OKAY
+                // Container(
+                //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                //   decoration: BoxDecoration(
+                //     color: Styles.secondColor.withOpacity(0.2),
+                //     borderRadius: BorderRadius.circular(15),
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text('Today Target',
+                //         style: Styles.text15bold.copyWith(
+                //           color: Colors.black,
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: 80,
+                //         height: 30,
+                //         child: MainButton(
+                //           title: "Check",
+                //           onPressed: () {
+                //             Navigator.of(context).push(MaterialPageRoute(
+                //               builder: (context) => const ActivityTracker()));
+                //           },
+                //           textStyle: Styles.seeMore.copyWith(
+                //             color: Colors.white,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 const Gap(20),
                 Text('Activity Today', style: Styles.title),
                 const Gap(10),

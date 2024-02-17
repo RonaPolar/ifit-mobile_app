@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 
@@ -84,6 +85,25 @@ class ClientProvider extends ChangeNotifier {
 
   void updateWorkoutMealListStream() {
     workoutMealListStream = getWorkoutMealList();
+    notifyListeners();
+  }
+
+  Stream<List<ExpertModel>>? expertListStream;
+
+  Stream<List<ExpertModel>> getExpertListStream() {
+    final data = _db.collection(tExpertPath).snapshots().map(expertListFromSnapshot);
+    return data;
+  }
+
+  List<ExpertModel> expertListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((data) {
+      final map = (data.data() as Map<String, dynamic>);
+      return ExpertModel.fromJson(map);
+    }).toList();
+  }
+
+  void updateExpertListStream() {
+    expertListStream = getExpertListStream();
     notifyListeners();
   }
 

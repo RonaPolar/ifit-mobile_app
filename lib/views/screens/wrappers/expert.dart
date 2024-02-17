@@ -34,8 +34,6 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
     });
   }
 
-
-
   List<Widget> bodyList(ExpertModel expertModel) {
     return [
       ExpHomeScreen(expertModel: expertModel),

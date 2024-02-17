@@ -8,7 +8,6 @@ import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/models/meal.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/Expert_screens/Expert_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
 import 'package:readmore/readmore.dart';
 
@@ -172,14 +171,14 @@ class _MealDetailsState extends State<MealDetails> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             var exObj = discoverExperts[0];
-                                           Navigator.push(context,
-                                              MaterialPageRoute(
-                                                builder: (context) => ExpertProfile(
-                                                  exObj: exObj,
-                                                  combinedList: [],
-                                                ),
-                                              ),
-                                           );
+                                           // Navigator.push(context,
+                                              // MaterialPageRoute(
+                                              //   builder: (context) => ExpertProfile(
+                                              //     exObj: exObj,
+                                              //     combinedList: [],
+                                              //   ),
+                                              // ),
+                                           // );
                                           },
                                       ),
                                     ],

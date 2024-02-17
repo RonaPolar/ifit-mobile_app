@@ -27,21 +27,23 @@ class _LittleContainerState extends State<LittleContainer> {
       margin: const EdgeInsets.all(5),
       width: 120,
       decoration: BoxDecoration(
-          color: widget.containerColor ?? Styles.secondColor.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(20)),
+        color: widget.containerColor ?? Styles.secondColor.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            widget.image,
+          Image.network(widget.image,
             width: 60,
             height: 60,
             fit: BoxFit.contain,
+            errorBuilder: (context, object, stackTrace) {
+              return const Icon(Icons.question_mark_rounded);
+            },
           ),
           const Gap(5),
-          Text(
-            widget.title,
+          Text(widget.title,
             style: Styles.normal.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.bold,
