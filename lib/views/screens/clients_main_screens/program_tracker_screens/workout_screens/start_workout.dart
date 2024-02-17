@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
@@ -13,20 +16,68 @@ class StartWorkout extends StatefulWidget {
     super.key,
   });
 
-  final Exercise exercise;
+  final WorkoutPlanExercise exercise;
 
   @override
   State<StartWorkout> createState() => _StartWorkoutState();
 }
 
 class _StartWorkoutState extends State<StartWorkout> {
-  bool isPlaying = false;
+  bool isPlaying = true;
   int index = 0;
+  late Timer timer;
+  late int time;
+  bool doneCountdown = false;
+  String countdownText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    int countdown = 3;
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      switch (countdown) {
+        case 3:
+          setState(() {
+            countdownText = "Ready";
+          });
+        case 2:
+          setState(() {
+            countdownText = "Set";
+          });
+        case 1:
+          setState(() {
+            countdownText = "Go";
+          });
+      }
+      countdown--;
+    });
+
+    time = int.parse(widget.exercise.exercises[index].exerciseDuration.time);
+
+    Future.delayed(const Duration(seconds: 4), () {
+      setState(() {
+        doneCountdown = true;
+      });
+
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (time != 0 && isPlaying) {
+          setState(() {
+            time--;
+          });
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.exercise.exercises[1]);
-
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -63,43 +114,45 @@ class _StartWorkoutState extends State<StartWorkout> {
           ),
         ),
       ),
-      body: ListView(
+      body: Stack(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal:20),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       IconButton(
-                //         icon: isPlaying
-                //           ? const Icon(FluentSystemIcons.ic_fluent_play_filled)
-                //           : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
-                //         onPressed: () {
-                //           setState(() {
-                //             isPlaying = !isPlaying;
-                //             // Add your logic for play/pause functionality here
-                //           });
-                //         },
-                //       ),
-                //       Text("asdsa",
-                //         style: Styles.normal.copyWith(
-                //           color: Colors.black,
-                //           fontSize: 18
-                //         ),
-                //       ),
-                //       IconButton(icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
-                //       onPressed: (){
-                //
-                //         },
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: !isPlaying
+                          ? const Icon(FluentSystemIcons.ic_fluent_play_filled)
+                          : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
+                        onPressed: () {
+                          setState(() {
+                            isPlaying = !isPlaying;
+                          });
+                        },
+                      ),
+                      Text("$time",
+                        style: Styles.normal.copyWith(
+                          color: Colors.black,
+                          fontSize: 18
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
+                        onPressed: () {
+                          setState(() {
+                            time = int.parse(widget.exercise.exercises[index].exerciseDuration.time);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -114,20 +167,26 @@ class _StartWorkoutState extends State<StartWorkout> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            setState(() {
-                              index++;
-                            });
+                            if (widget.exercise.exercises.length - 1 != index) {
+                              setState(() {
+                                index++;
+                              });
+                            }
                           },
                         ),
                       ),
                       const Gap(5),
-                      //Comes only when the Exercise is not TIME
-                      // SizedBox(      
-                      //   width: 120,
-                      //   height: 35,
-                      //   child: MainButton(title: "Done", 
-                      //     textStyle: Styles.text18.copyWith(color: Colors.white), 
-                      //     onPressed: () { },)),
+                      SizedBox(
+                        width: 120,
+                        height: 35,
+                        child: MainButton(
+                          title: "Done",
+                          textStyle: Styles.text18.copyWith(color: Colors.white),
+                          onPressed: () {
+
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -139,8 +198,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.exercise.exercises[index].title,
+                    Text(widget.exercise.exercises[index].title,
                       style: Styles.text18.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -164,7 +222,23 @@ class _StartWorkoutState extends State<StartWorkout> {
                 ),
               ],
             ),
-          )
+          ),
+          Visibility(
+            visible: !doneCountdown,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.8),
+              ),
+              child: Center(
+                child: Text(countdownText,
+                  style: const TextStyle(
+                    fontSize: 75.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

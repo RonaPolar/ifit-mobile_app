@@ -78,172 +78,220 @@ class Workout {
 }
 
 class WorkoutPlan {
-  final String category;
-  final String purpose;
-  final String difficulty;
-  final String planName;
-  final String description;
-  final String workoutPicture;
-
-  final double rating;
-  final DateTime daysOfThePlan;
-  final String calories;
-  final String minutes;
-  final List<String> equipments;
-  final Exercise exercise;
-
+  final bool isCancelled;
   final String expertName;
+  final String purpose;
+  final String minutes;
+  final double rating;
+  final String description;
+  final WorkoutPlanExercise exercise;
+  final String planName;
+  final String calories;
+  final String workoutPicture;
+  final DateTime daysOfThePlan;
+  final String difficulty;
+  final List<String> equipments;
+  final String id;
+  final String category;
+  final bool isFavorite;
 
   WorkoutPlan({
-    required this.category,
-    required this.description,
-    required this.rating,
-    required this.daysOfThePlan,
-    required this.workoutPicture,
-    required this.planName,
-    required this.difficulty,
-    required this.calories,
-    required this.minutes,
-    required this.purpose,
-    required this.equipments,
-    required this.exercise,
+    required this.isCancelled,
     required this.expertName,
+    required this.purpose,
+    required this.minutes,
+    required this.rating,
+    required this.description,
+    required this.exercise,
+    required this.planName,
+    required this.calories,
+    required this.workoutPicture,
+    required this.daysOfThePlan,
+    required this.difficulty,
+    required this.equipments,
+    required this.id,
+    required this.category,
+    required this.isFavorite,
   });
 
   WorkoutPlan copyWith({
-    String? category,
-    String? description,
-    double? rating,
-    DateTime? daysOfThePlan,
-    String? planName,
-    String? difficulty,
-    String? workoutPicture,
-    String? calories,
-    String? minutes,
-    String? purpose,
-    String? name,
-    List<String>? equipments,
-    Exercise? exercise,
+    bool? isCancelled,
     String? expertName,
+    String? purpose,
+    String? minutes,
+    double? rating,
+    String? description,
+    WorkoutPlanExercise? exercise,
+    String? planName,
+    String? calories,
+    String? workoutPicture,
+    DateTime? daysOfThePlan,
+    String? difficulty,
+    List<String>? equipments,
+    String? id,
+    String? category,
+    bool? isFavorite,
   }) =>
       WorkoutPlan(
-        category: category ?? this.category,
-        description: description ?? this.description,
+        isCancelled: isCancelled ?? this.isCancelled,
+        expertName: expertName ?? this.expertName,
+        purpose: purpose ?? this.purpose,
+        minutes: minutes ?? this.minutes,
         rating: rating ?? this.rating,
+        description: description ?? this.description,
+        exercise: exercise ?? this.exercise,
         planName: planName ?? this.planName,
+        calories: calories ?? this.calories,
         workoutPicture: workoutPicture ?? this.workoutPicture,
         daysOfThePlan: daysOfThePlan ?? this.daysOfThePlan,
         difficulty: difficulty ?? this.difficulty,
-        calories: calories ?? this.calories,
-        minutes: minutes ?? this.minutes,
-        purpose: purpose ?? this.purpose,
         equipments: equipments ?? this.equipments,
-        exercise: exercise ?? this.exercise,
-        expertName: expertName ?? this.expertName,
+        id: id ?? this.id,
+        category: category ?? this.category,
+        isFavorite: isFavorite ?? this.isFavorite,
       );
 
   factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
-    category: json["category"],
-    description: json["description"],
-    rating: json["rating"]?.toDouble(),
-    planName: json["planName"],
-    daysOfThePlan: (json["daysOfThePlan"] as Timestamp).toDate(),
-    workoutPicture: json["workoutPicture"],
-    difficulty: json["difficulty"],
-    calories: json["calories"],
-    minutes: json["minutes"],
-    purpose: json["purpose"],
-    equipments: List<String>.from(json["equipments"].map((x) => x)),
-    exercise: Exercise.fromJson(json["exercise"]),
+    isCancelled: json["isCancelled"],
     expertName: json["expertName"],
+    purpose: json["purpose"],
+    minutes: json["minutes"],
+    rating: double.parse(json["rating"].toString()),
+    description: json["description"],
+    exercise: WorkoutPlanExercise.fromJson(json["exercise"]),
+    planName: json["planName"],
+    calories: json["calories"],
+    workoutPicture: json["workoutPicture"],
+    daysOfThePlan: (json["daysOfThePlan"] as Timestamp).toDate(),
+    difficulty: json["difficulty"],
+    equipments: List<String>.from(json["equipments"].map((x) => x)),
+    id: json["id"],
+    category: json["category"],
+    isFavorite: json["isFavorite"],
   );
 
   Map<String, dynamic> toJson() => {
-    "category": category,
-    "description": description,
-    "rating": rating,
-    "planName": planName,
-    "daysOfThePlan": Timestamp.fromDate(daysOfThePlan),
-    "workoutPicture": workoutPicture,
-    "difficulty": difficulty,
-    "calories": calories,
-    "minutes": minutes,
-    "purpose": purpose,
-    "equipments": List<dynamic>.from(equipments.map((x) => x)),
-    "exercise": exercise.toJson(),
+    "isCancelled": isCancelled,
     "expertName": expertName,
+    "purpose": purpose,
+    "minutes": minutes,
+    "rating": rating,
+    "description": description,
+    "exercise": exercise.toJson(),
+    "planName": planName,
+    "calories": calories,
+    "workoutPicture": workoutPicture,
+    "daysOfThePlan": Timestamp.fromDate(daysOfThePlan),
+    "difficulty": difficulty,
+    "equipments": List<dynamic>.from(equipments.map((x) => x)),
+    "id": id,
+    "category": category,
+    "isFavorite": isFavorite,
   };
 }
 
-class Exercise {
-  final int sets;
+class WorkoutPlanExercise {
   final List<ExerciseElement> exercises;
+  final int sets;
 
-  Exercise({
-    required this.sets,
+  WorkoutPlanExercise({
     required this.exercises,
+    required this.sets,
   });
 
-  Exercise copyWith({
-    int? sets,
+  WorkoutPlanExercise copyWith({
     List<ExerciseElement>? exercises,
+    int? sets,
   }) =>
-      Exercise(
-        sets: sets ?? this.sets,
+      WorkoutPlanExercise(
         exercises: exercises ?? this.exercises,
+        sets: sets ?? this.sets,
       );
 
-  factory Exercise.fromJson(Map<String, dynamic> json) => Exercise(
-    sets: json["sets"],
+  factory WorkoutPlanExercise.fromJson(Map<String, dynamic> json) => WorkoutPlanExercise(
     exercises: List<ExerciseElement>.from(json["exercises"].map((x) => ExerciseElement.fromJson(x))),
+    sets: json["sets"],
   );
 
   Map<String, dynamic> toJson() => {
-    "sets": sets,
     "exercises": List<dynamic>.from(exercises.map((x) => x.toJson())),
+    "sets": sets,
   };
 }
 
 class ExerciseElement {
-  final String url;
-  final String title;
+  final ExerciseDuration exerciseDuration;
   final String description;
+  final String title;
   final List<String> steps;
+  final String url;
 
   ExerciseElement({
-    required this.url,
-    required this.title,
+    required this.exerciseDuration,
     required this.description,
+    required this.title,
     required this.steps,
+    required this.url,
   });
 
   ExerciseElement copyWith({
-    String? url,
-    String? title,
+    ExerciseDuration? exerciseDuration,
     String? description,
+    String? title,
     List<String>? steps,
+    String? url,
   }) =>
       ExerciseElement(
-        url: url ?? this.url,
-        title: title ?? this.title,
+        exerciseDuration: exerciseDuration ?? this.exerciseDuration,
         description: description ?? this.description,
+        title: title ?? this.title,
         steps: steps ?? this.steps,
+        url: url ?? this.url,
       );
 
   factory ExerciseElement.fromJson(Map<String, dynamic> json) => ExerciseElement(
-    url: json["url"],
-    title: json["title"],
+    exerciseDuration: ExerciseDuration.fromJson(json["exerciseDuration"]),
     description: json["description"],
+    title: json["title"],
     steps: List<String>.from(json["steps"].map((x) => x)),
+    url: json["url"],
   );
 
   Map<String, dynamic> toJson() => {
-    "url": url,
-    "title": title,
+    "exerciseDuration": exerciseDuration.toJson(),
     "description": description,
+    "title": title,
     "steps": List<dynamic>.from(steps.map((x) => x)),
+    "url": url,
   };
 }
 
+class ExerciseDuration {
+  final String time;
+  final bool type;
 
+  ExerciseDuration({
+    required this.time,
+    required this.type,
+  });
+
+  ExerciseDuration copyWith({
+    String? time,
+    bool? type,
+  }) =>
+      ExerciseDuration(
+        time: time ?? this.time,
+        type: type ?? this.type,
+      );
+
+  factory ExerciseDuration.fromJson(Map<String, dynamic> json) => ExerciseDuration(
+    time: json["time"],
+    type: json["type"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "time": time,
+    "type": type,
+  };
+}
 

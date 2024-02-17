@@ -53,8 +53,9 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                       ..pop()
                       ..pop();
                   }
-              );
-            });
+                );
+              },
+            );
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -253,6 +254,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
         const Gap(5),
         ListView.builder(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: expertProvider.equipmentsText.length,
           itemBuilder: (context, index) {
             final TextEditingController equipment = expertProvider.equipmentsText[index];
@@ -329,6 +331,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
             ListView.builder(
               shrinkWrap: true,
               itemCount: expertProvider.exerciseList.length,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 final ExerciseElement exercise = expertProvider.exerciseList[index];
 

@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/exercise_row.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
@@ -11,14 +12,17 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_exercises_steps.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 class WorkoutDetails extends StatefulWidget {
   const WorkoutDetails({
+    required this.id,
     required this.dObj,
     super.key,
   });
 
+  final String id;
   final WorkoutPlan dObj;
 
   @override
@@ -26,8 +30,24 @@ class WorkoutDetails extends StatefulWidget {
 }
 
 class _WorkoutDetailsState extends State<WorkoutDetails> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final ClientProvider clientProvider = Provider.of<ClientProvider>(context, listen: false);
+      clientProvider.getWorkoutPlanExisting(
+        workoutPlan: widget.dObj,
+        id: widget.id,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final WorkoutPlan workoutPlan = widget.dObj;
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
     return Container(
       color: Colors.red,
       child: NestedScrollView(
@@ -58,7 +78,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
-                child: Image.network(widget.dObj.workoutPicture,
+                child: Image.network(workoutPlan.workoutPicture,
                   errorBuilder: (context, exception, stackTrace) {
                     return const Icon(Icons.question_mark_rounded);
                   },
@@ -100,7 +120,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.dObj.planName.toString(),
+                                workoutPlan.planName,
                                 style: Styles.text18.copyWith(
                                     fontWeight: FontWeight.w700),
                               ),
@@ -112,7 +132,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                       style: Styles.text12
                                     ),
                                     TextSpan(
-                                      text: widget.dObj.expertName,
+                                      text: workoutPlan.expertName,
                                       style: Styles.text12.copyWith(
                                         color: Colors.blue,
                                       ),
@@ -148,7 +168,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Descriptions',
-                      style:  Styles.text18.copyWith(
+                        style:  Styles.text18.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -159,19 +179,22 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                                padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Styles.secondColor.withOpacity(0.3),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.star_sharp, color: Colors.red,),
-                                    Text("${widget.dObj.rating.toString()} stars"),
-                                  ],
-                                ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10,
                               ),
+                              decoration: BoxDecoration(
+                                color: Styles.secondColor.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star_sharp,
+                                    color: Colors.red,
+                                  ),
+                                  Text("${workoutPlan.rating} stars"),
+                                ],
+                              ),
+                            ),
                             const Gap(5),
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -182,8 +205,10 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.accessibility_new_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.exercise.sets} "),
+                                  const Icon(Icons.accessibility_new_sharp,
+                                    color: Colors.red,
+                                  ),
+                                  Text("${workoutPlan.exercise.sets} "),
                                 ],
                               ),
                             ),
@@ -198,7 +223,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${widget.dObj.daysOfThePlan.day} days"),
+                                  Text("${workoutPlan.daysOfThePlan.day} days"),
                                 ],
                               ),
                             ),
@@ -213,7 +238,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${widget.dObj.minutes} mins"),
+                                  Text("${workoutPlan.minutes} mins"),
                                 ],
                               ),
                             ),
@@ -227,8 +252,10 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.local_fire_department_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.calories} calories"),
+                                  const Icon(Icons.local_fire_department_sharp,
+                                    color: Colors.red,
+                                  ),
+                                  Text("${workoutPlan.calories} calories"),
                                 ],
                               ),
                             ),
@@ -256,8 +283,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                   ),
                   const Gap(30),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     decoration: BoxDecoration(
                       color: Styles.secondColor.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(15),
@@ -287,7 +313,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             ),
                           ),
                         Text(
-                          "${widget.dObj.equipments.length} Items",
+                          "${workoutPlan.equipments.length} Items",
                           style: Styles.normal.copyWith(
                             fontWeight: FontWeight.w700),
                           )
@@ -305,7 +331,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       ),
                     ],
                   ),
-
                   const Gap(20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -316,7 +341,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             fontWeight: FontWeight.w700),
                       ),
                       Text(
-                        "${widget.dObj.exercise.sets} Sets",
+                        "${workoutPlan.exercise.sets} Sets",
                         style:  Styles.normal.copyWith(
                             fontWeight: FontWeight.w700),
                       )
@@ -326,18 +351,18 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: widget.dObj.exercise.exercises.length,
+                    itemCount: workoutPlan.exercise.exercises.length,
                     itemBuilder: (context, index) {
+                      final ExerciseElement exercise = workoutPlan.exercise.exercises[index];
 
-                      var sObj = widget.dObj.exercise.exercises[index];
                       return ExercisesRow(
-                        exerciseElement: sObj,
+                        exerciseElement: exercise,
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => WorkoutExercisesSteps(
-                                eObj: sObj,
+                                eObj: exercise,
                                 index: index,
                               )
                             ),
@@ -346,20 +371,26 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       );
                     },
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Column(
                       children: [
                         MainButton(
-                          title: 'Start Now',
-                          onPressed: () {
-                            Navigator.push(context,MaterialPageRoute(
-                                builder: (context) => StartWorkout(
-                                  exercise: widget.dObj.exercise,
+                          title: !clientProvider.workoutPlanExisting
+                            ? 'Start Now'
+                            : "Continue",
+                          onPressed: () async {
+                            await clientProvider.addWorkoutPlan(
+                              id: widget.id,
+                              workoutPlan: workoutPlan,
+                            ).then((value) {
+                                Navigator.push(context,MaterialPageRoute(
+                                  builder: (context) => StartWorkout(
+                                    exercise: widget.dObj.exercise,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            });
                           },
                         ),
                       ],

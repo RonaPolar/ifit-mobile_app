@@ -44,6 +44,27 @@ class AddExerciseScreen extends StatelessWidget {
                   hintText: 'Description',
                   icon: Icons.description,
                 ),
+                const Gap(10),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        expertProvider.updateIsCounting();
+                      },
+                      icon: Icon(expertProvider.isCounting
+                        ? Icons.numbers
+                        : Icons.lock_clock,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFieldContainer(
+                        controller: ExpertProvider.exerciseTime,
+                        hintText: expertProvider.isCounting ? "Counting" : "Time",
+                        icon: Icons.description,
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   children: [
                     IconButton(

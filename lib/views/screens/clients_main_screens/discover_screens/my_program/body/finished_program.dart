@@ -127,12 +127,12 @@ class _FinishedProgramScreenState extends State<FinishedProgramScreen> {
                         // It's a workout item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  WorkoutDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       WorkoutDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: ProgramRow(image: item["image"], 
                             title: item["name"], 

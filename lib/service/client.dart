@@ -6,6 +6,7 @@ import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:uuid/uuid.dart';
 
 class ClientProvider extends ChangeNotifier {
 
@@ -105,6 +106,60 @@ class ClientProvider extends ChangeNotifier {
   void updateExpertListStream() {
     expertListStream = getExpertListStream();
     notifyListeners();
+  }
+
+  bool workoutPlanExisting = false;
+
+  Future<void> getWorkoutPlanExisting({
+    required String id,
+    required WorkoutPlan workoutPlan,
+  }) async {
+    final String workoutId = workoutPlan.id;
+
+    final data = await _db.collection(tClientPath)
+        .doc(id).collection(tWorkoutPlanPath).get();
+
+    final List<WorkoutPlan> workoutPlanList = data.docs.map((snapshot) {
+      final map = snapshot.data()["workoutPlan"];
+      return WorkoutPlan.fromJson(map);
+    }).toList();
+
+    if (workoutPlanList.any((element) => element.id == workoutId)) {
+      workoutPlanExisting = true;
+    } else {
+      workoutPlanExisting = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> addWorkoutPlan({
+    required String id,
+    required WorkoutPlan workoutPlan,
+  }) async {
+
+    final String workoutId = workoutPlan.id;
+
+    final data = await _db.collection(tClientPath)
+        .doc(id).collection(tWorkoutPlanPath).get();
+
+    final List<WorkoutPlan> workoutPlanList = data.docs.map((snapshot) {
+      final map = snapshot.data()["workoutPlan"];
+      return WorkoutPlan.fromJson(map);
+    }).toList();
+
+    // if the id of workoutPlan is already in the list
+    if (workoutPlanList.any((element) => element.id == workoutId)) {
+      debugPrint("$workoutId: Id is already existing");
+    } else {
+      await _db.collection(tClientPath)
+          .doc(id).collection(tWorkoutPlanPath)
+          .doc(workoutId).set({
+        tWorkoutPlanPath: workoutPlan.toJson(),
+      }).then((value) {
+        getWorkoutPlanExisting(id: id, workoutPlan: workoutPlan);
+        return debugPrint("Workout plan added successfully!");
+      }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
+    }
   }
 
 }

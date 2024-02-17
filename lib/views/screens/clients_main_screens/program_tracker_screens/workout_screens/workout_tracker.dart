@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_category.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 
 class WorkoutTrackerScreen extends StatefulWidget {
@@ -169,16 +168,16 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                       itemBuilder: (context, index) {
                         var wObj = upcomingWorkoutArr[index];
                         return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                   WorkoutDetails(dObj: wObj),
-                              ),
-                            );
-                            },
-                            child: ProgramRow(image: wObj["image"], 
+                          onTap: () {
+                            // Navigator.push(context, MaterialPageRoute(
+                            //   builder: (context) => WorkoutDetails(
+                            //        dObj: wObj,
+                            //         id: ,
+                            //      ),
+                            //   ),
+                            // );
+                          },
+                          child: ProgramRow(image: wObj["image"],
                           title: wObj["name"], 
                           bottomText: "${wObj["schedule"]} | ${wObj["time"]}", 
                           showToggleSwitch: true,));

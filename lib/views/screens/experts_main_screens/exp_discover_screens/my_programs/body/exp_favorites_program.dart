@@ -125,12 +125,12 @@ class _ExpFavoritesProgramScreenState extends State<ExpFavoritesProgramScreen> {
                         // It's a workout item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  WorkoutDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       WorkoutDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: FavoritesRow(image: item["image"], 
                             title: item["name"], 

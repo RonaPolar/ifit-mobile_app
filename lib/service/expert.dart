@@ -9,6 +9,7 @@ import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class ExpertProvider extends ChangeNotifier {
 
@@ -68,20 +69,6 @@ class ExpertProvider extends ChangeNotifier {
     "Full Body"
   ];
 
-  List<Map> data = [
-    {
-      "category": "upper body",
-      "subcategory":{
-        "list": [
-          {
-            "data1": "arm",
-            "data2": "chest"
-          }
-        ]
-      }
-
-    }
-  ];
 
   void updateWorkoutCategory(String value) {
     workoutCategory = value;
@@ -165,6 +152,13 @@ class ExpertProvider extends ChangeNotifier {
   static TextEditingController exerciseTitle = TextEditingController();
   static TextEditingController exerciseVideo = TextEditingController();
   static TextEditingController exerciseDescription = TextEditingController();
+  static TextEditingController exerciseTime = TextEditingController();
+  bool isCounting = true;
+
+  void updateIsCounting() {
+    isCounting = !isCounting;
+    notifyListeners();
+  }
 
   List<TextEditingController> steps = [];
 
@@ -186,6 +180,10 @@ class ExpertProvider extends ChangeNotifier {
       title: exerciseTitle.text,
       description: exerciseDescription.text,
       steps: steps.map((e) => e.text).toList(),
+      exerciseDuration: ExerciseDuration(
+        time: exerciseTime.text,
+        type: isCounting,
+      ),
     );
 
     exerciseList.add(exercise);
@@ -219,6 +217,7 @@ class ExpertProvider extends ChangeNotifier {
     await uploadWorkoutPhoto(id).then((value) async {
 
       final WorkoutPlan workoutPlan = WorkoutPlan(
+        id: const Uuid().v1(),
         category: workoutCategory ?? "",
         purpose: workoutPurpose ?? "",
         difficulty: workoutDifficulty ?? "",
@@ -229,17 +228,19 @@ class ExpertProvider extends ChangeNotifier {
         minutes: minutes.text,
         calories: calories.text,
         equipments: equipmentsText.map((e) => e.text).toList(),
-        exercise: Exercise(
+        exercise: WorkoutPlanExercise(
           sets: sets,
           exercises: exerciseList,
         ),
         rating: 0,
         expertName: expertName,
+        isFavorite: false,
+        isCancelled: false,
       );
 
-      final bool hasWorkoutPlans = !data.data()!.containsKey("workoutPlans");
+      final Map? hasWorkoutPlans = data.data();
 
-      if (hasWorkoutPlans) {
+      if (hasWorkoutPlans == null ) {
         await _db.collection(tWorkoutPlanPath).doc(id).set({
           "workoutPlans": [
             workoutPlan.toJson(),

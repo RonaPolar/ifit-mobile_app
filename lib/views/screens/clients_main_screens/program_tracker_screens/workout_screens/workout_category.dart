@@ -216,11 +216,11 @@ class _WorkoutCategoryState extends State<WorkoutCategory> {
                   var wObj = popularWorkoutArr[index];
                   return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WorkoutDetails(dObj: wObj)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => WorkoutDetails(dObj: wObj)),
+                        // );
                       },
                       child: BigContainer(image: wObj["image"], 
                         title: wObj["name"], 
@@ -261,11 +261,11 @@ class _WorkoutCategoryState extends State<WorkoutCategory> {
                   var wObj = popularWorkoutArr[index];
                   return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WorkoutDetails(dObj: wObj)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => WorkoutDetails(dObj: wObj)),
+                        // );
                       },
                       child: ProgramRow(image: wObj["image"], 
                         title: wObj["name"], 
