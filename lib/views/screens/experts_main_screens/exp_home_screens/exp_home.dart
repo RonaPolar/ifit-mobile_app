@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/program_created.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/rating.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -10,14 +13,19 @@ import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
+import 'package:provider/provider.dart';
 
 class ExpHomeScreen extends StatefulWidget {
   const ExpHomeScreen({
     required this.expertModel,
+    required this.workoutPlanList,
+    required this.workoutMealList,
     super.key,
   });
 
   final ExpertModel expertModel;
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
   @override
   State<ExpHomeScreen> createState() => _ExpHomeScreenState();
@@ -27,15 +35,16 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
 
     final ExpertModel expert = widget.expertModel;
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(15),
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,8 +54,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Welcome Back,',
+                        Text('Welcome Back,',
                           style: Styles.text15normal,
                         ),
                         Text(
@@ -101,7 +109,11 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                   ),
                 ),
                 const Gap(20),
-                ProgramCreatedWidget(expertModel: expert),
+                ProgramCreatedWidget(
+                  expertModel: expert,
+                  workoutMealList: widget.workoutMealList,
+                  workoutPlanList: widget.workoutPlanList,
+                ),
                 const Gap(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +138,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

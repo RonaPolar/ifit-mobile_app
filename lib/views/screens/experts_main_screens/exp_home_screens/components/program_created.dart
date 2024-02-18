@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 
 class ProgramCreatedWidget extends StatelessWidget {
   const ProgramCreatedWidget({
     required this.expertModel,
+    required this.workoutPlanList,
+    required this.workoutMealList,
     super.key,
   });
 
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
   final ExpertModel expertModel;
 
   @override
@@ -40,9 +46,7 @@ class ProgramCreatedWidget extends StatelessWidget {
                   children: [
                     Text('Workouts', style: Styles.title),
                     const Gap(5),
-                    Text(
-                      // "${Experts[0]["workoutCreated"]}",
-                      "",
+                    Text("${workoutPlanList.length}",
                       style: Styles.normal.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -74,9 +78,7 @@ class ProgramCreatedWidget extends StatelessWidget {
                   children: [
                     Text('Meals', style: Styles.title),
                     const Gap(5),
-                    Text(
-                      // "${Experts[0]["mealCreated"]}",
-                      "",
+                    Text("${workoutMealList.length}",
                       style: Styles.normal.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

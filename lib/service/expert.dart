@@ -47,6 +47,55 @@ class ExpertProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Stream<List<WorkoutPlan>>? workoutPlanListStream;
+
+  Stream<List<WorkoutPlan>> getWorkoutPlanListStream(String uid) {
+
+    return _db.collection(tWorkoutPlanPath).doc(uid).snapshots().map((doc) {
+      final data = doc.data();
+
+      if (data != null) {
+        final map = data["workoutPlans"];
+
+        return (map as List).map((e) => WorkoutPlan.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    });
+  }
+
+  void updateWorkoutPlanListStream({
+    required String uid,
+  }) {
+    workoutPlanListStream = getWorkoutPlanListStream(uid);
+    notifyListeners();
+  }
+
+  Stream<List<WorkoutMeal>>? workoutMealListStream;
+
+  Stream<List<WorkoutMeal>> getWorkoutMealListStream(String uid) {
+
+    return _db.collection(tWorkoutMealPath).doc(uid).snapshots().map((doc) {
+
+      final data = doc.data();
+
+      if (data != null) {
+        final map = data["workoutMeals"];
+        return (map as List).map((e) => WorkoutMeal.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+
+    });
+  }
+
+  void updateWorkoutMealListStream({
+    required String uid,
+  }) {
+    workoutMealListStream = getWorkoutMealListStream(uid);
+    notifyListeners();
+  }
+
   String? workoutCategory;
 
   List<String> workoutCategoryList = [

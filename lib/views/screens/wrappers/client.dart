@@ -8,9 +8,7 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/discove
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_tracker.dart';
-import 'package:ifit/views/screens/wrappers/expert_list.dart';
-import 'package:ifit/views/screens/wrappers/workout_meal.dart';
-import 'package:ifit/views/screens/wrappers/workout_plan.dart';
+import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:provider/provider.dart';
 
 class ClientAuthWrapper extends StatefulWidget {
@@ -35,6 +33,9 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ClientProvider client = Provider.of<ClientProvider>(context, listen: false);
       client.updateClientStream(uid: widget.uid);
+      client.updateWorkoutMealListStream();
+      client.updateWorkoutPlanListStream();
+      client.updateExpertListStream();
     });
   }
 
@@ -71,47 +72,38 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
     final ClientProvider client = Provider.of<ClientProvider>(context);
 
 
-    return StreamBuilder<ClientModel>(
+    return StreamWrapper<ClientModel>(
       stream: client.clientStream,
-      builder: (context, snapshot) {
+      child: (data) {
+        final ClientModel clientModel = data!;
 
-        if (snapshot.hasData) {
-          final client = snapshot.data!;
+        return StreamWrapper<List<List<WorkoutPlan>>>(
+          stream: client.workoutPlanListStream,
+          child: (data) {
+            final List<List<WorkoutPlan>> workoutPlan = data!;
 
-          return WorkoutPlanWrapper(
-            child: (data) {
-              final List<List<WorkoutPlan>> workoutPlan = data;
+            return StreamWrapper<List<List<WorkoutMeal>>>(
+              stream: client.workoutMealListStream,
+              child: (data) {
+                final List<List<WorkoutMeal>> workoutMeal = data!;
 
-              return WorkoutMealWrapper(
-                child: (data) {
-                  final List<List<WorkoutMeal>> workoutMeal = data;
+                return StreamWrapper<List<ExpertModel>>(
+                  stream: client.expertListStream,
+                  child: (data) {
+                    final List<ExpertModel> expertModel = data!;
 
-                  return ExpertListWrapper(
-                    child: (data) {
-                      final List<ExpertModel> expertModel = data.where((element) => element.verified == true).toList();
-
-                      return bodyList(
-                        clientModel: client,
+                    return bodyList(
+                        clientModel: clientModel,
                         workoutPlan: workoutPlan,
                         workoutMeal: workoutMeal,
                         expertModel: expertModel
-                      )[widget.index];
-                    }
-
-                  );
-                }
-              );
-            }
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text("Something went wrong: ${snapshot.error}"),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+                    )[widget.index];
+                  }
+                );
+              }
+            );
+          },
+        );
       },
     );
   }

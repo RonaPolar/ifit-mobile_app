@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/exp_discover.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
+import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:provider/provider.dart';
 
 import '../Experts_main_screens/exp_program_screens/exp_program.dart';
@@ -30,13 +33,23 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context, listen: false);
       expertProvider.updateExpertStream(uid: widget.uid);
+      expertProvider.updateWorkoutMealListStream(uid: widget.uid);
+      expertProvider.updateWorkoutPlanListStream(uid: widget.uid);
 
     });
   }
 
-  List<Widget> bodyList(ExpertModel expertModel) {
+  List<Widget> bodyList({
+    required ExpertModel expertModel,
+    required List<WorkoutPlan> workoutPlan,
+    required List<WorkoutMeal> workoutMeal,
+  }) {
     return [
-      ExpHomeScreen(expertModel: expertModel),
+      ExpHomeScreen(
+        expertModel: expertModel,
+        workoutMealList: workoutMeal,
+        workoutPlanList: workoutPlan,
+      ),
       ExpDiscoverScreen(),
       ExpProgramScreen(expertModel: expertModel),
       ExpProfileScreen(),
@@ -47,23 +60,31 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
   Widget build(BuildContext context) {
     final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
 
-    return StreamBuilder<ExpertModel>(
+    return StreamWrapper<ExpertModel>(
       stream: expertProvider.expertStream,
-      builder: (context, snapshot) {
+      child: (data) {
+        final ExpertModel expertModel = data!;
 
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
+        return StreamWrapper<List<WorkoutPlan>>(
+          stream: expertProvider.workoutPlanListStream,
+          child: (data) {
+            final List<WorkoutPlan> workoutPlan = data!;
 
-          return bodyList(data)[widget.index];
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text("Something went wrong: ${snapshot.error}"),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+
+            return StreamWrapper<List<WorkoutMeal>>(
+              stream: expertProvider.workoutMealListStream,
+              child: (data) {
+                final List<WorkoutMeal> workoutMeal = data!;
+
+                return bodyList(
+                  expertModel: expertModel,
+                  workoutPlan: workoutPlan,
+                  workoutMeal: workoutMeal
+                )[widget.index];
+              }
+            );
+          }
+        );
       },
     );
   }

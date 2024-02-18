@@ -111,27 +111,6 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       centerTitle: true,
       elevation: 0,
       automaticallyImplyLeading: false,
-      // leading: InkWell(
-      //   onTap: () {
-      //     // Navigator.of(context).push(
-      //     //   MaterialPageRoute(
-      //     //   builder: (context) => const HomeNavBar()));
-      //   },
-      //   child: Container(
-      //     margin: const EdgeInsets.all(12),
-      //       height: 30,
-      //       width: 30,
-      //     alignment: Alignment.center,
-      //     decoration: BoxDecoration(
-      //         color: Colors.grey.shade200,
-      //         borderRadius: BorderRadius.circular(10)),
-      //     child: const Icon(
-      //       FluentSystemIcons.ic_fluent_chevron_left_filled,
-      //       size: 20,
-      //       color: Colors.black,
-      //     ),
-      //   ),
-      // ),
       title: Text('Program Tracker',
         style: Styles.headline20,
       ),
