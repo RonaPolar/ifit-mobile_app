@@ -59,10 +59,14 @@ class ClientProvider extends ChangeNotifier {
   }
 
   List<List<WorkoutPlan>> workoutPlanFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs.map((data) {
-      final map = (data.data() as Map<String, dynamic>)["workoutPlans"];
-      return (map as List).map((data) => WorkoutPlan.fromJson(data)).toList();
-    }).toList();
+    try {
+      return snapshot.docs.map((data) {
+        final map = (data.data() as Map<String, dynamic>)["workoutPlans"];
+        return (map as List).map((data) => WorkoutPlan.fromJson(data)).toList();
+      }).toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   void updateWorkoutPlanListStream() {
@@ -108,6 +112,47 @@ class ClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Stream<List<WorkoutPlan>>? clientWorkoutPlanListStream;
+
+  Stream<List<WorkoutPlan>> getClientWorkoutPlanListStream(String uid) {
+    return _db.collection(tClientPath).doc(uid)
+      .collection(tWorkoutPlanPath).snapshots().map((doc) {
+        return doc.docs.map((data) {
+          final map = data.data();
+          return WorkoutPlan.fromJson(map[tWorkoutPlanPath]);
+        },
+      ).toList();
+    });
+  }
+
+  void updateClientWorkoutPlanListStream({
+    required String uid,
+  }) {
+    clientWorkoutPlanListStream = getClientWorkoutPlanListStream(uid);
+    notifyListeners();
+  }
+
+  Stream<List<WorkoutMeal>>? clientWorkoutMealListStream;
+
+  Stream<List<WorkoutMeal>> getClientWorkoutMealListStream(String uid) {
+    return _db.collection(tClientPath).doc(uid)
+      .collection(tWorkoutMealPath).snapshots().map((doc) {
+        return doc.docs.map((data) {
+          final map = data.data();
+
+          return WorkoutMeal.fromJson(map[tWorkoutMealPath]);
+        },
+      ).toList();
+    });
+  }
+
+  void updateClientWorkoutMealListStream({
+    required String uid,
+  }) {
+    clientWorkoutMealListStream = getClientWorkoutMealListStream(uid);
+    notifyListeners();
+  }
+
   bool workoutPlanExisting = false;
 
   Future<void> getWorkoutPlanExisting({
@@ -143,7 +188,7 @@ class ClientProvider extends ChangeNotifier {
         .doc(id).collection(tWorkoutPlanPath).get();
 
     final List<WorkoutPlan> workoutPlanList = data.docs.map((snapshot) {
-      final map = snapshot.data()["workoutPlan"];
+      final map = snapshot.data()[tWorkoutPlanPath];
       return WorkoutPlan.fromJson(map);
     }).toList();
 
@@ -158,6 +203,61 @@ class ClientProvider extends ChangeNotifier {
       }).then((value) {
         getWorkoutPlanExisting(id: id, workoutPlan: workoutPlan);
         return debugPrint("Workout plan added successfully!");
+      }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
+    }
+  }
+
+  bool workoutMealExisting = false;
+
+  Future<void> getWorkoutMealExisting({
+    required String id,
+    required WorkoutMeal workoutMeal,
+  }) async {
+    final String workoutId = workoutMeal.id;
+
+    final data = await _db.collection(tClientPath)
+        .doc(id).collection(tWorkoutMealPath).get();
+
+    final List<WorkoutMeal> workoutMealList = data.docs.map((snapshot) {
+      final map = snapshot.data()[tWorkoutMealPath];
+      return WorkoutMeal.fromJson(map);
+    }).toList();
+
+    if (workoutMealList.any((element) => element.id == workoutId)) {
+      workoutMealExisting = true;
+    } else {
+      workoutMealExisting = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> addWorkoutMealPlan({
+    required String id,
+    required WorkoutMeal workoutMeal,
+  }) async {
+
+    final String workoutId = workoutMeal.id;
+
+    final data = await _db.collection(tClientPath)
+        .doc(id).collection(tWorkoutMealPath).get();
+
+    final List<WorkoutMeal> workoutMealList = data.docs.map((snapshot) {
+      final map = snapshot.data()[tWorkoutMealPath];
+      return WorkoutMeal.fromJson(map);
+    }).toList();
+
+    // if the id of workoutMeal is already in the list
+    if (workoutMealList.any((element) => element.id == workoutId)) {
+      debugPrint("$workoutId: Id is already existing");
+    } else {
+      await _db.collection(tClientPath)
+          .doc(id).collection(tWorkoutMealPath)
+          .doc(workoutId).set({
+        tWorkoutMealPath: workoutMeal.toJson(),
+      }).then((value) {
+
+        getWorkoutMealExisting(id: id, workoutMeal: workoutMeal);
+        return debugPrint("Workout meal added successfully!");
       }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
     }
   }

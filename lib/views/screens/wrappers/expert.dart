@@ -35,7 +35,6 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
       expertProvider.updateExpertStream(uid: widget.uid);
       expertProvider.updateWorkoutMealListStream(uid: widget.uid);
       expertProvider.updateWorkoutPlanListStream(uid: widget.uid);
-
     });
   }
 

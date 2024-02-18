@@ -216,11 +216,11 @@ class _MealCategoryState extends State<MealCategory> {
                   var mObj = popularMealArr[index];
                   return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealDetails(dObj: mObj)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => MealDetails(dObj: mObj)),
+                        // );
                       },
                       child: BigContainer(image: mObj["image"], 
                         title: mObj["name"], 
@@ -261,11 +261,11 @@ class _MealCategoryState extends State<MealCategory> {
                   var mObj = popularMealArr[index];
                   return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealDetails(dObj: mObj)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => MealDetails(dObj: mObj)),
+                        // );
                       },
                       child: ProgramRow(image: mObj["image"], 
                         title: mObj["name"], 

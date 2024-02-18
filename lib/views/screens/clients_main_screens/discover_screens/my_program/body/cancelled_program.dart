@@ -141,12 +141,12 @@ class _CancelledProgramScreenState extends State<CancelledProgramScreen> {
                         // It's a meal item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  MealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       MealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: CancelledRow(image: item["image"], 
                             title: item["name"], 

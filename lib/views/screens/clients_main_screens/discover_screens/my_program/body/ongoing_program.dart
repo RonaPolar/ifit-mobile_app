@@ -149,12 +149,12 @@ class _OngoingProgramScreenState extends State<OngoingProgramScreen> {
                         // It's a meal item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  MealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       MealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: OngoingRow(image: item["image"], 
                             title: item["name"], 

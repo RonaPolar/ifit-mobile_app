@@ -147,9 +147,11 @@ class _ProgramRowState extends State<ProgramRow> {
               width: 60,
               height: 60,
               color: Styles.secondColor.withOpacity(0.6),
-              child: Image.asset(
-                widget.image,
+              child: Image.network(widget.image,
                 fit: BoxFit.contain,
+                errorBuilder: (context, object, stackTrace) {
+                  return const Icon(Icons.question_mark_rounded);
+                },
               ),
             ),
           ),
@@ -167,9 +169,7 @@ class _ProgramRowState extends State<ProgramRow> {
                     fontSize: 12,
                   ),
                 ),
-                const SizedBox(
-                  height: 4,
-                ),
+                const SizedBox(height: 4),
                 if (widget.progress != null &&
                     widget.progressText !=
                         null) // Conditionally render the progress bar
@@ -191,6 +191,7 @@ class _ProgramRowState extends State<ProgramRow> {
                           end: Alignment.centerRight,
                         ),
                       ),
+                      const Gap(4.0),
                       Text(
                         "${widget.progressText!} days", // Display the duration here
                         style: Styles.normal.copyWith(

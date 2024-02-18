@@ -140,12 +140,12 @@ class _ExpFavoritesProgramScreenState extends State<ExpFavoritesProgramScreen> {
                         // It's a meal item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  MealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       MealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: FavoritesRow(image: item["image"], 
                             title: item["name"], 

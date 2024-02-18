@@ -142,12 +142,12 @@ class _FinishedProgramScreenState extends State<FinishedProgramScreen> {
                         // It's a meal item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  MealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       MealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
                           child: ProgramRow(image: item["image"], 
                             title: item["name"], 

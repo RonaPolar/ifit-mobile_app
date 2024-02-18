@@ -3,21 +3,25 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 class MealDetails extends StatefulWidget {
   
   const MealDetails({
+    required this.id,
     required this.dObj,
     super.key,
   });
 
+  final String id;
   final WorkoutMeal dObj;
 
   @override
@@ -84,6 +88,9 @@ class _MealDetailsState extends State<MealDetails> {
 
   @override
   Widget build(BuildContext context) {
+
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
     return Container(
       color: Colors.red,
       child: NestedScrollView(
@@ -383,32 +390,18 @@ class _MealDetailsState extends State<MealDetails> {
                           padding: const EdgeInsets.only(top: 5, bottom: 10),
                           child: Column(
                             children: [
-                              // Visibility(
-                              //   visible: isContainerVisible,
-                              //   child: SizedBox(
-                              //     width: 200,
-                              //     child: MainButton(
-                              //     title: "Are you Done?",
-                              //     buttonColor: Styles.secondColor,
-                              //     onPressed: () {
-                              //       showDialog(context: context,
-                              //         builder: (BuildContext context) {
-                              //           return ConfirmationDialog(
-                              //             onYesPressed: () {
-                              //                 Navigator.pop(context);
-                              //               },
-                              //             );
-                              //           },
-                              //         );
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
                               const Gap(10),
                               MainButton(
-                                title: buttonText,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
+                                title: !clientProvider.workoutMealExisting
+                                    ? 'Start Now'
+                                    : "Continue",
+                                onPressed: () async {
+                                  await clientProvider.addWorkoutMealPlan(
+                                    id: widget.id,
+                                    workoutMeal: widget.dObj,
+                                  ).then((value) {
+                                    Navigator.of(context).pop();
+                                  });
                                 },
                               ),
                             ],

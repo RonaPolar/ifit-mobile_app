@@ -36,6 +36,8 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       client.updateWorkoutMealListStream();
       client.updateWorkoutPlanListStream();
       client.updateExpertListStream();
+      client.updateClientWorkoutMealListStream(uid: widget.uid);
+      client.updateClientWorkoutPlanListStream(uid: widget.uid);
     });
   }
 
@@ -45,6 +47,8 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
     required List<List<WorkoutPlan>> workoutPlan,
     required List<List<WorkoutMeal>> workoutMeal,
     required List<ExpertModel> expertModel,
+    required List<WorkoutPlan> clientWorkoutPlan,
+    required List<WorkoutMeal> clientWorkoutMeal,
   }) {
     return [
       HomeScreen(
@@ -60,6 +64,8 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       ),
       ProgramTrackerScreen(
         clientModel: clientModel,
+        workoutMealList: clientWorkoutMeal,
+        workoutPlanList: clientWorkoutPlan,
       ),
       ProfileScreen(
         clientModel: clientModel,
@@ -92,12 +98,30 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
                   child: (data) {
                     final List<ExpertModel> expertModel = data!;
 
-                    return bodyList(
-                        clientModel: clientModel,
-                        workoutPlan: workoutPlan,
-                        workoutMeal: workoutMeal,
-                        expertModel: expertModel
-                    )[widget.index];
+                    return StreamWrapper<List<WorkoutPlan>>(
+                      stream: client.clientWorkoutPlanListStream,
+                      child: (data) {
+
+                        final List<WorkoutPlan> clientWorkoutPlan = data!;
+
+                        return StreamWrapper<List<WorkoutMeal>>(
+                          stream: client.clientWorkoutMealListStream,
+                          child: (data) {
+
+                            final List<WorkoutMeal> clientWorkoutMeal = data!;
+
+                            return bodyList(
+                              clientModel: clientModel,
+                              workoutPlan: workoutPlan,
+                              workoutMeal: workoutMeal,
+                              expertModel: expertModel,
+                              clientWorkoutMeal: clientWorkoutMeal,
+                              clientWorkoutPlan: clientWorkoutPlan,
+                            )[widget.index];
+                          }
+                        );
+                      }
+                    );
                   }
                 );
               }

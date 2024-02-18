@@ -64,6 +64,7 @@ class Meal {
 }
 
 class WorkoutMeal {
+  final String id;
   final String foodCategory;
   final String purpose;
   final String foodPlanName;
@@ -79,6 +80,7 @@ class WorkoutMeal {
   final double rating;
 
   WorkoutMeal({
+    required this.id,
     required this.foodCategory,
     required this.purpose,
     required this.foodPlanName,
@@ -95,6 +97,7 @@ class WorkoutMeal {
   });
 
   WorkoutMeal copyWith({
+    String? id,
     String? foodCategory,
     String? purpose,
     String? foodPlanName,
@@ -110,6 +113,7 @@ class WorkoutMeal {
     double? rating,
   }) =>
       WorkoutMeal(
+        id: id ?? this.id,
         foodCategory: foodCategory ?? this.foodCategory,
         purpose: purpose ?? this.purpose,
         foodPlanName: foodPlanName ?? this.foodPlanName,
@@ -126,6 +130,7 @@ class WorkoutMeal {
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
+    id: json["id"],
     foodCategory: json["foodCategory"],
     purpose: json["purpose"],
     foodPlanName: json["foodPlanName"],
@@ -142,6 +147,7 @@ class WorkoutMeal {
   );
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "foodCategory": foodCategory,
     "purpose": purpose,
     "foodPlanName": foodPlanName,

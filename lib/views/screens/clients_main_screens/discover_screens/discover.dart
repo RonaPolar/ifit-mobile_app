@@ -64,7 +64,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     // combinedList.addAll(widget.workoutMealList);
     // combinedList.addAll(widget.workoutPlanList);
 
-    combinedList = [...(widget.workoutMealList).first, ...(widget.workoutPlanList).first];
+    combinedList = [...(widget.workoutPlanList).first];
     combinedList.shuffle(Random());
 
     return Scaffold(

@@ -225,7 +225,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => MealDetails(dObj: mObj)),
+                          builder: (context) => MealDetails(
+                            dObj: mObj,
+                            id: widget.clientModel.uid,
+                          )),
                         );
                       },
                       child: BigContainer(

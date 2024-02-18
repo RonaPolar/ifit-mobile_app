@@ -418,12 +418,13 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
-    final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+    final data = await _db.collection(tWorkoutMealPath).doc(id).get();
     final auth = await _db.collection(tExpertPath).doc(id).get();
     final String expertName = auth.get("name");
 
     await uploadWorkoutMealPhoto(id).then((value) async {
       final WorkoutMeal workoutMeal = WorkoutMeal(
+        id: const Uuid().v1(),
         foodCategory: foodCategory ?? "",
         purpose: workoutPurpose ?? "",
         foodPlanName: foodPlanName.text,

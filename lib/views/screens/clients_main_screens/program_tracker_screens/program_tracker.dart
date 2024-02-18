@@ -13,16 +13,19 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/my_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 class ProgramTrackerScreen extends StatefulWidget {
   const ProgramTrackerScreen({
     required this.clientModel,
+    required this.workoutPlanList,
+    required this.workoutMealList,
     super.key,
   });
 
   final ClientModel clientModel;
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
 
   @override
@@ -177,7 +180,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                   ),
               ),
             ),
-        
+
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(
@@ -254,19 +257,20 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 2,
+                    itemCount: widget.workoutPlanList.length,
                     itemBuilder: (context, index) {
-                      var wObj = latestWorkoutArr[index];
+                      var wObj = widget.workoutPlanList[index];
                       return InkWell(
                         onTap: () {
                           // Navigator.push(context, MaterialPageRoute(
                           //     builder: (context) => WorkoutDetails(dObj: wObj)));
                           },
-                          child: ProgramRow(image: wObj["image"],
-                            title: wObj["name"],
-                            bottomText: "${wObj["duration"]} minutes | ${wObj["kcal"]} Calories",
-                            progress: wObj["progress"] as double?,
-                            progressText: wObj["days"],
+                          child: ProgramRow(
+                            image: wObj.workoutPicture,
+                            title: wObj.planName,
+                            bottomText: "${wObj.minutes} minutes | ${wObj.calories} Calories",
+                            progress: 12,
+                            progressText: "${wObj.daysOfThePlan.day}",
                             showToggleSwitch: false,
                         ),
                       );
@@ -291,23 +295,22 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                       )
                     ],
                   ),
-                  ListView.builder( //MealRowContainer Content
+                  ListView.builder(
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 2, //recommendWorkoutArr.length
+                    itemCount: widget.workoutMealList.length,
                     itemBuilder: (context, index) {
-                      var mObj = latestMealArr[index];
+                      var mObj = widget.workoutMealList[index];
                       return InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => MealDetails(dObj: mObj)));
+                          // Navigator.push(context, MaterialPageRoute(
+                          //   builder: (context) => MealDetails(dObj: mObj)));
                         },
-                        child: ProgramRow(image: mObj["image"],
-                          title: mObj["name"],
-                          bottomText: "${mObj["categories"]} | ${mObj["kcal"]} Calories",
-                          progress: mObj["progress"] as double?,
-                          progressText: mObj["days"],
+                        child: ProgramRow(image: mObj.foodPhoto,
+                          title: mObj.foodPlanName,
+                          bottomText: "${mObj.purpose} | ${mObj.calories} Calories",
+                          progress: 12,
                           showToggleSwitch: false,
                         ),
                       );

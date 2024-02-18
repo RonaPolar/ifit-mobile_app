@@ -157,11 +157,11 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                       var mObj = upcomingMealArr[index];
                       return InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MealDetails(dObj: mObj)),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => MealDetails(dObj: mObj)),
+                            // );
                           },
                           child: ProgramRow(image: mObj["image"], 
                           title: mObj["name"], 
