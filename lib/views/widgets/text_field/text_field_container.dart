@@ -45,29 +45,47 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
           Image.asset(widget.imagePath!, scale: 10, fit: BoxFit.scaleDown);
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Styles.boxtextField,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: TextFormField(
-        controller: widget.controller,
-        keyboardType: widget.keyboardType,
-        obscureText: widget.obscureText,
-        maxLines: widget.maxLines,
-        decoration: InputDecoration(
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          prefixIcon: prefixIcon,
-          suffixIcon: widget.rightIcon,
-          hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: Styles.fadeTextColor,
+    return TextFormField(
+      controller: widget.controller,
+      keyboardType: widget.keyboardType,
+      obscureText: widget.obscureText,
+      maxLines: widget.maxLines,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.all(12.0),
+        fillColor: Colors.grey.withOpacity(0.2),
+        focusColor: Colors.grey,
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+          borderSide: BorderSide.none,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+          borderSide: BorderSide.none,
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+          borderSide: BorderSide.none,
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+          borderSide: const BorderSide(
+            color: Colors.red,
           ),
         ),
-        onChanged: widget.onChanged,
-        validator: widget.validator,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+          borderSide: BorderSide.none,
+        ),
+        prefixIcon: prefixIcon,
+        suffixIcon: widget.rightIcon,
+        hintText: widget.hintText,
+        hintStyle: TextStyle(
+          color: Styles.fadeTextColor,
+        ),
       ),
+      onChanged: widget.onChanged,
+      validator: widget.validator,
     );
   }
 }

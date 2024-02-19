@@ -223,7 +223,10 @@ class ExpertProvider extends ChangeNotifier {
 
   List<ExerciseElement> exerciseList = [];
 
-  void addExercise() {
+  void updateExercise({
+    required bool isEdit,
+    int? index,
+  }) {
 
     final ExerciseElement exercise = ExerciseElement(
       url: exerciseVideo.text,
@@ -236,7 +239,11 @@ class ExpertProvider extends ChangeNotifier {
       ),
     );
 
-    exerciseList.add(exercise);
+    if (isEdit) {
+      exerciseList[index!] = exercise;
+    } else {
+      exerciseList.add(exercise);
+    }
     clearExerciseForm();
 
     notifyListeners();
@@ -247,6 +254,7 @@ class ExpertProvider extends ChangeNotifier {
     exerciseVideo.clear();
     exerciseDescription.clear();
     steps = [];
+    exerciseTime.clear();
     notifyListeners();
   }
 
@@ -269,6 +277,7 @@ class ExpertProvider extends ChangeNotifier {
       showHUD(true);
 
       final WorkoutPlan workoutPlan = WorkoutPlan(
+        dateCreated: DateTime.now(),
         id: const Uuid().v1(),
         category: workoutCategory ?? "",
         purpose: workoutPurpose ?? "",
@@ -432,6 +441,7 @@ class ExpertProvider extends ChangeNotifier {
       showHUD(true);
 
       final WorkoutMeal workoutMeal = WorkoutMeal(
+        dateCreated: DateTime.now(),
         id: const Uuid().v1(),
         foodCategory: foodCategory ?? "",
         purpose: workoutPurpose ?? "",

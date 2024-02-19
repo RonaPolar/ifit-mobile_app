@@ -4,90 +4,57 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
+import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/widgets/date/date_picker.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  const EditProfile({
+    required this.clientModel,
+    super.key,
+  });
+
+  final ClientModel clientModel;
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _numberController = TextEditingController();
-  TextEditingController _programController = TextEditingController();
-  TextEditingController _birth_dateController = TextEditingController();
-  String age = "";
-  String height = "";
-  String weight = "";
-  String gender = "";
-  String photo_url = "";
 
   @override
   void initState() {
     super.initState();
-    // Fetch data based on the provided UID when the widget initializes
-    fetchData();
+    getData(context);
   }
 
-  Future<void> fetchData() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
+  void getData(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context, listen: false);
 
-      if (user != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('clients')
-            .where('email', isEqualTo: user.email)
-            .get();
+    final ClientModel client = widget.clientModel;
 
-        if (querySnapshot.docs.isNotEmpty) {
-          var userData =
-              querySnapshot.docs.first.data() as Map<String, dynamic>?;
-
-          if (userData != null) {
-            setState(() {
-              _nameController.text = userData['name'] ?? '';
-              _emailController.text = userData['email'] ?? '';
-              _numberController.text = userData['phone_number'] ?? '';
-              _programController.text = userData['program'] ?? '';
-              _birth_dateController.text = userData['birth_date'] ?? '';
-
-              gender = userData['gender'] ?? '';
-              height = userData['height'] ?? '';
-              weight = userData['weight'] ?? '';
-              photo_url = userData['photo_url'] ?? '';
-              String birthdateString = userData['birth_date'] ?? '';
-              DateTime birthdate = DateTime.parse(birthdateString);
-
-              DateTime currentDate = DateTime.now();
-              Duration difference = currentDate.difference(birthdate);
-
-              age = (difference.inDays ~/ 365).toString();
-            });
-          } else {
-            print('User data is null.');
-          }
-        } else {
-          print('No user data found for this UID.');
-        }
-      } else {
-        print('User is null.');
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
+    setState(() {
+      Auth.name.text = client.name;
+      Auth.phone.text = client.phoneNumber;
+      Auth.height.text = client.height;
+      Auth.weight.text = client.weight;
+      auth.gender = client.gender;
+    });
   }
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    String? selectedValue;
+    final Auth auth = Provider.of<Auth>(context);
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -130,124 +97,43 @@ class _EditProfileState extends State<EditProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Profile Details", style: Styles.title),
-                        const Gap(20),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: Styles.primaryColor,
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: SizedBox(
-                                  height: 100,
-                                  child: Image.network(
-                                    photo_url,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Text('Image Error: $error');
-                                    },
-                                  ),
-                                  // Replace with your placeholder widget or image
-                                ),
-                              ),
-                              Positioned(
-                                bottom: -2,
-                                right: -2,
-                                child: IconButton(
-                                  icon: Icon(
-                                    FluentSystemIcons.ic_fluent_camera_filled,
-                                    color: Styles.primaryColor,
-                                    size: 30,
-                                  ),
-                                  onPressed: () {
-                                    // Handle camera button press
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        const Gap(15),
+                        TextFieldContainer(
+                          controller: Auth.name,
+                          hintText: "Name",
+                          icon: FluentSystemIcons.ic_fluent_edit_regular,
                         ),
                         const Gap(15),
                         TextFieldContainer(
-                            controller: _nameController,
-                            hintText: "Name",
-                            icon: FluentSystemIcons.ic_fluent_edit_regular,
-                            obscureText: false),
-                        const Gap(15),
-                        TextFieldContainer(
-                            controller: _emailController,
-                            hintText: "Email",
-                            icon: FluentSystemIcons.ic_fluent_edit_regular,
-                            obscureText: false),
-                        const Gap(15),
-                        TextFieldContainer(
-                            controller: _numberController,
-                            hintText: "Number",
-                            icon: FluentSystemIcons.ic_fluent_edit_regular,
-                            obscureText: false),
+                          controller: Auth.phone,
+                          hintText: "Number",
+                          icon: FluentSystemIcons.ic_fluent_edit_regular,
+                        ),
                         const Gap(15),
                         RegisterDropDown(
-                          hintText: _programController.text,
-                          icon: FluentSystemIcons.ic_fluent_edit_regular,
-                          items: const [
-                            DropdownMenuItem<String>(
-                              value: "Loss Weight",
-                              child: Text("Loss Weight Program"),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: "Body Toning",
-                              child: Text("Body Toning Program"),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: "Gain Muscles",
-                              child: Text("Gain Muscles Program"),
-                            )
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value;
-                            });
-                          },
-                          selectedValue: selectedValue,
+                          hintText: 'Gender',
+                          icon: FluentSystemIcons.ic_fluent_people_regular,
+                          items: auth.genderList.map((data) {
+                            return  DropdownMenuItem<String>(
+                              value: data,
+                              child: Text(data),
+                            );
+                          }).toList(),
+                          onChanged: auth.updateGender,
+                          selectedValue: auth.gender,
                         ),
-                        // TextfieldContainer(hitText: user[0]["program"].toString(),
-                        //   icon: FluentSystemIcons.ic_fluent_edit_regular, obscureText: false),
                         const Gap(15),
                         TextFieldContainer(
-                            controller: _birth_dateController,
-                            hintText: "Birthdate",
-                            icon: FluentSystemIcons.ic_fluent_edit_regular,
-                            obscureText: false),
-
+                          controller: Auth.height,
+                          hintText: "Height",
+                          icon: FluentSystemIcons.ic_fluent_edit_regular,
+                        ),
                         const Gap(15),
-                        DisplayTextContainer(
-                            hitText: age,
-                            icon: FluentSystemIcons
-                                .ic_fluent_person_accounts_regular,
-                            obscureText: false),
-                        const Gap(15),
-                        DisplayTextContainer(
-                            hitText: gender,
-                            icon: FluentSystemIcons
-                                .ic_fluent_person_accounts_regular,
-                            obscureText: false),
-                        const Gap(15),
-                        DisplayTextContainer(
-                            hitText: height,
-                            icon: FluentSystemIcons
-                                .ic_fluent_person_accounts_regular,
-                            obscureText: false),
-                        const Gap(15),
-                        DisplayTextContainer(
-                            hitText: weight,
-                            icon: FluentSystemIcons
-                                .ic_fluent_person_accounts_regular,
-                            obscureText: false),
+                        TextFieldContainer(
+                          controller: Auth.weight,
+                          hintText: "Weight",
+                          icon: FluentSystemIcons.ic_fluent_edit_regular,
+                        ),
                       ],
                     ),
                   ],
@@ -264,9 +150,10 @@ class _EditProfileState extends State<EditProfile> {
                       context: context,
                       builder: (BuildContext context) {
                         return ConfirmationDialog(
-                          onYesPressed: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => const ProfileNavBar()));
+                          onYesPressed: () async {
+                            await auth.editClientProfile(widget.clientModel.uid).then((value) {
+                              Navigator.of(context)..pop()..pop();
+                            });
                           },
                         );
                       });

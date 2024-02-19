@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -13,7 +14,6 @@ import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
-import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/settings.dart'
     as CloudFirestoreSettings;
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
@@ -45,8 +45,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return age;
 
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +134,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: "Edit",
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const EditProfile()));
+                                  builder: (context) => EditProfile(
+                                    clientModel: widget.clientModel,
+                                  )));
                             },
                             textStyle: Styles.seeMore.copyWith(
                               color: Colors.white,

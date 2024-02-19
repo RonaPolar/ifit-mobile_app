@@ -328,7 +328,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
             IconButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AddExerciseScreen()));
+                  builder: (context) => AddExerciseScreen()));
               },
               icon: const Icon(Icons.add),
             )
@@ -343,14 +343,23 @@ class _CreateWorkoutState extends State<CreateWorkout> {
               itemBuilder: (context, index) {
                 final ExerciseElement exercise = expertProvider.exerciseList[index];
 
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Exercise: ${exercise.title}"),
-                      ],
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AddExerciseScreen(
+                          exerciseElement: exercise,
+                          index: index,
+                        )));
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Exercise: ${exercise.title}"),
+                        ],
+                      ),
                     ),
                   ),
                 );

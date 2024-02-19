@@ -78,6 +78,7 @@ class Workout {
 }
 
 class WorkoutPlan {
+  final DateTime dateCreated;
   final String expertName;
   final String purpose;
   final String minutes;
@@ -97,6 +98,7 @@ class WorkoutPlan {
   final int? dayCountFinished;
 
   WorkoutPlan({
+    required this.dateCreated,
     required this.expertName,
     required this.purpose,
     required this.minutes,
@@ -117,6 +119,7 @@ class WorkoutPlan {
   });
 
   WorkoutPlan copyWith({
+    DateTime? dateCreated,
     bool? isCancelled,
     String? expertName,
     String? purpose,
@@ -136,6 +139,7 @@ class WorkoutPlan {
     int? dayCountFinished,
   }) =>
       WorkoutPlan(
+        dateCreated: dateCreated ?? this.dateCreated,
         isCancelled: isCancelled ?? this.isCancelled,
         expertName: expertName ?? this.expertName,
         purpose: purpose ?? this.purpose,
@@ -156,6 +160,7 @@ class WorkoutPlan {
       );
 
   factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
+    dateCreated: (json["dateCreated"] as Timestamp).toDate(),
     isCancelled: json["isCancelled"],
     expertName: json["expertName"],
     purpose: json["purpose"],
@@ -176,6 +181,7 @@ class WorkoutPlan {
   );
 
   Map<String, dynamic> toJson() => {
+    "dateCreated": Timestamp.fromDate(dateCreated),
     "isCancelled": isCancelled,
     "expertName": expertName,
     "purpose": purpose,

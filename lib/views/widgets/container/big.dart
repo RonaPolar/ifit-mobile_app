@@ -46,14 +46,16 @@ class _BigContainerState extends State<BigContainer> {
             },
           ),
           const Gap(5),
-          Text(
-            widget.title,
-            style: Styles.seeMore.copyWith(
-              color: widget.textColor ?? Colors.black,
+          Expanded(
+            child: Text(widget.title,
+              textAlign: TextAlign.center,
+              style: Styles.seeMore.copyWith(
+                color: widget.textColor ?? Colors.black,
+              ),
             ),
           ),
-          Text(
-            widget.bottomText,
+          Text(widget.bottomText,
+            textAlign: TextAlign.center,
             style: Styles.normal.copyWith(
               fontSize: 12,
               color: widget.textColor ?? Colors.black,

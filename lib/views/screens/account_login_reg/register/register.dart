@@ -14,6 +14,7 @@ import 'package:ifit/views/screens/account_login_reg/register/Expert_registratio
 import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_terms.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
@@ -45,6 +46,8 @@ class _RegisterState extends State<Register> {
   void _showTypesOfUserDialog() {
     CustomDialogs.showTypesOfUserDialog(context);
   }
+
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -118,169 +121,112 @@ class _RegisterState extends State<Register> {
 
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
 
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // ElevatedButton(
-              //   onPressed: () {
-              //     clientProvider.updateWorkoutPlanListStream();
-              //   },
-              //   child: Text("tap"),
-              // ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Text('Hey there,',
-                      style: Styles.text18,
-                    ),
-                    Text('Create an Account',
-                      style: Styles.headline25,
-                    ),
-                    const Gap(30),
-                    TextFieldContainer(
-                      hintText: 'First Name',
-                      icon: FluentSystemIcons.ic_fluent_person_regular,
-                      controller: Auth.firstName,
-                    ),
-                    const Gap(15),
-                    TextFieldContainer(
-                      hintText: 'Last Name',
-                      icon: FluentSystemIcons.ic_fluent_person_regular,
-                      controller: Auth.lastName,
-                    ),
-                    const Gap(15),
-                    TextFieldContainer(
-                      hintText: 'Email',
-                      icon: FluentSystemIcons.ic_fluent_mail_regular,
-                      obscureText: false,
-                      controller: Auth.email,
-                    ),
-                    const Gap(15),
-                    TextFieldContainer(
-                      //password eye icon
-                      hintText: 'Password',
-                      icon: FluentSystemIcons.ic_fluent_lock_regular,
-                      controller: Auth.password,
-                      obscureText: !_isPasswordVisible,
-                      maxLines: _isPasswordVisible ? null : 1,
-                      rightIcon: IconButton(
-                        icon: _isPasswordVisible
-                            ? const Icon(Icons.visibility)
-                            : const Icon(Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                    const Gap(15),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text.rich(
-                        TextSpan(
-                          text: 'Click here to learn about ',
-                          children: [
-                            TextSpan(
-                              text: 'Type of User',
-                              style: TextStyle(
-                                color: Styles.textColor,
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  _showTypesOfUserDialog(); // Show Privacy Policy dialog
-                                },
-                            ),
-                          ],
-                        ),
-                        style: TextStyle(color: Styles.fadeTextColor),
-                      ),
-                    ),
-                    const Gap(5),
-                    RegisterDropDown(
-                      hintText: 'Type of User',
-                      icon: FluentSystemIcons.ic_fluent_people_regular,
-                      items: auth.userTypeList.map((data) {
-                        return DropdownMenuItem<String>(
-                          value: data,
-                          child: Text(data),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        auth.updateRegisterUserType(value!);
-                        // setState(() {
-                        //   selectedValue = value;
-                        //   box.write('Rtype', value);
-                        //   if (value == "Client") {
-                        //     destinationScreen = "ClientRegistration";
-                        //   } else if (value == "Expert") {
-                        //     destinationScreen = "ExpertRegistration";
-                        //   }
-                        // });
-                      },
-                      selectedValue: auth.registerUserType,
-                    ),
-                    const Gap(5),
-                    (validatorError == ""
-                        ? const SizedBox()
-                        : Align(
-                            //make a condition that make if any of it wasnt filled it will display "Enter _____"
-                            alignment: Alignment.bottomLeft,
-                            child: Text(
-                              validatorError,
-                              style: Styles.text15normal.copyWith(
-                                color: Colors.red,
-                              ),
-                            ),
-                          )),
-                    const Gap(10),
-                    Row(
+      body: ModalProgressHUD(
+        inAsyncCall: auth.isLoading,
+        child: Form(
+          key: formKey,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isCheck = !_isCheck;
-                            });
-                          },
-                          icon: _isCheck
-                              ? const Icon(FluentSystemIcons
-                                  .ic_fluent_checkbox_checked_regular)
-                              : const Icon(FluentSystemIcons
-                                  .ic_fluent_checkbox_unchecked_regular),
-                          color: Styles.fadeTextColor,
+                        Text('Hey there,',
+                          style: Styles.text18,
                         ),
-                        Expanded(
+                        Text('Create an Account',
+                          style: Styles.headline25,
+                        ),
+                        const Gap(30),
+                        TextFieldContainer(
+                          hintText: 'First Name',
+                          icon: FluentSystemIcons.ic_fluent_person_regular,
+                          controller: Auth.firstName,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "This field is required";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        const Gap(15),
+                        TextFieldContainer(
+                          hintText: 'Last Name',
+                          icon: FluentSystemIcons.ic_fluent_person_regular,
+                          controller: Auth.lastName,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "This field is required";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        const Gap(15),
+                        TextFieldContainer(
+                          hintText: 'Email',
+                          icon: FluentSystemIcons.ic_fluent_mail_regular,
+                          obscureText: false,
+                          controller: Auth.email,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "This field is required";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        const Gap(15),
+                        TextFieldContainer(
+                          //password eye icon
+                          hintText: 'Password',
+                          icon: FluentSystemIcons.ic_fluent_lock_regular,
+                          controller: Auth.password,
+                          obscureText: !_isPasswordVisible,
+                          maxLines: _isPasswordVisible ? null : 1,
+                          rightIcon: IconButton(
+                            icon: _isPasswordVisible
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "This field is required";
+                            } else if (val.length < 6) {
+                              return "Password should be greater than 6.";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        const Gap(15),
+                        Align(
+                          alignment: Alignment.bottomLeft,
                           child: Text.rich(
                             TextSpan(
-                              text: 'By continuing you accept our ',
+                              text: 'Click here to learn about ',
                               children: [
                                 TextSpan(
-                                  text: 'Privacy Policy',
+                                  text: 'Type of User',
                                   style: TextStyle(
                                     color: Styles.textColor,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      _showPrivacyPolicyDialog(); // Show Privacy Policy dialog
-                                    },
-                                ),
-                                const TextSpan(text: ' and '),
-                                TextSpan(
-                                  text: 'Terms of Use',
-                                  style: TextStyle(
-                                    color: Styles.textColor,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      _showTermsOfUseDialog(); // Show Terms of Use dialog
+                                      _showTypesOfUserDialog(); // Show Privacy Policy dialog
                                     },
                                 ),
                               ],
@@ -288,103 +234,177 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(color: Styles.fadeTextColor),
                           ),
                         ),
-                      ],
-                    ),
-                    const Gap(10),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    right: 20, left: 20, bottom: 5, top: 20),
-                child: Column(
-                  children: [
-                    MainButton(
-                      title: 'Register',
-                      onPressed: () async {
-
-                        print(auth.registerUserType);
-
-                        // if (await validateAndSendEmail()) {
-
-                          // ignore: use_build_context_synchronously
-                          // Navigator.push(context, MaterialPageRoute(
-                          //     builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
-                          //       // check if all fields are filled and valid
-                          //
-                          //     }),
-                          //   ),
-                          // );
-                          if (auth.registerUserType == "Client") {
-                            await auth.createUser().then((String? id) {
-                              Navigator.pushReplacement(context, MaterialPageRoute(
-                                builder: (context) => RegisterPart2(id: id!)),
-                              );
-                            });
-
-                          } else if (auth.registerUserType == "Expert") {
-                            await auth.createUser().then((value) {
-                              Navigator.pushReplacement(context, MaterialPageRoute(
-                                  builder: (context) =>
-                                  const ExpertRegistration1()),
-                              );
-                            });
+                        const Gap(5),
+                        RegisterDropDown(
+                          hintText: 'Type of User',
+                          icon: FluentSystemIcons.ic_fluent_people_regular,
+                          items: auth.userTypeList.map((data) {
+                            return DropdownMenuItem<String>(
+                              value: data,
+                              child: Text(data),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            auth.updateRegisterUserType(value!);
+                            // setState(() {
+                            //   selectedValue = value;
+                            //   box.write('Rtype', value);
+                            //   if (value == "Client") {
+                            //     destinationScreen = "ClientRegistration";
+                            //   } else if (value == "Expert") {
+                            //     destinationScreen = "ExpertRegistration";
+                            //   }
                             // });
-                          }
-                        }
-                      // },
-                    ),
-                    const Gap(10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 1,
-                            color: Styles.textColor,
-                          ),
+                          },
+                          selectedValue: auth.registerUserType,
                         ),
-                        Text(
-                          ' Or ',
-                          style: Styles.text18,
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Navigate to the login screen here
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const LogIn(),
-                          ),
-                        );
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          style: Styles.text18,
-                          children: <TextSpan>[
-                            const TextSpan(
-                              text: 'Already have an Account? ',
+                        const Gap(5),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isCheck = !_isCheck;
+                                });
+                              },
+                              icon: _isCheck
+                                  ? const Icon(FluentSystemIcons
+                                      .ic_fluent_checkbox_checked_regular)
+                                  : const Icon(FluentSystemIcons
+                                      .ic_fluent_checkbox_unchecked_regular),
+                              color: Styles.fadeTextColor,
                             ),
-                            TextSpan(
-                              text: 'Login',
-                              style: Styles.title.copyWith(
-                                decoration: TextDecoration.underline,
+                            Expanded(
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'By continuing you accept our ',
+                                  children: [
+                                    TextSpan(
+                                      text: 'Privacy Policy',
+                                      style: TextStyle(
+                                        color: Styles.textColor,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          _showPrivacyPolicyDialog(); // Show Privacy Policy dialog
+                                        },
+                                    ),
+                                    const TextSpan(text: ' and '),
+                                    TextSpan(
+                                      text: 'Terms of Use',
+                                      style: TextStyle(
+                                        color: Styles.textColor,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          _showTermsOfUseDialog(); // Show Terms of Use dialog
+                                        },
+                                    ),
+                                  ],
+                                ),
+                                style: TextStyle(color: Styles.fadeTextColor),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        const Gap(10),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                        right: 20, left: 20, bottom: 5, top: 20),
+                    child: Column(
+                      children: [
+                        MainButton(
+                          title: 'Register',
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              // if (await validateAndSendEmail()) {
+
+                              // ignore: use_build_context_synchronously
+                              // Navigator.push(context, MaterialPageRoute(
+                              //     builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
+                              //       // check if all fields are filled and valid
+                              //
+                              //     }),
+                              //   ),
+                              // );
+                              if (auth.registerUserType == "Client") {
+                                await auth.createUser().then((String? id) {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(
+                                      builder: (context) => RegisterPart2(id: id!)),
+                                  );
+                                });
+
+                              } else if (auth.registerUserType == "Expert") {
+                                await auth.createUser().then((value) {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                      const ExpertRegistration1()),
+                                  );
+                                });
+                                // });
+                              }
+                            }
+                            // },
+                          }
+                        ),
+                        const Gap(10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: Styles.textColor,
+                              ),
+                            ),
+                            Text(
+                              ' Or ',
+                              style: Styles.text18,
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Navigate to the login screen here
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const LogIn(),
+                              ),
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              style: Styles.text18,
+                              children: <TextSpan>[
+                                const TextSpan(
+                                  text: 'Already have an Account? ',
+                                ),
+                                TextSpan(
+                                  text: 'Login',
+                                  style: Styles.title.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

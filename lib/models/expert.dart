@@ -62,7 +62,7 @@ class Expert {
 
 ///
 class ExpertModel {
-  final String birthDate;
+  final DateTime birthDate;
   final DateTime dateCreation;
   final String? datejoined;
   final String email;
@@ -99,7 +99,7 @@ class ExpertModel {
   });
 
   ExpertModel copyWith({
-    String? birthDate,
+    DateTime? birthDate,
     String? datejoined,
     String? email,
     String? gender,
@@ -136,7 +136,7 @@ class ExpertModel {
       );
 
   factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
-    birthDate: json["birth_date"],
+    birthDate: (json["birth_date"] as Timestamp).toDate(),
     dateCreation: (json["date_creation"] as Timestamp).toDate(),
     datejoined: json["datejoined"],
     email: json["email"],
@@ -155,7 +155,7 @@ class ExpertModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "birth_date": birthDate,
+    "birth_date": Timestamp.fromDate(birthDate),
     "datejoined": datejoined,
     "email": email,
     "gender": gender,

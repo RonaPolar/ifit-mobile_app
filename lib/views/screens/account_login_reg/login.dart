@@ -9,6 +9,7 @@ import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class LogIn extends StatefulWidget {
@@ -24,36 +25,44 @@ class _LogInState extends State<LogIn> {
   final passwordController = TextEditingController();
 
   final bool _isInvalidCredentials = false;
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
 
     final IFitPackage package = Provider.of<IFitPackage>(context);
+    final Auth auth = Provider.of<Auth>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraint) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraint.maxHeight,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: _buildTop(),
+      body: Form(
+        key: formKey,
+        child: ModalProgressHUD(
+          inAsyncCall: auth.isLoading,
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraint) {
+                return Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraint.maxHeight,
                     ),
-                    _buildBottom(package),
-                  ],
-                ),
-              ),
-            );
-          }
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: _buildTop(),
+                        ),
+                        _buildBottom(package),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            ),
+          ),
         ),
       ),
     );
@@ -73,6 +82,13 @@ class _LogInState extends State<LogIn> {
           hintText: 'Email',
           icon: FluentSystemIcons.ic_fluent_mail_regular,
           controller: Auth.email,
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return "This field is required";
+            } else {
+              return null;
+            }
+          },
         ),
         const Gap(15),
         TextFieldContainer(
@@ -92,20 +108,15 @@ class _LogInState extends State<LogIn> {
               });
             },
           ),
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return "This field is required";
+            } else {
+              return null;
+            }
+          },
         ),
         const Gap(5),
-        (_isInvalidCredentials
-            ? Align(
-          //make a condition that make if any of it wasnt filled it will display "Enter _____"
-          alignment: Alignment.bottomCenter,
-          child: Text(
-            'Invalid Credentials',
-            style: Styles.text15normal.copyWith(
-              color: Colors.red,
-            ),
-          ),
-        )
-            : const SizedBox())
       ],
     );
   }
@@ -115,18 +126,20 @@ class _LogInState extends State<LogIn> {
     final Auth auth = Provider.of<Auth>(context);
 
     void loginUser() async {
-      await auth.login().then((_) {
-        bool isExpert = auth.userType == "Expert";
+      if (formKey.currentState!.validate()) {
+        await auth.login().then((_) {
+          bool isExpert = auth.userType == "Expert";
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => isExpert
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => isExpert
                 ? const ExpBottomBar()
                 : const MainBottomBar(),
           ),
-        );
-      });
+          );
+        });
+      }
     }
 
     return Column(

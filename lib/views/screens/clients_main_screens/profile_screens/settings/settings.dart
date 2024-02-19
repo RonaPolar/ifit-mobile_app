@@ -78,8 +78,8 @@ class _SettingsState extends State<Settings> {
                                 .ic_fluent_person_accounts_regular,
                             title: 'Edit Profile Details',
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const EditProfile()));
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (context) => const EditProfile()));
                             },
                           ),
                           NextNavigation(

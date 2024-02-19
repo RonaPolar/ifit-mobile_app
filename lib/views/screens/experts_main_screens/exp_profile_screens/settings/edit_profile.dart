@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/widgets/date/date_picker.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
@@ -26,21 +27,24 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
-    getData();
+    getData(scaffoldKey.currentContext!);
   }
 
-  void getData() {
+  void getData(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context, listen: false);
+
     final ExpertModel expertModel = widget.expertModel;
     setState(() {
       Auth.name.text = expertModel.name;
       Auth.email.text = expertModel.email;
       Auth.profession.text = expertModel.profession;
-      Auth.birthday.text = expertModel.birthDate;
       Auth.phone.text = expertModel.phoneNumber;
-      // Auth.birthday.text = expertModel.birthDate;
+      auth.dateOfBirth = expertModel.birthDate;
     });
   }
 
@@ -52,6 +56,7 @@ class _EditProfileState extends State<EditProfile> {
     final Auth auth = Provider.of<Auth>(context);
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Styles.bgColor,
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(15),
@@ -64,7 +69,7 @@ class _EditProfileState extends State<EditProfile> {
                 return ConfirmationDialog(
                   onYesPressed: () async {
                     if (formKey.currentState!.validate())  {
-                      await auth.editWorkoutProfile(widget.expertModel.uid).then((value) {
+                      await auth.editExpertProfile(widget.expertModel.uid).then((value) {
                         Navigator.of(context)..pop()..pop();
                       });
                     }
@@ -214,6 +219,10 @@ class _EditProfileState extends State<EditProfile> {
                             },
                           ),
                           const Gap(15),
+                          DatePickerField(
+                            onDateSelected: auth.updateDateOfBirth,
+                            hintText: 'Date of Birth',
+                          ),
                         ],
                       ),
                     ],

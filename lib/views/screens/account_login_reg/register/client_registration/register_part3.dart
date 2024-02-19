@@ -24,14 +24,6 @@ class RegisterPart3 extends StatefulWidget {
 }
 
 class _RegisterPart3State extends State<RegisterPart3> {
-  String? selectedValue;
-  List<bool> list1 = [false, false, false];
-  List<bool> list2 = [false, false, false];
-  List<bool> list3 = [false, false, false, false];
-  List<bool> list4 = [false, false, false];
-  List<bool> list5 = [false, false, false];
-  List<bool> list6 = [false, false, false, false];
-  List<bool> list7 = [false, false, false, false];
 
   String validatorError = "";
 
@@ -96,14 +88,6 @@ class _RegisterPart3State extends State<RegisterPart3> {
                         : Text(validatorError,
                             style: const TextStyle(color: Colors.red),
                     ),
-                    // CustomCheckbox(
-                    //   questionText:
-                    //       'In fitness, do you consider yourself as?',
-                    //   choices: const ['Beginner', 'Intermediate', 'Expert'],
-                    //   onSelectionChanged: (value) {
-                    //     list1 = value;
-                    //   },
-                    // ),
                     Text("In fitness, do you consider yourself as?",
                       style: Styles.text15bold,
                     ),

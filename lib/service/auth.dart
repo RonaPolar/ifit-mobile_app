@@ -47,6 +47,7 @@ class Auth extends ChangeNotifier {
 
   Future<String?> createUser() async {
     final String path = "${registerUserType}s".toLowerCase();
+    showHUD(true);
 
     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
       email: email.text,
@@ -63,6 +64,8 @@ class Auth extends ChangeNotifier {
       'user_type': registerUserType,
       'verified': false,
     }).then((value) => debugPrint("Added successfully!"));
+
+    showHUD(false);
 
     return uid;
   }
@@ -237,6 +240,7 @@ class Auth extends ChangeNotifier {
 
   Future<void> login() async {
     debugPrint("Signing in...");
+    showHUD(true);
     await _auth.signInWithEmailAndPassword(
       email: email.text,
       password: password.text,
@@ -273,6 +277,7 @@ class Auth extends ChangeNotifier {
       } else {
       }
     });
+    showHUD(false);
   }
 
   Stream<User?> get userStream => FirebaseAuth.instance.authStateChanges();
@@ -323,7 +328,7 @@ class Auth extends ChangeNotifier {
         "profession_id": professionIdUrl,
         "proof_of_field_of_study": proofOfStudyUrl,
         "gender": gender,
-        "birth_date": birthday.text,
+        "birth_date": dateOfBirth,
         "phone_number": phone.text,
         "profession": profession.text,
         "description": description.text,
@@ -355,7 +360,7 @@ class Auth extends ChangeNotifier {
     proofOfStudyUrl = await ref.getDownloadURL();
   }
 
-  Future<void> editWorkoutProfile(String id) async {
+  Future<void> editExpertProfile(String id) async {
     final path = db.collection(tExpertPath).doc(id);
 
     showHUD(true);
@@ -370,6 +375,26 @@ class Auth extends ChangeNotifier {
         return debugPrint("Profile successfully updated!");
       })
       .onError((error, stackTrace) => debugPrint("Error updating! $error"));
+
+    notifyListeners();
+  }
+
+  Future<void> editClientProfile(String id) async {
+    final path = db.collection(tClientPath).doc(id);
+
+    showHUD(true);
+    await path.set({
+      "name": name.text,
+      "phone_number": phone.text,
+      "gender": gender,
+      "height": height.text,
+      "weight": weight.text,
+    }, SetOptions(merge: true))
+        .then((value) {
+      showHUD(false);
+      return debugPrint("Profile successfully updated!");
+    })
+        .onError((error, stackTrace) => debugPrint("Error updating! $error"));
 
     notifyListeners();
   }

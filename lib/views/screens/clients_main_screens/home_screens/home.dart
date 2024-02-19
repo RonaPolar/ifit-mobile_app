@@ -39,17 +39,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Schedule> schedArr = [
-    Schedule(title: "7pm - 8pm", subtitle: "Stretching"),
-    Schedule(title: "5pm - 6:30pm", subtitle: "Full Body"),
-    Schedule(title: "8am - 9pm", subtitle: "Abdominal"),
-    Schedule(title: "7:30am - 7:50am", subtitle: "Stretching"),
-    Schedule(title: "6:30am - 7am", subtitle: "Meal"),
-  ];
-
-  List<Workout> recommendWorkout = [];
-  List<Meal> recommendMeal = [];
-
   @override
   void initState() {
     super.initState();
@@ -57,18 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ClientProvider clientProvider = Provider.of<ClientProvider>(context, listen: false);
       clientProvider.getBmi(client: widget.clientModel);
-      getStaticData();
-    });
-
-  }
-
-  Future<void> getStaticData() async {
-    final String workout = await rootBundle.loadString(JsonFile.workout);
-    final String meal = await rootBundle.loadString(JsonFile.meal);
-
-    setState(() {
-      recommendWorkout = (jsonDecode(workout)["workout"] as List).map((e) => Workout.fromJson(e)).toList();
-      recommendMeal = (jsonDecode(meal)["meal"] as List).map((e) => Meal.fromJson(e)).toList();
     });
   }
 
@@ -76,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final ClientProvider clientProvider =  Provider.of<ClientProvider>(context);
     final ClientModel client = widget.clientModel;
+
+
 
     return SafeArea(
       child: Scaffold(
@@ -127,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Gap(20),
                 Text('Activity Today', style: Styles.title),
                 const Gap(10),
-                ActivityTodayWidget(schedArr: schedArr),
+                // ActivityTodayWidget(schedArr: schedArr),
                 const Gap(20),
                 _buildWorkoutRecommendation(clientProvider),
                 const Gap(15),
@@ -141,6 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWorkoutRecommendation(ClientProvider clientProvider) {
+
+    final List<WorkoutPlan> combinedWorkoutPlan = widget.workoutPlanList.expand((element) => element).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -158,44 +140,40 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
-        Row(
-          children: widget.workoutPlanList.map((data) {
-            return Expanded(
-              child: SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final WorkoutPlan workoutPlan = data[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => WorkoutDetails(
-                              dObj: workoutPlan,
-                              id: widget.clientModel.uid,
-                              clientWorkoutPlan: widget.clientWorkoutPlan[index],
-                            ),
-                        ));
-                      },
-                      child: BigContainer(
-                        image: workoutPlan.workoutPicture,
-                        title: workoutPlan.planName,
-                        bottomText:
-                        "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
-                      ),
-                    );
-                  },
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: combinedWorkoutPlan.length,
+            itemBuilder: (context, index) {
+              final WorkoutPlan workoutPlan = combinedWorkoutPlan[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => WorkoutDetails(
+                      dObj: workoutPlan,
+                      id: widget.clientModel.uid,
+                      clientWorkoutPlan: combinedWorkoutPlan[index],
+                    ),
+                  ));
+                },
+                child: BigContainer(
+                  image: workoutPlan.workoutPicture,
+                  title: workoutPlan.planName,
+                  bottomText:
+                  "${workoutPlan.minutes} minutes | ${workoutPlan.calories} kcal",
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            },
+          ),
         ),
       ],
     );
   }
 
   Widget _buildMealRecommendation(ClientProvider clientProvider) {
+    final List<WorkoutMeal> combinedWorkoutMeal = widget.workoutMealList.expand((element) => element).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -215,37 +193,31 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
-        Row(
-          children: widget.workoutMealList.map((data) {
-            return Expanded(
-              child: SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final WorkoutMeal mObj = data[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MealDetails(
-                            dObj: mObj,
-                            id: widget.clientModel.uid,
-                          )),
-                        );
-                      },
-                      child: BigContainer(
-                        image: mObj.foodPhoto,
-                        title: mObj.foodPlanName,
-                        bottomText:
-                        "${mObj.purpose} | ${mObj.calories} kcal",
-                      ),
-                    );
-                  },
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: combinedWorkoutMeal.length,
+            itemBuilder: (context, index) {
+              final WorkoutMeal mObj = combinedWorkoutMeal[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MealDetails(
+                        dObj: mObj,
+                        id: widget.clientModel.uid,
+                      )),
+                  );
+                },
+                child: BigContainer(
+                  image: mObj.foodPhoto,
+                  title: mObj.foodPlanName,
+                  bottomText:
+                  "${mObj.purpose} | ${mObj.calories} kcal",
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            },
+          ),
         ),
       ],
     );

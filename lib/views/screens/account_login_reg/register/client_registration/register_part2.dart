@@ -99,7 +99,7 @@ class _RegisterPart2State extends State<RegisterPart2> {
                   TextFieldContainer(
                     hintText: 'Number',
                     icon: FluentSystemIcons.ic_fluent_book_number_regular,
-                    controller: numberController,
+                    controller: Auth.phone,
                     keyboardType: TextInputType.number,
                   ),
                   const Gap(15),
@@ -116,7 +116,6 @@ class _RegisterPart2State extends State<RegisterPart2> {
                     selectedValue: auth.gender,
                   ),
                   const Gap(15),
-                  // const TextfieldContainer(hitText: 'Date of Birth', icon: FluentSystemIcons.ic_fluent_calendar_regular, obscureText: false),
                   DatePickerField(
                     onDateSelected: auth.updateDateOfBirth,
                     hintText: 'Date of Birth',

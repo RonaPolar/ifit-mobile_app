@@ -59,13 +59,25 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> newArrivalCombination = [];
+    List<dynamic> popularCombination = [];
     List<dynamic> combinedList = [];
 
-    // combinedList.addAll(widget.workoutMealList);
-    // combinedList.addAll(widget.workoutPlanList);
+    final List<WorkoutMeal> newArrivalMeal = widget.workoutMealList.expand((element) => element).toList();
+    final List<WorkoutMeal> popularMeal = widget.workoutMealList.expand((element) => element).toList();
+    final List<WorkoutPlan> newArrivalPlan = widget.workoutPlanList.expand((element) => element).toList();
+    final List<WorkoutPlan> popularPlan = widget.workoutPlanList.expand((element) => element).toList();
 
-    combinedList = [...(widget.workoutPlanList).first];
-    combinedList.shuffle(Random());
+    newArrivalMeal.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
+    newArrivalPlan.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
+
+    popularMeal.sort((a, b) => a.rating.compareTo(b.rating));
+    popularPlan.sort((a, b) => a.rating.compareTo(b.rating));
+
+    newArrivalCombination = [...newArrivalMeal, ...newArrivalPlan];
+    popularCombination = [...popularMeal, ...popularPlan];
+
+    combinedList = [...newArrivalPlan, ...newArrivalMeal];
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -153,9 +165,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     ),
                     child: Column(
                       children: [
-                        NewArrivalWidget(combinedList: combinedList),
+                        NewArrivalWidget(
+                          combinedList: newArrivalCombination,
+                        ),
                         const Gap(10),
-                        PopularWidget(combinedList: combinedList),
+                        PopularWidget(
+                          combinedList: popularCombination,
+                        ),
                       ],
                     ),
                   ),

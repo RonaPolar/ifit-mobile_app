@@ -44,6 +44,7 @@ class _LittleContainerState extends State<LittleContainer> {
           ),
           const Gap(5),
           Text(widget.title,
+            textAlign: TextAlign.center,
             style: Styles.normal.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.bold,
@@ -52,6 +53,7 @@ class _LittleContainerState extends State<LittleContainer> {
           ),
           Text(
             widget.bottomText,
+            textAlign: TextAlign.center,
             style: Styles.normal.copyWith(
               fontSize: 10,
               color: widget.textColor ?? Colors.black,

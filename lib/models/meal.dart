@@ -64,6 +64,7 @@ class Meal {
 }
 
 class WorkoutMeal {
+  final DateTime dateCreated;
   final String id;
   final String foodCategory;
   final String purpose;
@@ -81,6 +82,7 @@ class WorkoutMeal {
   final bool isFavorite;
 
   WorkoutMeal({
+    required this.dateCreated,
     required this.id,
     required this.foodCategory,
     required this.purpose,
@@ -99,6 +101,7 @@ class WorkoutMeal {
   });
 
   WorkoutMeal copyWith({
+    DateTime? dateCreated,
     String? id,
     String? foodCategory,
     String? purpose,
@@ -116,6 +119,7 @@ class WorkoutMeal {
     bool? isFavorite,
   }) =>
       WorkoutMeal(
+        dateCreated: dateCreated ?? this.dateCreated,
         id: id ?? this.id,
         foodCategory: foodCategory ?? this.foodCategory,
         purpose: purpose ?? this.purpose,
@@ -134,6 +138,7 @@ class WorkoutMeal {
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
+    dateCreated: json["dateCreated"],
     id: json["id"],
     foodCategory: json["foodCategory"],
     purpose: json["purpose"],
@@ -152,6 +157,7 @@ class WorkoutMeal {
   );
 
   Map<String, dynamic> toJson() => {
+    "dateCreated": dateCreated,
     "id": id,
     "foodCategory": foodCategory,
     "purpose": purpose,
