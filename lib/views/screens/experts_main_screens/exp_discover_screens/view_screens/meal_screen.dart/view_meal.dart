@@ -180,6 +180,7 @@ class _ViewMealDetailsState extends State<ViewMealDetails> {
                             ),
                             FavoriteButton(
                               onPressed: () {},
+                              favorite: false,
                             ),
                           ],
                         ),

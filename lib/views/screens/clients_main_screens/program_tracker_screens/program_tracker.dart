@@ -6,7 +6,6 @@ import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
-import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
@@ -38,77 +37,6 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
   @override
   Widget build(BuildContext context) {
-  List latestWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "rate": "4.7",
-      "kcal": "180",
-      "days": "14",
-      "duration": "30",
-      "exercise": "10",
-      "progress": 0.3,
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "rate": "4.3",
-      "kcal": "200",
-      "duration": "30",
-      "days": "10",
-      "exercise": "11",
-      "progress": 0.5,
-    },
-    {
-      "name": "Upper Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "rate": "4.5",
-      "kcal": "300",
-      "duration": "20",
-      "days": "15",
-      "exercise": "12",
-      "progress": 0.6,
-    },
-  ];
-
-    List latestMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "rate": "4.9",
-      "kcal": "190",
-      "fats": "100",
-      "proteins": "176",
-      "sugar": "50",
-      "categories": "Breakfast",
-      "days": "21",
-      "progress": 0.2,
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "rate": "4.6",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "categories": "Lunch",
-      "days": "15",
-      "progress": 0.9,
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "rate": "4.3",
-      "kcal": "300",
-      "fats": "170",
-      "proteins": "400",
-      "sugar": "79",
-      "categories": "Dinner",
-      "days": "14",
-      "progress": 0.5,
-    },
-  ];
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -218,6 +146,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                     itemCount: widget.workoutPlanList.length,
                     itemBuilder: (context, index) {
                       var wObj = widget.workoutPlanList[index];
+
                       return InkWell(
                         onTap: () {
                             Navigator.push(context, MaterialPageRoute(

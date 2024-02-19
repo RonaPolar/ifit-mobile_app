@@ -228,14 +228,13 @@ class _ViewWorkoutDetailsState extends State<ViewWorkoutDetails> {
                           ),
                           FavoriteButton(
                             onPressed: () {},
+                            favorite: false,
                           ),
                         ],
                       ),
                       
                     ],
                   ),
-
-                  
                   const Gap(15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

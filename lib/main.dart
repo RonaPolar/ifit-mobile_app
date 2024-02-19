@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ClientProvider>(create: (_) => ClientProvider()),
         ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
         ChangeNotifierProvider<IFitPackage>(create: (_) => IFitPackage(info: packageInfo)),
-        ChangeNotifierProvider<WorkoutProvider>(create: (_) => WorkoutProvider()),
+        ChangeNotifierProvider<WorkoutProvider>(create: (context) => WorkoutProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

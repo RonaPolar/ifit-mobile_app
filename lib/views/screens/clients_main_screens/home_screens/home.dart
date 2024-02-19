@@ -25,12 +25,14 @@ class HomeScreen extends StatefulWidget {
     required this.clientModel,
     required this.workoutPlanList,
     required this.workoutMealList,
+    required this.clientWorkoutPlan,
     super.key,
   });
 
   final ClientModel clientModel;
   final List<List<WorkoutPlan>> workoutPlanList;
   final List<List<WorkoutMeal>> workoutMealList;
+  final List<WorkoutPlan> clientWorkoutPlan;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -172,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) => WorkoutDetails(
                               dObj: workoutPlan,
                               id: widget.clientModel.uid,
+                              clientWorkoutPlan: widget.clientWorkoutPlan[index],
                             ),
                         ));
                       },

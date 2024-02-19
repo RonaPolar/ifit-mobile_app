@@ -41,7 +41,6 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
     });
   }
 
-
   List<Widget> bodyList({
     required ClientModel clientModel,
     required List<List<WorkoutPlan>> workoutPlan,
@@ -55,6 +54,7 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
         clientModel: clientModel,
         workoutPlanList: workoutPlan,
         workoutMealList: workoutMeal,
+        clientWorkoutPlan: clientWorkoutPlan,
       ),
       DiscoverScreen(
         clientModel: clientModel,

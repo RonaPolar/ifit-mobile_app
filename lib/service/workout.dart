@@ -87,18 +87,24 @@ class WorkoutProvider extends ChangeNotifier {
 
   Future<void> updateAddToFavorite({
     required String id,
-    required String workoutId,
+    required WorkoutPlan workoutPlan,
   }) async {
-    final data = await _db.collection(tClientPath)
+    final path = _db.collection(tClientPath)
         .doc(id)
         .collection(tWorkoutPlanPath)
-        .doc(workoutId);
+        .doc(workoutPlan.id);
 
-    data.set({
+    await path.set({
       tWorkoutPlanPath: {
-        "isFavorite": true,
+        "isFavorite": !workoutPlan.isFavorite,
       }
-    });
+    }, SetOptions(merge: true))
+      .then((value) {
+        return debugPrint("Update favorites successfully!");
+    })
+      .onError((error, stackTrace) => debugPrint("Error! $stackTrace"));
+
+    notifyListeners();
   }
 
   Future<void> cancelWorkout({
@@ -117,5 +123,7 @@ class WorkoutProvider extends ChangeNotifier {
     }, SetOptions(merge: true))
       .then((value) => debugPrint("Update cancel status!"))
       .onError((error, stackTrace) => debugPrint("Failed to update! $error"));
+
+    notifyListeners();
   }
 }

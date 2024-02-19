@@ -78,7 +78,6 @@ class Workout {
 }
 
 class WorkoutPlan {
-  final bool isCancelled;
   final String expertName;
   final String purpose;
   final String minutes;
@@ -94,10 +93,10 @@ class WorkoutPlan {
   final String id;
   final String category;
   final bool isFavorite;
+  final bool isCancelled;
   final int? dayCountFinished;
 
   WorkoutPlan({
-    required this.isCancelled,
     required this.expertName,
     required this.purpose,
     required this.minutes,
@@ -112,7 +111,8 @@ class WorkoutPlan {
     required this.equipments,
     required this.id,
     required this.category,
-    required this.isFavorite,
+    this.isCancelled = false,
+    this.isFavorite = false,
     this.dayCountFinished,
   });
 

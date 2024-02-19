@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/service/client.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/exercise_row.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
@@ -19,11 +20,13 @@ class WorkoutDetails extends StatefulWidget {
   const WorkoutDetails({
     required this.id,
     required this.dObj,
+    this.clientWorkoutPlan,
     super.key,
   });
 
   final String id;
   final WorkoutPlan dObj;
+  final WorkoutPlan? clientWorkoutPlan;
 
   @override
   State<WorkoutDetails> createState() => _WorkoutDetailsState();
@@ -47,6 +50,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
   Widget build(BuildContext context) {
     final WorkoutPlan workoutPlan = widget.dObj;
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
     return Container(
       color: Colors.red,
@@ -154,10 +158,18 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               ),
                             ],
                           ),
-                          Container(
-                            padding: EdgeInsets.zero,
+                          Visibility(
+                            visible: clientProvider.workoutPlanExisting,
                             child: FavoriteButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                await workoutProvider.updateAddToFavorite(
+                                  id: widget.id,
+                                  workoutPlan: widget.dObj,
+                                );
+                              },
+                              favorite: widget.clientWorkoutPlan == null
+                                ? widget.dObj.isFavorite
+                                : widget.clientWorkoutPlan!.isFavorite,
                             ),
                           ),
                         ],

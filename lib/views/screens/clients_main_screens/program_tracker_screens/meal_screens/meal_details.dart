@@ -197,6 +197,7 @@ class _MealDetailsState extends State<MealDetails> {
                               padding: EdgeInsets.zero,
                               child: FavoriteButton(
                                 onPressed: () {},
+                                favorite: widget.dObj.isFavorite,
                               ),
                             ),
                           ],
