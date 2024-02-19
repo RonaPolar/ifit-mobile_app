@@ -86,8 +86,10 @@ class FavoriteProgramScreen extends StatelessWidget {
                   image: item.workoutPicture,
                   title: item.planName,
                   bottomText: "${item.minutes} minutes | ${item.calories} Calories",
-                  progress: item.dayCountFinished == null ? 0 : (item.daysOfThePlan.day - item.dayCountFinished!) * 0.01,
-                  progressText: "${item.daysOfThePlan.day}",
+                  progress: item.dayCountFinished == null
+                      ? 0
+                      : (int.parse(item.daysOfThePlan) - item.dayCountFinished!) * 0.01,
+                  progressText: item.daysOfThePlan,
                   icon: FluentSystemIcons.ic_fluent_more_vertical_regular,
                   showToggleSwitch: false,
                   onPressed: () async {

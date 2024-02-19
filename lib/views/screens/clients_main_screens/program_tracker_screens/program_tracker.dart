@@ -160,8 +160,10 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                             image: wObj.workoutPicture,
                             title: wObj.planName,
                             bottomText: "${wObj.minutes} minutes | ${wObj.calories} Calories",
-                            progress: wObj.dayCountFinished == null ? 0 : (wObj.daysOfThePlan.day - wObj.dayCountFinished!) * 0.01,
-                            progressText: "${wObj.daysOfThePlan.day}",
+                            progress: wObj.dayCountFinished == null
+                                ? 0
+                                : (int.parse(wObj.daysOfThePlan) - wObj.dayCountFinished!) * 0.01,
+                            progressText: wObj.daysOfThePlan,
                             showToggleSwitch: false,
                         ),
                       );

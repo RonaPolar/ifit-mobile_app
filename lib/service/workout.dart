@@ -99,9 +99,7 @@ class WorkoutProvider extends ChangeNotifier {
         "isFavorite": !workoutPlan.isFavorite,
       }
     }, SetOptions(merge: true))
-      .then((value) {
-        return debugPrint("Update favorites successfully!");
-    })
+      .then((value) => debugPrint("Update favorites successfully!"))
       .onError((error, stackTrace) => debugPrint("Error! $stackTrace"));
 
     notifyListeners();

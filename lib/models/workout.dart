@@ -87,7 +87,7 @@ class WorkoutPlan {
   final String planName;
   final String calories;
   final String workoutPicture;
-  final DateTime daysOfThePlan;
+  final String daysOfThePlan;
   final String difficulty;
   final List<String> equipments;
   final String id;
@@ -127,7 +127,7 @@ class WorkoutPlan {
     String? planName,
     String? calories,
     String? workoutPicture,
-    DateTime? daysOfThePlan,
+    String? daysOfThePlan,
     String? difficulty,
     List<String>? equipments,
     String? id,
@@ -166,7 +166,7 @@ class WorkoutPlan {
     planName: json["planName"],
     calories: json["calories"],
     workoutPicture: json["workoutPicture"],
-    daysOfThePlan: (json["daysOfThePlan"] as Timestamp).toDate(),
+    daysOfThePlan: json["daysOfThePlan"],
     difficulty: json["difficulty"],
     equipments: List<String>.from(json["equipments"].map((x) => x)),
     id: json["id"],
@@ -186,7 +186,7 @@ class WorkoutPlan {
     "planName": planName,
     "calories": calories,
     "workoutPicture": workoutPicture,
-    "daysOfThePlan": Timestamp.fromDate(daysOfThePlan),
+    "daysOfThePlan": daysOfThePlan,
     "difficulty": difficulty,
     "equipments": List<dynamic>.from(equipments.map((x) => x)),
     "id": id,

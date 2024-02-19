@@ -236,7 +236,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.timer, color: Colors.red,),
-                                  Text("${workoutPlan.daysOfThePlan.day} days"),
+                                  Text("${workoutPlan.daysOfThePlan} days"),
                                 ],
                               ),
                             ),

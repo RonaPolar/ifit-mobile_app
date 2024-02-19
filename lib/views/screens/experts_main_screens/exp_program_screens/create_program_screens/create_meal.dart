@@ -9,6 +9,7 @@ import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class CreateMeal extends StatefulWidget {
@@ -71,149 +72,149 @@ class _CreateMealState extends State<CreateMeal> {
           style: Styles.headline20,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RegisterDropDown(
-                hintText: 'Food Category',
-                icon: FluentSystemIcons.ic_fluent_food_regular,
-                items: expertProvider.foodCategoryList.map((data) {
-                  return DropdownMenuItem<String>(
-                    value: data,
-                    child: Text(data),
-                  );
-                }).toList(),
-                onChanged: expertProvider.updateFoodCategory,
-                selectedValue: expertProvider.foodCategory,
-              ),
-              const Gap(10),
-              RegisterDropDown(
-                hintText: 'Purpose',
-                icon: Icons.fitness_center_outlined,
-                items: expertProvider.workoutPurposeList.map((data) {
-                  return DropdownMenuItem<String>(
-                    value: data,
-                    child: Text(data),
-                  );
-                }).toList(),
-                onChanged: expertProvider.updateWorkoutPurpose,
-                selectedValue: expertProvider.workoutPurpose,
-              ),
-              const Gap(10),
-              TextFieldContainer(
-                controller: ExpertProvider.foodPlanName,
-                hintText: 'Food Plan Name',
-                icon: FluentSystemIcons.ic_fluent_food_regular,
-              ),
-              const Gap(10),
-              SizedBox(
-                height: 100,
-                child: TextFieldContainer(
-                  controller: ExpertProvider.foodDescription,
-                  hintText: "Description",
-                  icon: Icons.description,
+      body: ModalProgressHUD(
+        inAsyncCall: expertProvider.isLoading,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                RegisterDropDown(
+                  hintText: 'Food Category',
+                  icon: FluentSystemIcons.ic_fluent_food_regular,
+                  items: expertProvider.foodCategoryList.map((data) {
+                    return DropdownMenuItem<String>(
+                      value: data,
+                      child: Text(data),
+                    );
+                  }).toList(),
+                  onChanged: expertProvider.updateFoodCategory,
+                  selectedValue: expertProvider.foodCategory,
                 ),
-              ),
-              const Gap(10),
-              Row(
-                children: [
-                  Text('Food Picture',
-                    style: Styles.title,
-                  ),
-                  const Gap(10),
-                  SizedBox(
-                    height: 25,
-                    width: 100,
-                    child: MainButton(
-                      title: 'Upload',
-                      textStyle: Styles.title.copyWith(color: Colors.white),
-                      onPressed: () {
-                        expertProvider.uploadWorkoutMeal(context);
-                      },
-                    ),
-                  ),
-                  const Gap(15),
-                ],
-              ),
-              const Gap(15),
-              Container(
-                child: expertProvider.workoutMeal != null
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(File(expertProvider.workoutMeal!.path),
-                          fit: BoxFit.cover,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                    )
-                  : const Text("No Image",
-                      style: TextStyle(fontSize: 20),
+                const Gap(10),
+                RegisterDropDown(
+                  hintText: 'Purpose',
+                  icon: Icons.fitness_center_outlined,
+                  items: expertProvider.workoutPurposeList.map((data) {
+                    return DropdownMenuItem<String>(
+                      value: data,
+                      child: Text(data),
+                    );
+                  }).toList(),
+                  onChanged: expertProvider.updateWorkoutPurpose,
+                  selectedValue: expertProvider.workoutPurpose,
                 ),
-              ),
-              const Gap(20),
-              Text("Nutritions",
-                style: Styles.title,
-              ),
-              const Gap(5),
-              TextFieldContainer(
-                  controller: ExpertProvider.mealCalories,
-                  hintText: 'Calories',
-                  imagePath: "assets/icons/calories.png",
-              ),
-              const Gap(10),
-              TextFieldContainer(
-                  controller: ExpertProvider.mealFats,
-                  hintText: 'Fats',
-                  imagePath: "assets/icons/fat.png",
-              ),
-              const Gap(10),
-              TextFieldContainer(
-                  controller: ExpertProvider.mealSugar,
-                  hintText: 'Sugar',
-                  imagePath: "assets/icons/sugar.png",
-              ),
-              const Gap(10),
-              TextFieldContainer(
-                  controller: ExpertProvider.mealProtein,
-                  hintText: 'Protein',
-                  imagePath: "assets/icons/protein.png",
-              ),
-              const Gap(20),
-              Text("Ingredients Needed",
-                style: Styles.title,
-              ),
-              const Gap(5),
-              _buildIngredients(expertProvider),
-              const Gap(20),
-              Text(
-                "Step by Step Preparations",
-                style: Styles.title,
-              ),
-              const Gap(5),
-              _buildStepPreparations(expertProvider),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
+                const Gap(10),
+                TextFieldContainer(
+                  controller: ExpertProvider.foodPlanName,
+                  hintText: 'Food Plan Name',
+                  icon: FluentSystemIcons.ic_fluent_food_regular,
+                ),
+                const Gap(10),
+                SizedBox(
+                  height: 100,
+                  child: TextFieldContainer(
+                    controller: ExpertProvider.foodDescription,
+                    hintText: "Description",
+                    icon: Icons.description,
+                  ),
+                ),
+                const Gap(10),
+                Row(
                   children: [
-                    MainButton(
-                      title: 'Done',
-                      onPressed: () {
-                        expertProvider.addWorkoutMeal(id: widget.id).then((value) {
-                          Navigator.of(context)..pop()..pop();
-                          expertProvider.clearWorkoutMealForm();
-                        });
-                      },
+                    Text('Food Picture',
+                      style: Styles.title,
                     ),
+                    const Gap(10),
+                    SizedBox(
+                      height: 25,
+                      width: 100,
+                      child: MainButton(
+                        title: 'Upload',
+                        textStyle: Styles.title.copyWith(color: Colors.white),
+                        onPressed: () {
+                          expertProvider.uploadWorkoutMeal(context);
+                        },
+                      ),
+                    ),
+                    const Gap(15),
                   ],
                 ),
-              ),
-            ],
+                const Gap(15),
+                Visibility(
+                  visible: expertProvider.workoutMeal != null,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(File(expertProvider.workoutMeal?.path ?? ""),
+                        fit: BoxFit.cover,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(20),
+                Text("Nutritions",
+                  style: Styles.title,
+                ),
+                const Gap(5),
+                TextFieldContainer(
+                    controller: ExpertProvider.mealCalories,
+                    hintText: 'Calories',
+                    imagePath: "assets/icons/calories.png",
+                ),
+                const Gap(10),
+                TextFieldContainer(
+                    controller: ExpertProvider.mealFats,
+                    hintText: 'Fats',
+                    imagePath: "assets/icons/fat.png",
+                ),
+                const Gap(10),
+                TextFieldContainer(
+                    controller: ExpertProvider.mealSugar,
+                    hintText: 'Sugar',
+                    imagePath: "assets/icons/sugar.png",
+                ),
+                const Gap(10),
+                TextFieldContainer(
+                    controller: ExpertProvider.mealProtein,
+                    hintText: 'Protein',
+                    imagePath: "assets/icons/protein.png",
+                ),
+                const Gap(20),
+                Text("Ingredients Needed",
+                  style: Styles.title,
+                ),
+                const Gap(5),
+                _buildIngredients(expertProvider),
+                const Gap(20),
+                Text(
+                  "Step by Step Preparations",
+                  style: Styles.title,
+                ),
+                const Gap(5),
+                _buildStepPreparations(expertProvider),
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      MainButton(
+                        title: 'Done',
+                        onPressed: () {
+                          expertProvider.addWorkoutMeal(id: widget.id).then((value) {
+                            Navigator.of(context)..pop()..pop();
+                            expertProvider.clearWorkoutMealForm();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

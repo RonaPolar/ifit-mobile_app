@@ -58,10 +58,10 @@ class ExpertRatingWidget extends StatelessWidget {
                       child: MainButton(
                         title: "View More",
                         onPressed: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                  const ExpProfileScreen()));
+                          // Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //         const ExpProfileScreen()));
                         },
                         textStyle: Styles.seeMore.copyWith(
                           color: Colors.white,

@@ -7,11 +7,11 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/components/add_exercise.dart';
-import 'package:ifit/views/widgets/date/date_picker.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class CreateWorkout extends StatefulWidget {
@@ -52,6 +52,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                     Navigator.of(context)..pop()
                       ..pop()
                       ..pop();
+                    expertProvider.clearWorkoutPlanForm();
                   }
                 );
               },
@@ -77,146 +78,153 @@ class _CreateWorkoutState extends State<CreateWorkout> {
           style: Styles.headline20,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.id),
-                  RegisterDropDown(
-                    hintText: 'Category',
-                    icon: Icons.fitness_center_outlined,
-                    items: expertProvider.workoutCategoryList.map((data) {
-                      return DropdownMenuItem<String>(
-                        value: data,
-                        child: Text(data),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      expertProvider.updateWorkoutCategory(value!);
-                    },
-                    selectedValue: expertProvider.workoutCategory,
-                  ),
-                  const Gap(10),
-                  RegisterDropDown(
-                    hintText: 'Purpose',
-                    icon: Icons.fitness_center_outlined,
-                    items: expertProvider.workoutPurposeList.map((data) {
-                      return DropdownMenuItem<String>(
-                        value: data,
-                        child: Text(data),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      expertProvider.updateWorkoutPurpose(value!);
-                    },
-                    selectedValue: expertProvider.workoutPurpose,
-                  ),
-                  const Gap(10),
-                  RegisterDropDown(
-                    hintText: 'Difficulty',
-                    icon: Icons.fitness_center_outlined,
-                    items: expertProvider.workoutDifficultyList.map((data) {
-                      return DropdownMenuItem<String>(
-                        value: data,
-                        child: Text(data),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      expertProvider.updateWorkoutDifficulty(value!);
-                    },
-                    selectedValue: expertProvider.workoutDifficulty,
-                  ),
-                  const Gap(10),
-                  TextFieldContainer(
-                    controller: ExpertProvider.planName,
-                    hintText: 'Plan Name',
-                    icon: Icons.fitness_center_outlined,
-                  ),
-                  const Gap(10),
-                  SizedBox(
-                    height: 100,
-                    child: TextFieldContainer(
-                      controller: ExpertProvider.workoutDescription,
-                      hintText: "Description",
-                      icon: Icons.description,
+      body: ModalProgressHUD(
+        inAsyncCall: expertProvider.isLoading,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.id),
+                    RegisterDropDown(
+                      hintText: 'Category',
+                      icon: Icons.fitness_center_outlined,
+                      items: expertProvider.workoutCategoryList.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: data,
+                          child: Text(data),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        expertProvider.updateWorkoutCategory(value!);
+                      },
+                      selectedValue: expertProvider.workoutCategory,
                     ),
-                  ),
-                  const Gap(10),
-                  Row(
-                    children: [
-                      Text('Workout Picture',
-                        style: Styles.title,
+                    const Gap(10),
+                    RegisterDropDown(
+                      hintText: 'Purpose',
+                      icon: Icons.fitness_center_outlined,
+                      items: expertProvider.workoutPurposeList.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: data,
+                          child: Text(data),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        expertProvider.updateWorkoutPurpose(value!);
+                      },
+                      selectedValue: expertProvider.workoutPurpose,
+                    ),
+                    const Gap(10),
+                    RegisterDropDown(
+                      hintText: 'Difficulty',
+                      icon: Icons.fitness_center_outlined,
+                      items: expertProvider.workoutDifficultyList.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: data,
+                          child: Text(data),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        expertProvider.updateWorkoutDifficulty(value!);
+                      },
+                      selectedValue: expertProvider.workoutDifficulty,
+                    ),
+                    const Gap(10),
+                    TextFieldContainer(
+                      controller: ExpertProvider.planName,
+                      hintText: 'Plan Name',
+                      icon: Icons.fitness_center_outlined,
+                    ),
+                    const Gap(10),
+                    SizedBox(
+                      height: 100,
+                      child: TextFieldContainer(
+                        controller: ExpertProvider.workoutDescription,
+                        hintText: "Description",
+                        icon: Icons.description,
                       ),
-                      const Gap(10),
-                      SizedBox(
-                        height: 25,
-                        width: 100,
-                        child: MainButton(
-                          title: 'Upload',
-                          textStyle: Styles.title.copyWith(color: Colors.white),
-                          onPressed: () {
-                            expertProvider.uploadWorkoutPicture(context);
-                          },
+                    ),
+                    const Gap(10),
+                    Row(
+                      children: [
+                        Text('Workout Picture',
+                          style: Styles.title,
                         ),
-                      ),
-                      Visibility(
-                        visible: expertProvider.workoutPicture != null,
-                        child: Image.file(File(expertProvider.workoutPicture?.path ?? ""),
-                          fit: BoxFit.cover,
+                        const Gap(10),
+                        SizedBox(
+                          height: 25,
                           width: 100,
-                          height: 100,
+                          child: MainButton(
+                            title: 'Upload',
+                            textStyle: Styles.title.copyWith(color: Colors.white),
+                            onPressed: () {
+                              expertProvider.uploadWorkoutPicture(context);
+                            },
+                          ),
                         ),
+
+                      ],
+                    ),
+                    const Gap(10),
+                    Visibility(
+                      visible: expertProvider.workoutPicture != null,
+                      child: Image.file(File(expertProvider.workoutPicture?.path ?? ""),
+                        fit: BoxFit.cover,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+
+                    const Gap(10),
+                    TextFieldContainer(
+                      controller: ExpertProvider.daysOfThePlan,
+                      hintText: 'Days of the plan',
+                      icon: FluentSystemIcons.ic_fluent_timer_regular,
+                      obscureText: false,
+                    ),
+                    const Gap(10),
+                    TextFieldContainer(
+                      controller: ExpertProvider.minutes,
+                      hintText: 'Minutes it Takes to Do',
+                      icon: FluentSystemIcons.ic_fluent_timer_regular,
+                      obscureText: false,
+                    ),
+                    const Gap(10),
+                    TextFieldContainer(
+                      controller: ExpertProvider.calories,
+                      hintText: 'Calories',
+                      imagePath: "assets/icons/calories.png",
+                      obscureText: false,
+                    ),
+                    const Gap(20),
+                  ],
+                ),
+                _buildEquipmentsNeeded(expertProvider),
+                _buildExercises(expertProvider),
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      MainButton(
+                        title: 'Done',
+                        onPressed: () async {
+                          await expertProvider.addWorkoutPlan(
+                            id: widget.id,
+                          ).then((value) {
+                            expertProvider.clearWorkoutPlanForm();
+                            Navigator.of(context).pop();
+                          });
+                        },
                       ),
                     ],
                   ),
-
-                  const Gap(10),
-                  DatePickerField(
-                    onDateSelected: expertProvider.updateDaysOfThePlan,
-                    hintText: "Days of the Plan",
-                  ),
-                  const Gap(10),
-                  TextFieldContainer(
-                    controller: ExpertProvider.minutes,
-                    hintText: 'Minutes it Takes to Do',
-                    icon: FluentSystemIcons.ic_fluent_timer_regular,
-                    obscureText: false,
-                  ),
-                  const Gap(10),
-                  TextFieldContainer(
-                    controller: ExpertProvider.calories,
-                    hintText: 'Calories',
-                    imagePath: "assets/icons/calories.png",
-                    obscureText: false,
-                  ),
-                  const Gap(20),
-                ],
-              ),
-              _buildEquipmentsNeeded(expertProvider),
-              _buildExercises(expertProvider),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    MainButton(
-                      title: 'Done',
-                      onPressed: () async {
-                        await expertProvider.addWorkoutPlan(
-                          id: widget.id,
-                        ).then((value) {
-                          expertProvider.clearWorkoutPlanForm();
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

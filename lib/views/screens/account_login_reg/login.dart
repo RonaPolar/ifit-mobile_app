@@ -31,6 +31,7 @@ class _LogInState extends State<LogIn> {
     final IFitPackage package = Provider.of<IFitPackage>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
       body: SafeArea(
         child: LayoutBuilder(

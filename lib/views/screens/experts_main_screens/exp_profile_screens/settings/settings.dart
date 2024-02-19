@@ -74,14 +74,16 @@ class _SettingsState extends State<Settings> {
                             style: Styles.title
                           ),
                           const Gap(1),
-                          NextNavigation(
-                            iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
-                            title: 'Edit Profile Details',
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const EditProfile()));
-                            },
-                          ),
+                          // NextNavigation(
+                          //   iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
+                          //   title: 'Edit Profile Details',
+                          //   onTap: () {
+                          //     Navigator.of(context).push(MaterialPageRoute(
+                          //       builder: (context) => const EditProfile(
+                          //
+                          //       )));
+                          //   },
+                          // ),
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_lock_regular,
                             title: 'Change Email',

@@ -2,43 +2,34 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/toggle_switch.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/exp_program.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/settings.dart';
 
-class ExpProfileScreen extends StatefulWidget {
-  const ExpProfileScreen({super.key});
+class ExpProfileScreen extends StatelessWidget {
+  const ExpProfileScreen({
+    required this.expertModel,
+    required this.workoutMealList,
+    required this.workoutPlanList,
 
-  @override
-  State<ExpProfileScreen> createState() => _ExpProfileScreenState();
-}
+    super.key,
+  });
 
-class _ExpProfileScreenState extends State<ExpProfileScreen> {
-  List Experts = [
-    {
-      "name": "Dr. Otto Octavius",
-      "image": "assets/images/Experts/Expert1.png",
-      "profession": "Physician",
-      "rate": "4.5",
-      "mealCreated": "2",
-      "workoutCreated": "3",
-      "descriptions":
-          "Hello! I completed my course in 2017 and have 5 years of experience working as Physician. If you like my programs I created, you can visit me at Manila Center at Makati City.",
-    },
-  ];
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
+  final ExpertModel expertModel;
 
-  bool positive = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,27 +37,8 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (context) => const ExpHomeScreen()));
-          },
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            height: 30,
-            width: 30,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10)),
-            child: const Icon(
-              FluentSystemIcons.ic_fluent_chevron_left_filled,
-              size: 20,
-              color: Colors.black,
-            ),
-          ),
-        ),
         title: Text(
           'Profile',
           style: Styles.headline20,
@@ -98,9 +70,11 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                             child: SizedBox(
                               width: 50,
                               height: 50,
-                              child: Image.asset(
-                                "${Experts[0]["image"]}",
+                              child: Image.network(expertModel.professionId,
                                 fit: BoxFit.fill,
+                                errorBuilder: (context, object, stackTrace) {
+                                  return const Icon(Icons.question_mark_rounded);
+                                },
                               ),
                             ),
                           ),
@@ -110,11 +84,9 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${Experts[0]["name"]}",
-                                  style: Styles.title),
+                              Text(expertModel.name, style: Styles.title),
                               const Gap(5),
-                              Text("${Experts[0]["profession"]}",
-                                  style: Styles.text15normal)
+                              Text(expertModel.profession, style: Styles.text15normal)
                             ],
                           ),
                         ),
@@ -125,7 +97,9 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                               title: "Edit",
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const EditProfile()));
+                                    builder: (context) => EditProfile(
+                                      expertModel: expertModel,
+                                    )));
                               },
                               textStyle: Styles.seeMore.copyWith(
                                 color: Colors.white,
@@ -137,19 +111,25 @@ class _ExpProfileScreenState extends State<ExpProfileScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: ProfileCell(
-                                value: "${Experts[0]["rate"]}",
-                                title: 'Star Rate')),
+                          child: ProfileCell(
+                            value: "${expertModel.rating}",
+                            title: 'Star Rate',
+                          ),
+                        ),
                         const Gap(10),
                         Expanded(
-                            child: ProfileCell(
-                                value: "${Experts[0]["mealCreated"]}",
-                                title: 'Meals')),
+                          child: ProfileCell(
+                            value: "${workoutMealList.length}",
+                            title: 'Meals',
+                          ),
+                        ),
                         const Gap(10),
                         Expanded(
-                            child: ProfileCell(
-                                value: "${Experts[0]["workoutCreated"]}",
-                                title: 'Workouts')),
+                          child: ProfileCell(
+                            value: "${workoutPlanList.length}",
+                            title: 'Workouts',
+                          ),
+                        ),
                       ],
                     ),
                     const Gap(15),

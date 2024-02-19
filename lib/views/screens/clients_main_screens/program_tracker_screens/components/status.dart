@@ -41,7 +41,7 @@ class ProgramStatusWidget extends StatelessWidget {
     }).toList();
 
     final List<WorkoutPlan> finishedWorkoutPlan = workoutPlanList.where((element) {
-      return (element.daysOfThePlan.day == element.dayCountFinished);
+      return (int.parse(element.daysOfThePlan) == element.dayCountFinished);
     }).toList();
 
     return Container(

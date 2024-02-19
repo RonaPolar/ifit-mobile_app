@@ -11,12 +11,20 @@ import 'package:image_picker/image_picker.dart';
 
 class Auth extends ChangeNotifier {
 
+  bool isLoading = false;
+
+  void showHUD(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseStorage ref = FirebaseStorage.instance;
 
   static TextEditingController firstName = TextEditingController();
   static TextEditingController lastName = TextEditingController();
+  static TextEditingController name = TextEditingController();
   static TextEditingController email = TextEditingController();
   static TextEditingController password = TextEditingController();
   static TextEditingController birthday = TextEditingController();
@@ -345,6 +353,25 @@ class Auth extends ChangeNotifier {
 
     // store proof of study to firestore
     proofOfStudyUrl = await ref.getDownloadURL();
+  }
+
+  Future<void> editWorkoutProfile(String id) async {
+    final path = db.collection(tExpertPath).doc(id);
+
+    showHUD(true);
+    await path.set({
+      "name": name.text,
+      "email": email.text,
+      "phone_number": phone.text,
+      "profession": profession.text,
+    }, SetOptions(merge: true))
+      .then((value) {
+        showHUD(false);
+        return debugPrint("Profile successfully updated!");
+      })
+      .onError((error, stackTrace) => debugPrint("Error updating! $error"));
+
+    notifyListeners();
   }
 
 }

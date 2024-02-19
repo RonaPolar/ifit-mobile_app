@@ -51,7 +51,11 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
       ),
       ExpDiscoverScreen(),
       ExpProgramScreen(expertModel: expertModel),
-      ExpProfileScreen(),
+      ExpProfileScreen(
+        expertModel: expertModel,
+        workoutMealList: workoutMeal,
+        workoutPlanList: workoutPlan,
+      ),
     ];
   }
 

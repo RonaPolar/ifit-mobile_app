@@ -13,6 +13,13 @@ import 'package:uuid/uuid.dart';
 
 class ExpertProvider extends ChangeNotifier {
 
+  bool isLoading = false;
+
+  void showHUD(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Stream<List<ExpertModel>>? expertListStream;
@@ -152,6 +159,7 @@ class ExpertProvider extends ChangeNotifier {
 
   static TextEditingController planName = TextEditingController();
   static TextEditingController workoutDescription = TextEditingController();
+  static TextEditingController daysOfThePlan = TextEditingController();
   static TextEditingController minutes = TextEditingController();
   static TextEditingController calories = TextEditingController();
 
@@ -169,13 +177,6 @@ class ExpertProvider extends ChangeNotifier {
     );
   }
 
-  DateTime? daysOfThePlan;
-
-  void updateDaysOfThePlan(DateTime? value) {
-    daysOfThePlan = value;
-    notifyListeners();
-  }
-
   List<TextEditingController> equipmentsText = [];
 
   void updateEquipmentsText(bool add) {
@@ -187,12 +188,12 @@ class ExpertProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int sets = 0;
+  int sets = 1;
 
   void updateSets(bool add) {
     if (add) {
       sets++;
-    } else if (sets > 0) {
+    } else if (sets > 1) {
       sets--;
     }
     notifyListeners();
@@ -259,11 +260,13 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
+
     final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
     final auth = await _db.collection(tExpertPath).doc(id).get();
     final String expertName = auth.get("name");
 
     await uploadWorkoutPhoto(id).then((value) async {
+      showHUD(true);
 
       final WorkoutPlan workoutPlan = WorkoutPlan(
         id: const Uuid().v1(),
@@ -273,7 +276,7 @@ class ExpertProvider extends ChangeNotifier {
         planName: planName.text,
         description: workoutDescription.text,
         workoutPicture: workoutPhotoUrl!,
-        daysOfThePlan: daysOfThePlan!,
+        daysOfThePlan: daysOfThePlan.text,
         minutes: minutes.text,
         calories: calories.text,
         equipments: equipmentsText.map((e) => e.text).toList(),
@@ -307,7 +310,9 @@ class ExpertProvider extends ChangeNotifier {
           .then((value) => debugPrint("Workout plan added successfully!"))
           .onError((error, stackTrace) => "Failed: $error");
       }
+      showHUD(false);
     });
+    notifyListeners();
   }
 
   String? workoutPhotoUrl;
@@ -331,12 +336,12 @@ class ExpertProvider extends ChangeNotifier {
     planName.clear();
     workoutDescription.clear();
     workoutPicture = null;
-    daysOfThePlan = null;
+    daysOfThePlan.clear();
     minutes.clear();
     calories.clear();
     equipmentsText = [];
     exerciseList = [];
-    sets = 0;
+    sets = 1;
     workoutPhotoUrl = null;
     notifyListeners();
   }
@@ -418,11 +423,14 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
+
     final data = await _db.collection(tWorkoutMealPath).doc(id).get();
     final auth = await _db.collection(tExpertPath).doc(id).get();
     final String expertName = auth.get("name");
 
     await uploadWorkoutMealPhoto(id).then((value) async {
+      showHUD(true);
+
       final WorkoutMeal workoutMeal = WorkoutMeal(
         id: const Uuid().v1(),
         foodCategory: foodCategory ?? "",
@@ -460,7 +468,11 @@ class ExpertProvider extends ChangeNotifier {
           .then((value) => debugPrint("Workout meal added successfully!"))
           .onError((error, stackTrace) => "Failed: $error");
       }
+
+      showHUD(false);
     });
+
+    notifyListeners();
   }
 
   void clearWorkoutMealForm() {

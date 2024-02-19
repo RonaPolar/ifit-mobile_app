@@ -19,10 +19,20 @@ class AddExerciseScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Add Exercise"),
       ),
+      bottomNavigationBar:  Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: ElevatedButton(
+          onPressed: () {
+            expertProvider.addExercise();
+            Navigator.pop(context);
+          },
+          child: const Text("Save Exercise"),
+        ),
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -45,23 +55,24 @@ class AddExerciseScreen extends StatelessWidget {
                   icon: Icons.description,
                 ),
                 const Gap(10),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    IconButton(
+                    TextButton(
                       onPressed: () {
                         expertProvider.updateIsCounting();
                       },
-                      icon: Icon(expertProvider.isCounting
-                        ? Icons.numbers
-                        : Icons.lock_clock,
+                      child: Text(expertProvider.isCounting
+                        ? "Switch to counting"
+                        : "Switch to seconds",
                       ),
                     ),
-                    Expanded(
-                      child: TextFieldContainer(
-                        controller: ExpertProvider.exerciseTime,
-                        hintText: expertProvider.isCounting ? "Counting" : "Time",
-                        icon: Icons.description,
-                      ),
+                    TextFieldContainer(
+                      controller: ExpertProvider.exerciseTime,
+                      hintText: expertProvider.isCounting
+                          ? "Counting"
+                          : "Time",
+                      icon: Icons.description,
                     ),
                   ],
                 ),
@@ -105,14 +116,9 @@ class AddExerciseScreen extends StatelessWidget {
                     },
                   ),
                 ),
+                const Gap(100.0),
 
-                TextButton(
-                  onPressed: () {
-                    expertProvider.addExercise();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Add"),
-                )
+
               ],
             ),
           ),
