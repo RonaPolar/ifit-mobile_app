@@ -5,18 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/video.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:provider/provider.dart';
 
 class StartWorkout extends StatefulWidget {
   const StartWorkout({
-    required this.exercise,
+    required this.workoutPlan,
+    required this.id,
     super.key,
   });
 
-  final WorkoutPlanExercise exercise;
+  final WorkoutPlan workoutPlan;
+  final String id;
 
   @override
   State<StartWorkout> createState() => _StartWorkoutState();
@@ -24,7 +28,6 @@ class StartWorkout extends StatefulWidget {
 
 class _StartWorkoutState extends State<StartWorkout> {
   bool isPlaying = true;
-  int index = 0;
   late Timer timer;
   late int time;
   bool doneCountdown = false;
@@ -33,6 +36,11 @@ class _StartWorkoutState extends State<StartWorkout> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
+    });
+
     int countdown = 3;
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -53,7 +61,7 @@ class _StartWorkoutState extends State<StartWorkout> {
       countdown--;
     });
 
-    time = int.parse(widget.exercise.exercises[index].exerciseDuration.time);
+    time = int.parse(widget.workoutPlan.exercise.exercises[0].exerciseDuration.time);
 
     Future.delayed(const Duration(seconds: 4), () {
       setState(() {
@@ -78,12 +86,18 @@ class _StartWorkoutState extends State<StartWorkout> {
 
   @override
   Widget build(BuildContext context) {
+
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+    final List<ExerciseElement> exercises = widget.workoutPlan.exercise.exercises;
+    final int index = workoutProvider.workoutIndex;
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
+        title: Text("Set: ${workoutProvider.setFinished}"),
         leading: InkWell(
           onTap: () {
             showDialog(context: context,
@@ -91,6 +105,7 @@ class _StartWorkoutState extends State<StartWorkout> {
                 return ConfirmationDialog(
                   question: "Are you sure to Quit?",
                   onYesPressed: () {
+                    workoutProvider.clearExerciseForm();
                     Navigator.of(context)..pop()..pop();
                   },
                 );
@@ -121,84 +136,16 @@ class _StartWorkoutState extends State<StartWorkout> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: !isPlaying
-                          ? const Icon(FluentSystemIcons.ic_fluent_play_filled)
-                          : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
-                        onPressed: () {
-                          setState(() {
-                            isPlaying = !isPlaying;
-                          });
-                        },
-                      ),
-                      Text("$time",
-                        style: Styles.normal.copyWith(
-                          color: Colors.black,
-                          fontSize: 18
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
-                        onPressed: () {
-                          setState(() {
-                            time = int.parse(widget.exercise.exercises[index].exerciseDuration.time);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 120,
-                        height: 35,
-                        child: MainButton(
-                          title: "Skip",
-                          textStyle: Styles.text18.copyWith(
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            if (widget.exercise.exercises.length - 1 != index) {
-                              setState(() {
-                                index++;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      const Gap(5),
-                      SizedBox(
-                        width: 120,
-                        height: 35,
-                        child: MainButton(
-                          title: "Done",
-                          textStyle: Styles.text18.copyWith(color: Colors.white),
-                          onPressed: () {
-
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildTimer(workoutProvider),
                 const Gap(30),
                 ExerciseVideoWidget(
-                  urlVideo: widget.exercise.exercises[index].url,
+                  urlVideo: exercises[index].url,
                 ),
                 const Gap(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.exercise.exercises[index].title,
+                    Text(exercises[index].title,
                       style: Styles.text18.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -208,13 +155,13 @@ class _StartWorkoutState extends State<StartWorkout> {
                       padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: widget.exercise.exercises.length,
+                      itemCount: exercises.length,
                       itemBuilder: (context, index) {
-                        final String step = widget.exercise.exercises[this.index].steps[index];
+                        final String step = exercises[index].steps[index];
                         return ExerStepsDottedLine(
                           index: index,
                           step: step,
-                          isLast: step == widget.exercise.exercises[this.index].steps.last,
+                          isLast: step == exercises[index].steps.last,
                         );
                       },
                     ),
@@ -241,6 +188,102 @@ class _StartWorkoutState extends State<StartWorkout> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTimer(WorkoutProvider workoutProvider) {
+
+    final List<ExerciseElement> exercises = widget.workoutPlan.exercise.exercises;
+    final int index = workoutProvider.workoutIndex;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal:20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: !isPlaying
+                    ? const Icon(FluentSystemIcons.ic_fluent_play_filled)
+                    : const Icon(FluentSystemIcons.ic_fluent_pause_filled),
+                onPressed: () {
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
+              ),
+              Text("$time",
+                style: Styles.normal.copyWith(
+                    color: Colors.black,
+                    fontSize: 18
+                ),
+              ),
+              IconButton(
+                icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
+                onPressed: () {
+                  setState(() {
+                    time = int.parse(exercises[index].exerciseDuration.time);
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 120,
+                height: 35,
+                child: MainButton(
+                  title: "Skip",
+                  textStyle: Styles.text18.copyWith(
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    workoutProvider.updateSkipWorkout(
+                      exerciseList: exercises,
+                    );
+                  },
+                ),
+              ),
+              const Gap(5),
+              SizedBox(
+                width: 120,
+                height: 35,
+                child: MainButton(
+                  title: "Done",
+                  textStyle: Styles.text18.copyWith(color: Colors.white),
+                  onPressed: () async {
+                    await workoutProvider.updateDoneWorkout(
+                      exerciseList: exercises,
+                      workoutId: widget.workoutPlan.id,
+                      id: widget.id,
+                      set: widget.workoutPlan.exercise.sets,
+                    ).then((value) {
+                      if (workoutProvider.setFinished == widget.workoutPlan.exercise.sets) {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => StartWorkout(
+                            workoutPlan: widget.workoutPlan,
+                            id: widget.id,
+                          ),
+                        ));
+                      } else {
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

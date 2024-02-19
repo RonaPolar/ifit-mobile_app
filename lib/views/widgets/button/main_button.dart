@@ -3,7 +3,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 
 class MainButton extends StatelessWidget {
   final String title;
-  final VoidCallback onPressed;
+  final Function() onPressed;
   final TextStyle? textStyle; // Add a TextStyle parameter
   final Color? buttonColor;
 

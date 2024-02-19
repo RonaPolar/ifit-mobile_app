@@ -85,4 +85,34 @@ class DialogService {
       },
     );
   }
+
+  void confirmationDialog(BuildContext context, {
+    required Function() onPressed,
+  }) async {
+
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("Please confirm if you want to cancel the program."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onPressed();
+              },
+              child: Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

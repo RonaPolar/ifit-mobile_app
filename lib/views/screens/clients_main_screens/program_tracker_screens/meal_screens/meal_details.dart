@@ -195,7 +195,9 @@ class _MealDetailsState extends State<MealDetails> {
                             ),
                             Container(
                               padding: EdgeInsets.zero,
-                              child: const FavoriteButton(),
+                              child: FavoriteButton(
+                                onPressed: () {},
+                              ),
                             ),
                           ],
                         ),
@@ -371,20 +373,20 @@ class _MealDetailsState extends State<MealDetails> {
                           ],
                         ),
                         const Gap(10),
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: widget.dObj.stepPrep.length,
-                          itemBuilder: (context, index) {
-                            final String sObj = widget.dObj.stepPrep[index];
-                            // return MealStepsDottedLine(
-                            //   sObj: sObj,
-                            //   isLast: stepArr.last == sObj,
-                            //   index: index,
-                            // );
-                          },
-                        ),
+                        // ListView.builder(
+                        //   padding: EdgeInsets.zero,
+                        //   physics: const NeverScrollableScrollPhysics(),
+                        //   shrinkWrap: true,
+                        //   itemCount: widget.dObj.stepPrep.length,
+                        //   itemBuilder: (context, index) {
+                        //     final String sObj = widget.dObj.stepPrep[index];
+                        //     // return MealStepsDottedLine(
+                        //     //   sObj: sObj,
+                        //     //   isLast: stepArr.last == sObj,
+                        //     //   index: index,
+                        //     // );
+                        //   },
+                        // ),
 
                         Container(
                           padding: const EdgeInsets.only(top: 5, bottom: 10),

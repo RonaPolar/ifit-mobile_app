@@ -9,6 +9,8 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/service/client.dart';
+import 'package:ifit/service/package.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
 import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
@@ -21,11 +23,15 @@ import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/crea
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
 import 'package:ifit/service/auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ifit/views/screens/welcome/onboarding_screen.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:get_storage/get_storage.dart';
+
+
+late PackageInfo packageInfo;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +42,9 @@ void main() async {
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
   Widget homeScreen;
   Get.put(ApiConnect());
+
+  packageInfo = await PackageInfo.fromPlatform();
+
 
   if (isFirstTime) {
     //condition to when the OnboardingScreen shows
@@ -76,11 +85,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProvider<ClientProvider>(create: (_) => ClientProvider()),
         ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
+        ChangeNotifierProvider<IFitPackage>(create: (_) => IFitPackage(info: packageInfo)),
+        ChangeNotifierProvider<WorkoutProvider>(create: (_) => WorkoutProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -226,9 +226,9 @@ class _ViewWorkoutDetailsState extends State<ViewWorkoutDetails> {
                               ),  
                             ],
                           ),
-                          Container(
-                              padding: EdgeInsets.zero,
-                              child: const FavoriteButton()),
+                          FavoriteButton(
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                       

@@ -2,9 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/views/widgets/search.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/body/favorites_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 
 class ExpFavoritesProgramScreen extends StatefulWidget {
   const ExpFavoritesProgramScreen({super.key});
@@ -121,38 +118,38 @@ class _ExpFavoritesProgramScreenState extends State<ExpFavoritesProgramScreen> {
                     itemBuilder: (context, index) {
                       var item = combinedList[index];
               
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
-                        // It's a workout item
-                        return InkWell(
-                          onTap: () {
-                            // Navigator.push(context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //       WorkoutDetails(dObj: item),
-                            //   ),
-                            // );
-                          },
-                          child: FavoritesRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                            ));
-                      } else {
-                        // It's a meal item
-                        return InkWell(
-                          onTap: () {
-                            // Navigator.push(context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //       MealDetails(dObj: item),
-                            //   ),
-                            // );
-                          },
-                          child: FavoritesRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            ));
+                      // if (item.containsKey("duration") && item.containsKey("kcal")) {
+                      //   // It's a workout item
+                      //   return InkWell(
+                      //     onTap: () {
+                      //       // Navigator.push(context,
+                      //       //   MaterialPageRoute(
+                      //       //     builder: (context) =>
+                      //       //       WorkoutDetails(dObj: item),
+                      //       //   ),
+                      //       // );
+                      //     },
+                      //     child: FavoritesRow(image: item["image"],
+                      //       title: item["name"],
+                      //       bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
+                      //       ));
+                      // } else {
+                      //   // It's a meal item
+                      //   return InkWell(
+                      //     onTap: () {
+                      //       // Navigator.push(context,
+                      //       //   MaterialPageRoute(
+                      //       //     builder: (context) =>
+                      //       //       MealDetails(dObj: item),
+                      //       //   ),
+                      //       // );
+                      //     },
+                      //     child: FavoritesRow(image: item["image"],
+                      //       title: item["name"],
+                      //       bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
+                      //       ));
                       }
-                    },
+                    // },
                   ),
                 ),
               ),

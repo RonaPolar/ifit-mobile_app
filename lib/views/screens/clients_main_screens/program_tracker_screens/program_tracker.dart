@@ -5,15 +5,16 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/my_program/my_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
+
+import 'workout_screens/workout_details.dart';
 
 class ProgramTrackerScreen extends StatefulWidget {
   const ProgramTrackerScreen({
@@ -33,6 +34,8 @@ class ProgramTrackerScreen extends StatefulWidget {
 }
 
 class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
+
+
   @override
   Widget build(BuildContext context) {
   List latestWorkoutArr = [
@@ -120,9 +123,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       actions: [
           InkWell(
             onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const OngoingPrograms()),
-              );
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (context) => const OngoingPrograms()),
+            //   );
             },
             child: Container(
               margin: const EdgeInsets.all(12),
@@ -181,55 +184,10 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
               ),
             ),
 
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.grey.shade500,
-                  ),
-                  bottom: BorderSide(
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButtonText(
-                    iconData: FluentSystemIcons.ic_fluent_timer_filled,
-                    title: 'Ongoing',
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const OngoingPrograms()));
-                    },
-                  ),
-                  IconButtonText(
-                    iconData: FluentSystemIcons.ic_fluent_heart_filled,
-                    title: 'Favorites',
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FavoritesProgram()));
-                    },
-                  ),
-                  IconButtonText(
-                    iconData: FluentSystemIcons.ic_fluent_checkmark_circle_filled,
-                    title: 'Finished',
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FinishedProgram()));
-                    },
-                  ),
-                  IconButtonText(
-                    iconData: FluentSystemIcons.ic_fluent_star_filled,
-                    title: 'Rate',
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ToRateProgram()));
-                    },
-                  ),
-                ],
-              )
+            ProgramStatusWidget(
+              workoutMealList: widget.workoutMealList,
+              workoutPlanList: widget.workoutPlanList,
+              clientModel: widget.clientModel,
             ),
             const Gap(10),
             Container(
@@ -262,14 +220,18 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                       var wObj = widget.workoutPlanList[index];
                       return InkWell(
                         onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(
-                          //     builder: (context) => WorkoutDetails(dObj: wObj)));
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => WorkoutDetails(
+                                dObj: wObj,
+                                id: widget.clientModel.uid,
+                              ),
+                            ));
                           },
                           child: ProgramRow(
                             image: wObj.workoutPicture,
                             title: wObj.planName,
                             bottomText: "${wObj.minutes} minutes | ${wObj.calories} Calories",
-                            progress: 12,
+                            progress: wObj.dayCountFinished == null ? 0 : (wObj.daysOfThePlan.day - wObj.dayCountFinished!) * 0.01,
                             progressText: "${wObj.daysOfThePlan.day}",
                             showToggleSwitch: false,
                         ),
@@ -304,13 +266,16 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                       var mObj = widget.workoutMealList[index];
                       return InkWell(
                         onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(
-                          //   builder: (context) => MealDetails(dObj: mObj)));
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => MealDetails(
+                              dObj: mObj,
+                              id: widget.clientModel.uid,
+                            ),
+                          ));
                         },
                         child: ProgramRow(image: mObj.foodPhoto,
                           title: mObj.foodPlanName,
                           bottomText: "${mObj.purpose} | ${mObj.calories} Calories",
-                          progress: 12,
                           showToggleSwitch: false,
                         ),
                       );

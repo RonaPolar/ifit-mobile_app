@@ -206,13 +206,10 @@ class _ProgramRowState extends State<ProgramRow> {
           if (widget.showToggleSwitch) // Conditionally render the ToggleSwitch
             const ToggleSwitch(),
           if (!widget.showToggleSwitch) // Conditionally render the default icon
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                widget.icon,
-                size: 30,
-                color: Styles.secondColor,
-              ),
+            Icon(
+              widget.icon,
+              size: 30,
+              color: Styles.secondColor,
             ),
         ],
       ),

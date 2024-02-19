@@ -178,9 +178,9 @@ class _ViewMealDetailsState extends State<ViewMealDetails> {
                                 ),  
                               ],
                             ),
-                            Container(
-                                padding: EdgeInsets.zero,
-                                child: const FavoriteButton()),
+                            FavoriteButton(
+                              onPressed: () {},
+                            ),
                           ],
                         ),
                       ),

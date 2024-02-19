@@ -2,24 +2,21 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 
-class FavoriteButton extends StatefulWidget {
-  const FavoriteButton({super.key});
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
+    required this.onPressed,
+    super.key,
+  });
 
-  @override
-  State<FavoriteButton> createState() => _FavoriteButtonState();
-}
+  final Function() onPressed;
 
-class _FavoriteButtonState extends State<FavoriteButton> {
-  bool isLiked = false;
 
   @override
   Widget build(BuildContext context) {
+    bool isLiked = false;
+
     return TextButton(
-      onPressed: () {
-        setState(() {
-          isLiked = !isLiked; // Toggle the like state
-        });
-      },
+      onPressed: onPressed,
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
       ),

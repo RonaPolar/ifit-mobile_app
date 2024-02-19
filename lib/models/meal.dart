@@ -78,6 +78,7 @@ class WorkoutMeal {
   final List<String> ingredients;
   final List<String> stepPrep;
   final double rating;
+  final bool isFavorite;
 
   WorkoutMeal({
     required this.id,
@@ -94,6 +95,7 @@ class WorkoutMeal {
     required this.ingredients,
     required this.stepPrep,
     required this.rating,
+    this.isFavorite = false,
   });
 
   WorkoutMeal copyWith({
@@ -111,6 +113,7 @@ class WorkoutMeal {
     List<String>? ingredients,
     List<String>? stepPrep,
     double? rating,
+    bool? isFavorite,
   }) =>
       WorkoutMeal(
         id: id ?? this.id,
@@ -127,6 +130,7 @@ class WorkoutMeal {
         ingredients: ingredients ?? this.ingredients,
         stepPrep: stepPrep ?? this.stepPrep,
         rating: rating ?? this.rating,
+        isFavorite: isFavorite ?? this.isFavorite,
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
@@ -144,6 +148,7 @@ class WorkoutMeal {
     ingredients: List<String>.from(json["ingredients"].map((x) => x)),
     stepPrep: List<String>.from(json["stepPrep"].map((x) => x)),
     rating: double.parse(json["rating"].toString()),
+    isFavorite: json["isFavorite"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -161,6 +166,7 @@ class WorkoutMeal {
     "ingredients": List<dynamic>.from(ingredients.map((x) => x)),
     "stepPrep": List<dynamic>.from(stepPrep.map((x) => x)),
     "rating": rating,
+    "isFavorite": isFavorite,
   };
 }
 

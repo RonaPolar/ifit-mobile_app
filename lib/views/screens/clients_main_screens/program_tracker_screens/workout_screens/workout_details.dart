@@ -139,7 +139,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
 
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                        /// TODO: ADD TO FAVORITES
                                         //    var exObj = discoverExperts[0];
                                            // Navigator.push(context,
                                            //    MaterialPageRoute(
@@ -157,7 +156,9 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                           ),
                           Container(
                             padding: EdgeInsets.zero,
-                            child: const FavoriteButton(),
+                            child: FavoriteButton(
+                              onPressed: () {},
+                            ),
                           ),
                         ],
                       ),
@@ -386,7 +387,8 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                             ).then((value) {
                                 Navigator.push(context,MaterialPageRoute(
                                   builder: (context) => StartWorkout(
-                                    exercise: widget.dObj.exercise,
+                                    workoutPlan: workoutPlan,
+                                    id: widget.id,
                                   ),
                                 ),
                               );

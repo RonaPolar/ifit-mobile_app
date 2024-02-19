@@ -94,6 +94,7 @@ class WorkoutPlan {
   final String id;
   final String category;
   final bool isFavorite;
+  final int? dayCountFinished;
 
   WorkoutPlan({
     required this.isCancelled,
@@ -112,6 +113,7 @@ class WorkoutPlan {
     required this.id,
     required this.category,
     required this.isFavorite,
+    this.dayCountFinished,
   });
 
   WorkoutPlan copyWith({
@@ -131,6 +133,7 @@ class WorkoutPlan {
     String? id,
     String? category,
     bool? isFavorite,
+    int? dayCountFinished,
   }) =>
       WorkoutPlan(
         isCancelled: isCancelled ?? this.isCancelled,
@@ -149,6 +152,7 @@ class WorkoutPlan {
         id: id ?? this.id,
         category: category ?? this.category,
         isFavorite: isFavorite ?? this.isFavorite,
+        dayCountFinished: dayCountFinished ?? this.dayCountFinished,
       );
 
   factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
@@ -168,6 +172,7 @@ class WorkoutPlan {
     id: json["id"],
     category: json["category"],
     isFavorite: json["isFavorite"],
+    dayCountFinished: json["dayCountFinished"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -187,6 +192,7 @@ class WorkoutPlan {
     "id": id,
     "category": category,
     "isFavorite": isFavorite,
+    "dayCountFinished": dayCountFinished,
   };
 }
 
