@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
@@ -82,6 +78,7 @@ class DiscoverScreen extends StatelessWidget {
                         const Gap(10),
                         PopularWidget(
                           combinedList: popularCombination,
+                          clientModel: clientModel,
                         ),
                       ],
                     ),
@@ -92,6 +89,7 @@ class DiscoverScreen extends StatelessWidget {
                   discoverExperts: expertList,
                   workoutMeal: workoutMealList,
                   workoutPlan: workoutPlanList,
+                  clientModel: clientModel,
                 ),
                 const Gap(10)
               ],//main Children

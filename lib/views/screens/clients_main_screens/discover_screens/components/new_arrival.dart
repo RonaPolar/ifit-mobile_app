@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/widgets/container/little.dart';
 import 'package:ifit/models/meal.dart';
@@ -66,7 +67,12 @@ class NewArrivalWidget extends StatelessWidget {
                   title: mealItem.foodPlanName,
                   bottomText: "${item.purpose} | ${item.calories} kcal",
                   onTap: () {
-
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => MealDetails(
+                          dObj: mealItem,
+                          id: clientModel.uid,
+                        )),
+                    );
                   },
                 );
               }

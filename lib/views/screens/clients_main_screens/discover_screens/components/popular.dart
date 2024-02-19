@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/widgets/container/little.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
@@ -7,9 +10,11 @@ import 'package:ifit/models/workout.dart';
 class PopularWidget extends StatelessWidget {
   const PopularWidget({
     required this.combinedList,
+    required this.clientModel,
     super.key,
   });
 
+  final ClientModel clientModel;
   final List combinedList;
 
   @override
@@ -43,12 +48,13 @@ class PopularWidget extends StatelessWidget {
                     title: item.planName,
                     bottomText: "${item.minutes} minutes | ${item.calories} kcal",
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => WorkoutDetails(dObj: item),
-                      //   ),
-                      // );
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => WorkoutDetails(
+                          dObj: item,
+                          id: clientModel.uid,
+                          clientWorkoutPlan: item,
+                        ),
+                      ));
                     },
                   ),
                 );
@@ -64,12 +70,12 @@ class PopularWidget extends StatelessWidget {
                     title: mealItem.foodPlanName,
                     bottomText: "${item.purpose} | ${item.calories} kcal",
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => MealDetails(dObj: item),
-                      //   ),
-                      // );
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => MealDetails(
+                            dObj: mealItem,
+                            id: clientModel.uid,
+                          )),
+                      );
                     },
                   ),
                 );

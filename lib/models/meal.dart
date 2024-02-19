@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Meal {
   final String name;
   final String image;
@@ -138,7 +140,7 @@ class WorkoutMeal {
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
-    dateCreated: json["dateCreated"],
+    dateCreated: (json["dateCreated"] as Timestamp).toDate(),
     id: json["id"],
     foodCategory: json["foodCategory"],
     purpose: json["purpose"],
@@ -157,7 +159,7 @@ class WorkoutMeal {
   );
 
   Map<String, dynamic> toJson() => {
-    "dateCreated": dateCreated,
+    "dateCreated": Timestamp.fromDate(dateCreated),
     "id": id,
     "foodCategory": foodCategory,
     "purpose": purpose,

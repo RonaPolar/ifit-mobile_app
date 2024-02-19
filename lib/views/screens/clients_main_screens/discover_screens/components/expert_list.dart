@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/container/square.dart';
@@ -11,12 +12,14 @@ class ExpertListWidget extends StatelessWidget {
     required this.discoverExperts,
     required this.workoutPlan,
     required this.workoutMeal,
+    required this.clientModel,
     super.key,
   });
 
   final List<ExpertModel> discoverExperts;
   final List<List<WorkoutPlan>> workoutPlan;
   final List<List<WorkoutMeal>> workoutMeal;
+  final ClientModel clientModel;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,7 @@ class ExpertListWidget extends StatelessWidget {
                     exObj: exObj,
                     workoutMeals: workoutMeal.isNotEmpty ? workoutMeal[index] : [],
                     workoutPlans: workoutPlan.isNotEmpty ? workoutPlan[index] : [],
+                    clientModel: clientModel,
                   )),
                 );
               },

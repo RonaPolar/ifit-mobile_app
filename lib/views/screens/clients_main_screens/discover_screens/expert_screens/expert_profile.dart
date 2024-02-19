@@ -5,6 +5,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/models/expert.dart';
@@ -18,10 +21,12 @@ class ExpertProfile extends StatefulWidget {
     required this.exObj,
     required this.workoutMeals,
     required this.workoutPlans,
+    required this.clientModel,
     super.key,
   });
 
   final ExpertModel exObj;
+  final ClientModel clientModel;
   final List<WorkoutMeal> workoutMeals;
   final List<WorkoutPlan> workoutPlans;
 
@@ -257,12 +262,13 @@ class _ExpertProfileState extends State<ExpertProfile> {
                             // It's a workout item
                             return InkWell(
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => WorkoutDetails(dObj: item),
-                                //   ),
-                                // );
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => WorkoutDetails(
+                                    dObj: item,
+                                    id: widget.exObj.uid,
+                                    clientWorkoutPlan: item,
+                                  ),
+                                ));
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
@@ -277,12 +283,12 @@ class _ExpertProfileState extends State<ExpertProfile> {
                             final mealItem = item as WorkoutMeal;
                             return InkWell(
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => MealDetails(dObj: item),
-                                //   ),
-                                // );
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => MealDetails(
+                                    dObj: mealItem,
+                                    id: widget.clientModel.uid,
+                                  )),
+                                );
                               },
                               child: BigContainer(
                                 containerColor: Styles.secondColor.withOpacity(0.5),
