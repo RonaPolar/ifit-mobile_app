@@ -1,24 +1,30 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 
 class WorkoutProvider extends ChangeNotifier {
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   int workoutIndex = 0;
+  List<int> skippedIndex = [];
 
   void updateSkipWorkout({
     required List<ExerciseElement> exerciseList,
   }) {
     final List<ExerciseElement> initialList = exerciseList;
 
-    if (workoutIndex != exerciseList.length - 1) {
-      exerciseList.removeAt(workoutIndex);
-      exerciseList.add(initialList[workoutIndex]);
-    }
-
+    // if (workoutIndex != exerciseList.length - 1) {
+    //   exerciseList.removeAt(workoutIndex);
+    //   exerciseList.add(initialList[workoutIndex]);
+    // }
+    skippedIndex.add(workoutIndex);
+    workoutIndex++;
 
     notifyListeners();
   }
@@ -26,27 +32,56 @@ class WorkoutProvider extends ChangeNotifier {
   int setFinished = 1;
 
   Future<void> updateDoneWorkout({
-    required List<ExerciseElement> exerciseList,
+    required BuildContext context,
+    required WorkoutPlan workoutPlan,
     required String id,
-    required String workoutId,
-    required int set,
   }) async {
 
+    final List<ExerciseElement> exerciseList = workoutPlan.exercise.exercises;
+    final int set = workoutPlan.exercise.sets;
+    final String workoutId = workoutPlan.id;
 
 
-    if (set == setFinished) { // if you are done with the whole set
-      await updateWorkoutDay(id: id, workoutId: workoutId).then((value) {
-        setFinished = 1;
-      });
-    } else if (exerciseList.length - 1 != workoutIndex) { // if you are not done
-      // with the whole exercises
-      workoutIndex++;
-    } else if (exerciseList.length - 1 == workoutIndex && setFinished != set) {
-      // if you are done with the exercises but is not finished with the set
-      setFinished++;
-      workoutIndex = 0;
+    if (skippedIndex.isEmpty) {
+      if (exerciseList.length - 1 == workoutIndex) {
+        if (setFinished == set) {
+          await updateWorkoutDay(
+            id: id,
+            workoutId: workoutId,
+          ).then((value) {
+            Navigator.of(context)..pop()..pop();
+            setFinished = 1;
+            workoutIndex = 0;
+          });
+        } else {
+
+          Navigator.of(context)..pop()..pop();
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => CountdownTimerScreen(
+                workoutPlan: workoutPlan,
+                id: id,
+              )));
+
+          workoutIndex = 0;
+          setFinished++;
+        }
+      } else {
+        workoutIndex++;
+      }
+    } else {
+
+      for (int data in skippedIndex) {
+        workoutIndex = data;
+      }
     }
 
+    notifyListeners();
+  }
+
+  bool isPause = false;
+
+  void pauseTimer() {
+    isPause = !isPause;
     notifyListeners();
   }
 
@@ -77,9 +112,12 @@ class WorkoutProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearExerciseForm() {
+  void clearExerciseForm({
+    required WorkoutPlan workoutPlan,
+  }) {
     setFinished = 1;
     workoutIndex = 0;
+    isPause = false;
     notifyListeners();
   }
 
