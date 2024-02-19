@@ -30,88 +30,20 @@ class ExpertProfile extends StatefulWidget {
 }
 
 class _ExpertProfileState extends State<ExpertProfile> {
-  List itemsArr = [
-    {
-      "item": "1x of 6lbs Kettlebell",
-    },
-    {
-      "item": "Skipping Rope",
-    },
-    {
-      "item": "2x of 18lbs Dumbbell",
-    },
-  ];
-
-  List popularWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "schedule": "Monday",
-      "categories": "Full Body",
-      "time": "9:00am",
-      "kcal": "320",
-      "exercise": "10",
-      "duration": "30",
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "schedule": "Monday",
-      "categories": "Upper Body",
-      "time": "10:00am",
-      "kcal": "210",
-      "exercise": "10",
-      "duration": "30",
-    },
-    {
-      "name": "Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "schedule": "Monday",
-      "categories": "Abdominal",
-      "time": "4:00pm",
-      "kcal": "260",
-      "exercise": "10",
-      "duration": "30",
-    },
-  ];
-
-  List popularMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "kcal": "190",
-      "fats": "199",
-      "proteins": "305",
-      "sugar": "150",
-      "categories": "Breakfast",
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "categories": "Lunch",
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "kcal": "300",
-      "fats": "250",
-      "proteins": "310",
-      "sugar": "100",
-      "categories": "Dinner",
-    },
-  ];
-  
   bool isFollowing = false;
-
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> combinedList = [];
     String buttonText = isFollowing ? 'Following' : 'Follow';
-    List<dynamic> combinedList = [...widget.workoutPlans, ...widget.workoutMeals];
+
+    if (widget.workoutMeals.isNotEmpty && widget.workoutPlans.isNotEmpty) {
+      combinedList = [...widget.workoutPlans, ...widget.workoutMeals];
+    } else if (widget.workoutPlans.isNotEmpty) {
+      combinedList = widget.workoutPlans;
+    } else if (widget.workoutMeals.isNotEmpty) {
+      combinedList = widget.workoutMeals;
+    }
     combinedList.shuffle(Random());
 
     return Container(

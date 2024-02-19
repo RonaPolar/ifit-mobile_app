@@ -288,7 +288,11 @@ TextEditingController txtSearch = TextEditingController();
 
                                 if (item.containsKey("duration") && item.containsKey("kcal")) {
                                   // It's a workout item
-                                  return InkWell(
+                                  return LittleContainer(
+                                    containerColor: Styles.secondColor.withOpacity(0.6),
+                                    image: item["image"],
+                                    title: item["name"],
+                                    bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -297,16 +301,14 @@ TextEditingController txtSearch = TextEditingController();
                                         ),
                                       );
                                     },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
-                                    ),
                                   );
                                 } else {
                                   // It's a meal item
-                                  return InkWell(
+                                  return LittleContainer(
+                                    containerColor: Styles.secondColor.withOpacity(0.6),
+                                    image: item["image"],
+                                    title: item["name"],
+                                    bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -315,12 +317,6 @@ TextEditingController txtSearch = TextEditingController();
                                         ),
                                       );
                                     },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
-                                    ),
                                   );
                                 }
                               },
@@ -351,7 +347,11 @@ TextEditingController txtSearch = TextEditingController();
 
                                 if (item.containsKey("duration") && item.containsKey("kcal")) {
                                   // It's a workout item
-                                  return InkWell(
+                                  return LittleContainer(
+                                    containerColor: Styles.secondColor.withOpacity(0.6),
+                                    image: item["image"],
+                                    title: item["name"],
+                                    bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -360,16 +360,14 @@ TextEditingController txtSearch = TextEditingController();
                                         ),
                                       );
                                     },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["duration"]} minutes | ${item["kcal"]} kcal",
-                                    ),
                                   );
                                 } else {
                                   // It's a meal item
-                                  return InkWell(
+                                  return LittleContainer(
+                                    containerColor: Styles.secondColor.withOpacity(0.6),
+                                    image: item["image"],
+                                    title: item["name"],
+                                    bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -378,12 +376,6 @@ TextEditingController txtSearch = TextEditingController();
                                         ),
                                       );
                                     },
-                                    child: LittleContainer(
-                                      containerColor: Styles.secondColor.withOpacity(0.6),
-                                      image: item["image"],
-                                      title: item["name"],
-                                      bottomText: "${item["categories"]} | ${item["kcal"]} kcal",
-                                    ),
                                   );
                                 }
                               },

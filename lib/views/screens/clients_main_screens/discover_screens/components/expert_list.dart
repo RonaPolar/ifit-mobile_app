@@ -9,16 +9,14 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_
 class ExpertListWidget extends StatelessWidget {
   const ExpertListWidget({
     required this.discoverExperts,
-    required this.combinedList,
-    required this.workoutMeals,
-    required this.workoutPlans,
+    required this.workoutPlan,
+    required this.workoutMeal,
     super.key,
   });
 
   final List<ExpertModel> discoverExperts;
-  final List<List<WorkoutPlan>> workoutPlans;
-  final List<List<WorkoutMeal>> workoutMeals;
-  final List combinedList;
+  final List<List<WorkoutPlan>> workoutPlan;
+  final List<List<WorkoutMeal>> workoutMeal;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +40,14 @@ class ExpertListWidget extends StatelessWidget {
           itemCount: discoverExperts.length,
           itemBuilder: (context, index) {
             ExpertModel exObj = discoverExperts[index];
+
             return InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) => ExpertProfile(
                     exObj: exObj,
-                    workoutMeals: workoutMeals[index],
-                    workoutPlans: workoutPlans[index],
+                    workoutMeals: workoutMeal.isNotEmpty ? workoutMeal[index] : [],
+                    workoutPlans: workoutPlan.isNotEmpty ? workoutPlan[index] : [],
                   )),
                 );
               },

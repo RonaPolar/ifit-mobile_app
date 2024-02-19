@@ -36,19 +36,20 @@ class PopularWidget extends StatelessWidget {
               if (item is WorkoutPlan) {
                 // It's a workout item
                 return InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => WorkoutDetails(dObj: item),
-                    //   ),
-                    // );
-                  },
+
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
                     image: item.workoutPicture,
                     title: item.planName,
                     bottomText: "${item.minutes} minutes | ${item.calories} kcal",
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => WorkoutDetails(dObj: item),
+                      //   ),
+                      // );
+                    },
                   ),
                 );
               } else {
@@ -56,19 +57,20 @@ class PopularWidget extends StatelessWidget {
 
                 final mealItem = item as WorkoutMeal;
                 return InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MealDetails(dObj: item),
-                    //   ),
-                    // );
-                  },
+
                   child: LittleContainer(
                     containerColor: Styles.secondColor.withOpacity(0.6),
                     image: mealItem.foodPhoto,
                     title: mealItem.foodPlanName,
                     bottomText: "${item.purpose} | ${item.calories} kcal",
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => MealDetails(dObj: item),
+                      //   ),
+                      // );
+                    },
                   ),
                 );
               }

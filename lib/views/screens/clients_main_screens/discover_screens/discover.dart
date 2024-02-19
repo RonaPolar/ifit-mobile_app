@@ -13,7 +13,7 @@ import 'package:ifit/views/screens/clients_main_screens/discover_screens/compone
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/new_arrival.dart';
 import 'package:ifit/views/screens/clients_main_screens/discover_screens/components/popular.dart';
 
-class DiscoverScreen extends StatefulWidget {
+class DiscoverScreen extends StatelessWidget {
   const DiscoverScreen({
     required this.clientModel,
     required this.workoutPlanList,
@@ -28,45 +28,14 @@ class DiscoverScreen extends StatefulWidget {
   final List<ExpertModel> expertList;
 
   @override
-  State<DiscoverScreen> createState() => _DiscoverScreenState();
-}
-
-class _DiscoverScreenState extends State<DiscoverScreen> {
-  TextEditingController txtSearch = TextEditingController();
-
-  List<Expert> discoverExperts = [];
-  List<Workout> popularWorkout = [];
-  List<Meal> popularMeal = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getStaticData();
-  }
-
-  Future<void> getStaticData() async {
-    final String expert = await rootBundle.loadString(JsonFile.expert);
-    final String meal = await rootBundle.loadString(JsonFile.meal);
-    final String workout = await rootBundle.loadString(JsonFile.workout);
-
-    setState(() {
-      discoverExperts = (jsonDecode(expert)["expert"] as List).map((e) => Expert.fromJson(e)).toList();
-      popularWorkout = (jsonDecode(workout)["popularWorkout"] as List).map((e) => Workout.fromJson(e)).toList();
-      popularMeal = (jsonDecode(meal)["popularMeal"] as List).map((e) => Meal.fromJson(e)).toList();
-    });
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     List<dynamic> newArrivalCombination = [];
     List<dynamic> popularCombination = [];
-    List<dynamic> combinedList = [];
 
-    final List<WorkoutMeal> newArrivalMeal = widget.workoutMealList.expand((element) => element).toList();
-    final List<WorkoutMeal> popularMeal = widget.workoutMealList.expand((element) => element).toList();
-    final List<WorkoutPlan> newArrivalPlan = widget.workoutPlanList.expand((element) => element).toList();
-    final List<WorkoutPlan> popularPlan = widget.workoutPlanList.expand((element) => element).toList();
+    final List<WorkoutMeal> newArrivalMeal = workoutMealList.expand((element) => element).toList();
+    final List<WorkoutMeal> popularMeal = workoutMealList.expand((element) => element).toList();
+    final List<WorkoutPlan> newArrivalPlan = workoutPlanList.expand((element) => element).toList();
+    final List<WorkoutPlan> popularPlan = workoutPlanList.expand((element) => element).toList();
 
     newArrivalMeal.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
     newArrivalPlan.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
@@ -77,67 +46,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     newArrivalCombination = [...newArrivalMeal, ...newArrivalPlan];
     popularCombination = [...popularMeal, ...popularPlan];
 
-    combinedList = [...newArrivalPlan, ...newArrivalMeal];
-
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   centerTitle: true,
-      //   elevation: 0,
-      //   leading: InkWell(
-      //     onTap: () {
-      //       // Navigator.of(context).push(
-      //       //   MaterialPageRoute(
-      //       //   builder: (context) => const HomeNavBar()));
-      //       },
-      //       child: Container(
-      //         margin: const EdgeInsets.all(12),
-      //           height: 30,
-      //           width: 30,
-      //         alignment: Alignment.center,
-      //         decoration: BoxDecoration(
-      //             color: Colors.grey.shade200,
-      //             borderRadius: BorderRadius.circular(10)),
-      //         child: const Icon(
-      //           FluentSystemIcons.ic_fluent_chevron_left_filled,
-      //           size: 20,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //   ),
-      //   title: Container(
-      //     width: double.maxFinite,
-      //     decoration: BoxDecoration(
-      //       color: Colors.grey.shade200,
-      //       borderRadius: BorderRadius.circular(10)),
-      //     child: SearchContainer(
-      //       controller: txtSearch, hintText: "Search",
-      //     )
-      //   ),
-      //   actions: [
-      //     InkWell(
-      //       onTap: () {
-      //       Navigator.of(context).push(
-      //           MaterialPageRoute(
-      //           builder: (context) => const OngoingPrograms()));
-      //       },
-      //       child: Container(
-      //         margin: const EdgeInsets.symmetric(horizontal:15, vertical: 10),
-      //         height: 35,
-      //         width: 35,
-      //         alignment: Alignment.center,
-      //         decoration: BoxDecoration(
-      //             color: Colors.grey.shade200,
-      //             borderRadius: BorderRadius.circular(10)),
-      //         child: const Icon(FluentSystemIcons.ic_fluent_person_regular,
-      //           size: 20,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -167,6 +77,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       children: [
                         NewArrivalWidget(
                           combinedList: newArrivalCombination,
+                          clientModel: clientModel,
                         ),
                         const Gap(10),
                         PopularWidget(
@@ -178,10 +89,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ),
                 const Gap(15),
                 ExpertListWidget(
-                  discoverExperts: widget.expertList,
-                  combinedList: combinedList,
-                  workoutMeals: widget.workoutMealList,
-                  workoutPlans: widget.workoutPlanList,
+                  discoverExperts: expertList,
+                  workoutMeal: workoutMealList,
+                  workoutPlan: workoutPlanList,
                 ),
                 const Gap(10)
               ],//main Children
