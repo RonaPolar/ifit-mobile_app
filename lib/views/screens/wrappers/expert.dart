@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
@@ -35,6 +36,7 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
       expertProvider.updateExpertStream(uid: widget.uid);
       expertProvider.updateWorkoutMealListStream(uid: widget.uid);
       expertProvider.updateWorkoutPlanListStream(uid: widget.uid);
+      expertProvider.updateClientListStream();
     });
   }
 
@@ -42,12 +44,14 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
     required ExpertModel expertModel,
     required List<WorkoutPlan> workoutPlan,
     required List<WorkoutMeal> workoutMeal,
+    required List<ClientModel> clientList,
   }) {
     return [
       ExpHomeScreen(
         expertModel: expertModel,
         workoutMealList: workoutMeal,
         workoutPlanList: workoutPlan,
+        clientList: clientList,
       ),
       ExpDiscoverScreen(),
       ExpProgramScreen(expertModel: expertModel),
@@ -79,11 +83,19 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
               child: (data) {
                 final List<WorkoutMeal> workoutMeal = data!;
 
-                return bodyList(
-                  expertModel: expertModel,
-                  workoutPlan: workoutPlan,
-                  workoutMeal: workoutMeal
-                )[widget.index];
+                return StreamWrapper<List<ClientModel>>(
+                  stream: expertProvider.clientListStream,
+                  child: (data) {
+                    final List<ClientModel> clientList = data!;
+
+                    return bodyList(
+                      expertModel: expertModel,
+                      workoutPlan: workoutPlan,
+                      workoutMeal: workoutMeal,
+                      clientList: clientList
+                    )[widget.index];
+                  }
+                );
               }
             );
           }

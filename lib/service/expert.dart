@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
@@ -100,6 +101,24 @@ class ExpertProvider extends ChangeNotifier {
     required String uid,
   }) {
     workoutMealListStream = getWorkoutMealListStream(uid);
+    notifyListeners();
+  }
+
+  Stream<List<ClientModel>>? clientListStream;
+
+  Stream<List<ClientModel>> getClientListStream() {
+
+    return _db.collection(tClientPath).snapshots().map((event) {
+      return event.docs.map((data) {
+        final map = data.data();
+
+        return ClientModel.fromJson(map);
+      }).toList();
+    });
+  }
+
+  void updateClientListStream() {
+    clientListStream = getClientListStream();
     notifyListeners();
   }
 
