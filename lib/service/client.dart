@@ -6,7 +6,6 @@ import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:uuid/uuid.dart';
 
 class ClientProvider extends ChangeNotifier {
 
@@ -49,6 +48,18 @@ class ClientProvider extends ChangeNotifier {
       print('Height or weight is zero, unable to calculate BMI');
     }
     notifyListeners();
+  }
+
+  String get getBMIDescription {
+    if (bmi < 18.5) {
+      return "Underweight";
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+      return "Normal";
+    } else if (bmi >= 25.0 && bmi <= 29.9) {
+      return "Overweight";
+    } else {
+      return "Obesity";
+    }
   }
 
   Stream<List<List<WorkoutPlan>>>? workoutPlanListStream;

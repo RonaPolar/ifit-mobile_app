@@ -2,18 +2,20 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:provider/provider.dart';
 
 class BMIWidget extends StatelessWidget {
   const BMIWidget({
-    required this.bmi,
     super.key,
   });
 
-  final double bmi;
-
   @override
   Widget build(BuildContext context) {
+
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
     return Container(
       height: 120,
       decoration: BoxDecoration(
@@ -35,14 +37,12 @@ class BMIWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "BMI (Body Mass Index)",
+                  Text("BMI (Body Mass Index)",
                     style: Styles.text15bold.copyWith(
                       color: Colors.white,
                     ),
                   ),
-                  Text(
-                    "You have a normal weight",
+                  Text(clientProvider.getBMIDescription,
                     style: Styles.seeMore.copyWith(
                       color: Colors.white.withOpacity(0.7),
                     ),
@@ -78,7 +78,7 @@ class BMIWidget extends StatelessWidget {
                     ),
                     sectionsSpace: 1,
                     centerSpaceRadius: 0,
-                    sections: showingSections(),
+                    sections: showingSections(clientProvider),
                   ),
                 ),
               ),
@@ -90,7 +90,8 @@ class BMIWidget extends StatelessWidget {
   }
 
   //BMI pIE cHART
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> showingSections(ClientProvider clientProvider) {
+
     return List.generate(
       2,
           (i) {
@@ -98,12 +99,12 @@ class BMIWidget extends StatelessWidget {
           case 0:
             return PieChartSectionData(
                 color: primary,
-                value: bmi,
+                value: clientProvider.bmi,
                 title: '',
                 radius: 45,
                 titlePositionPercentageOffset: 0.55,
                 badgeWidget: Text(
-                  bmi.toStringAsFixed(1), // Display BMI with one decimal place
+                  clientProvider.bmi.toStringAsFixed(1), // Display BMI with one decimal place
                   style: Styles.text12.copyWith(
                       color: Colors.white, fontWeight: FontWeight.w700),
                 ));

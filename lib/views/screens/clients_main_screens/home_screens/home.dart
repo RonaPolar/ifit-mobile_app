@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   name: client.name,
                 ),
                 const Gap(20),
-                BMIWidget(bmi: clientProvider.bmi),
+                const BMIWidget(),
                 const Gap(15),
                 /// TODO: REVERT IT ONCE OKAY
                 // Container(

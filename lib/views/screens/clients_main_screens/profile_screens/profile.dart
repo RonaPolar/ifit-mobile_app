@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -56,30 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            // Navigator.of(context).push(
-            //     MaterialPageRoute(builder: (context) => const HomeNavBar()));
-          },
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            height: 30,
-            width: 30,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10)),
-            child: const Icon(
-              FluentSystemIcons.ic_fluent_chevron_left_filled,
-              size: 20,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        title: Text(
-          'Profile',
-          style: Styles.headline20,
-        ),
+        automaticallyImplyLeading: false,
+        title: Text("Profile"),
       ),
       body: ListView(
         children: [
