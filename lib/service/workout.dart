@@ -17,12 +17,6 @@ class WorkoutProvider extends ChangeNotifier {
   void updateSkipWorkout({
     required List<ExerciseElement> exerciseList,
   }) {
-    final List<ExerciseElement> initialList = exerciseList;
-
-    // if (workoutIndex != exerciseList.length - 1) {
-    //   exerciseList.removeAt(workoutIndex);
-    //   exerciseList.add(initialList[workoutIndex]);
-    // }
     skippedIndex++;
     workoutIndex++;
 
@@ -44,14 +38,21 @@ class WorkoutProvider extends ChangeNotifier {
 
       if (exerciseList.length - 1 == workoutIndex) {
         if (setFinished == set) {
-          await updateWorkoutDay(
-            id: id,
-            workoutId: workoutId,
-          ).then((value) {
+
+          if ((exerciseList.length - skippedIndex) > skippedIndex ) {
+            await updateWorkoutDay(
+              id: id,
+              workoutId: workoutId,
+            ).then((value) {
+              Navigator.of(context)..pop()..pop();
+              setFinished = 1;
+              workoutIndex = 0;
+            });
+          } else {
             Navigator.of(context)..pop()..pop();
             setFinished = 1;
             workoutIndex = 0;
-          });
+          }
         } else {
 
           Navigator.of(context)..pop()..pop();

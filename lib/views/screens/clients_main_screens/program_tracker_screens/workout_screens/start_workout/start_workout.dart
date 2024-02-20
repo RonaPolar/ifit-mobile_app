@@ -29,8 +29,6 @@ class StartWorkout extends StatefulWidget {
 class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<int> _animation;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
 
   @override
   void initState() {
@@ -65,6 +63,14 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
         );
       }
     });
+  }
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
