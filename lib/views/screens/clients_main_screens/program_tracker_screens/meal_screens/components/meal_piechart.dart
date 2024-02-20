@@ -1,9 +1,15 @@
 //Nutrition Pie Chart
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:ifit/models/meal.dart';
 
 class MealPieChart extends StatefulWidget {
-  const MealPieChart({super.key});
+  const MealPieChart({
+    required this.workoutMealList,
+    super.key,
+  });
+
+  final List<WorkoutMeal> workoutMealList;
 
   @override
   State<MealPieChart> createState() => _MealPieChartState();
@@ -38,26 +44,49 @@ class _MealPieChartState extends State<MealPieChart> {
           ),
           sectionsSpace: 0,
           centerSpaceRadius: 0,
-          sections: showingSections(),
+          sections: widget.workoutMealList.isEmpty ? [] : showingSections(),
         ),
       ),
     );
   }
 
   List<PieChartSectionData> showingSections() {
+
+    final List<WorkoutMeal> workoutMeal = widget.workoutMealList;
+    double calories = 0;
+    double protein = 0;
+    double fats = 0;
+    double sugar = 0;
+
+    for (WorkoutMeal data in workoutMeal) {
+      calories += double.parse(data.calories);
+      protein += double.parse(data.protein);
+      fats += double.parse(data.fats);
+      sugar += double.parse(data.sugar);
+    }
+
+    double total = calories + protein + fats + sugar;
+
+    String caloriesPercentage = ((calories / total) * 100).toStringAsFixed(2);
+    String proteinPercentage = ((protein / total) * 100).toStringAsFixed(2);
+    String fatsPercentage = ((fats / total) * 100).toStringAsFixed(2);
+    String sugarPercentage = ((sugar / total) * 100).toStringAsFixed(2);
+
     return List.generate(4, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 20.0 : 16.0;
+      final fontSize = isTouched ? 20.0 : 14.0;
       final radius = isTouched ? 110.0 : 100.0;
-      final widgetSize = isTouched ? 70.0 : 60.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      final widgetSize = isTouched ? 70.0 : 50.0;
+      const shadows = [
+        Shadow(color: Colors.black, blurRadius: 2),
+      ];
 
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: Colors.blue.shade400,
-            value: 20,
-            title: '20%',
+            value: double.parse(sugarPercentage),
+            title: "$sugarPercentage%",
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -75,8 +104,8 @@ class _MealPieChartState extends State<MealPieChart> {
         case 1:
           return PieChartSectionData(
             color: Colors.yellow.shade700,
-            value: 30,
-            title: '30%',
+            value: double.parse(fatsPercentage),
+            title: '$fatsPercentage%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -94,8 +123,8 @@ class _MealPieChartState extends State<MealPieChart> {
         case 2:
           return PieChartSectionData(
             color: Colors.orange.shade800,
-            value: 16,
-            title: '16%',
+            value: double.parse(caloriesPercentage),
+            title: '$caloriesPercentage%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -113,8 +142,8 @@ class _MealPieChartState extends State<MealPieChart> {
         case 3:
           return PieChartSectionData(
             color: Colors.red.shade600,
-            value: 35,
-            title: '35%',
+            value: double.parse(sugarPercentage),
+            title: '$sugarPercentage%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,

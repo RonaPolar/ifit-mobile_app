@@ -12,7 +12,7 @@ class WorkoutProvider extends ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   int workoutIndex = 0;
-  List<int> skippedIndex = [];
+  int skippedIndex = 0;
 
   void updateSkipWorkout({
     required List<ExerciseElement> exerciseList,
@@ -23,7 +23,7 @@ class WorkoutProvider extends ChangeNotifier {
     //   exerciseList.removeAt(workoutIndex);
     //   exerciseList.add(initialList[workoutIndex]);
     // }
-    skippedIndex.add(workoutIndex);
+    skippedIndex++;
     workoutIndex++;
 
     notifyListeners();
@@ -42,7 +42,6 @@ class WorkoutProvider extends ChangeNotifier {
     final String workoutId = workoutPlan.id;
 
 
-    if (skippedIndex.isEmpty) {
       if (exerciseList.length - 1 == workoutIndex) {
         if (setFinished == set) {
           await updateWorkoutDay(
@@ -68,12 +67,6 @@ class WorkoutProvider extends ChangeNotifier {
       } else {
         workoutIndex++;
       }
-    } else {
-
-      for (int data in skippedIndex) {
-        workoutIndex = data;
-      }
-    }
 
     notifyListeners();
   }

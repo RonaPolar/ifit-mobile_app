@@ -2,7 +2,8 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/widgets/charts/meal_piechart.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/components/meal_piechart.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_category.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
@@ -10,77 +11,18 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 
 class MealTrackerScreen extends StatefulWidget {
 
-  const MealTrackerScreen({super.key});
+  const MealTrackerScreen({
+    required this.workoutMealList,
+    super.key,
+  });
+
+  final List<WorkoutMeal> workoutMealList;
 
   @override
   State<MealTrackerScreen> createState() => _MealTrackerScreenState();
 }
 
 class _MealTrackerScreenState extends State<MealTrackerScreen> {
-
-  List what2EatArr = [
-    {
-      "name": "Breakfast",
-      "image": "assets/icons/breakfast.png",
-      "foodNumber": "120",
-    },
-    {
-      "name": "Lunch",
-      "image": "assets/icons/lunch.png",
-      "foodNumber": "120",
-    },
-    {
-      "name": "Dinner",
-      "image": "assets/icons/dinner.png",
-      "foodNumber": "120",
-    },
-    {
-      "name": "Snacks",
-      "image": "assets/icons/snacks.png",
-      "foodNumber": "120",
-    },
-    {
-      "name": "Drinks",
-      "image": "assets/icons/drinks.png",
-      "foodNumber": "120",
-    },
-  ];
-
-  List upcomingMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "rate": "4.9",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "schedule": "Monday",
-      "time": "9:00am",
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "rate": "4.6",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "schedule": "Monday",
-      "time": "10:00am",
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "rate": "4.3",
-      "kcal": "300",
-      "fats": "250",
-      "proteins": "310",
-      "sugar": "100",
-      "schedule": "Monday",
-      "time": "4:00pm",
-    },
-  ];
 
   
 @override
@@ -110,8 +52,7 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
             ),
           ),
         ),
-        title: Text(
-          'Meal Tracker',
+        title: Text('Meal Tracker',
           style: Styles.headline20),
       ),
 
@@ -122,17 +63,18 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 230,
                   width: double.maxFinite,
-                  child: MealPieChart(),
+                  child: MealPieChart(
+                    workoutMealList: widget.workoutMealList,
+                  ),
                 ),
                 const Gap(20),
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                    Text(
-                    "Upcoming Meal Schedule",
+                    Text("Upcoming Meal Schedule",
                     style: Styles.title
                   ),
                   TextButton(
@@ -141,34 +83,34 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                         MaterialPageRoute(
                         builder: (context) => const MealSched()));
                     },
-                    child: Text(
-                      "See More",
+                    child: Text("See More",
                       style: Styles.seeMore
                       ),
                     )
                   ],
                 ),
-                ListView.builder( //Meal Content
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: upcomingMealArr.length,
-                    itemBuilder: (context, index) {
-                      var mObj = upcomingMealArr[index];
-                      return InkWell(
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => MealDetails(dObj: mObj)),
-                            // );
-                          },
-                          child: ProgramRow(image: mObj["image"], 
-                          title: mObj["name"], 
-                          bottomText: "${mObj["schedule"]} | ${mObj["time"]}", 
-                          showToggleSwitch: true,
-                        ));
-                    }),
+                // ListView.builder( //Meal Content
+                //   padding: EdgeInsets.zero,
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   shrinkWrap: true,
+                //   itemCount: upcomingMealArr.length,
+                //   itemBuilder: (context, index) {
+                //     var mObj = upcomingMealArr[index];
+                //     return InkWell(
+                //         onTap: () {
+                //           // Navigator.push(
+                //           //   context,
+                //           //   MaterialPageRoute(
+                //           //     builder: (context) => MealDetails(dObj: mObj)),
+                //           // );
+                //         },
+                //         child: ProgramRow(image: mObj["image"],
+                //         title: mObj["name"],
+                //         bottomText: "${mObj["schedule"]} | ${mObj["time"]}",
+                //         showToggleSwitch: true,
+                //       ));
+                //   },
+                // ),
       
                 const Gap(20),
                 Row(
@@ -180,23 +122,24 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                     ),
                   ],
                 ),
-                ListView.builder(
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: what2EatArr.length,
-                      itemBuilder: (context, index) {
-                        var mObj = what2EatArr[index];
-                        return What2Container(wObj: mObj, 
-                          onPressed: (obj) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MealCategory(mObj: mObj,)),
-                              );
-                            },
-                          );
-                      }),
+                // ListView.builder(
+                //   padding: EdgeInsets.zero,
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   shrinkWrap: true,
+                //   itemCount: what2EatArr.length,
+                //   itemBuilder: (context, index) {
+                //     var mObj = what2EatArr[index];
+                //     return What2Container(wObj: mObj,
+                //       onPressed: (obj) {
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) => MealCategory(mObj: mObj,)),
+                //           );
+                //         },
+                //       );
+                //   },
+                // ),
               ],
             ),
           )

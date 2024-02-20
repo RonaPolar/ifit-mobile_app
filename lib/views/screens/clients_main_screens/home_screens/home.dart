@@ -186,7 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const MealTrackerScreen()),
+                    builder: (context) => MealTrackerScreen(
+                      workoutMealList: combinedWorkoutMeal,
+                    )),
                 );
               },
               child: Text("See More", style: Styles.seeMore),
