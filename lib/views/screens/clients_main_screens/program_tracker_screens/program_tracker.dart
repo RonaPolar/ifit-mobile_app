@@ -201,7 +201,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) => MealDetails(
-                              dObj: mObj,
+                              workoutMeal: mObj,
                               id: widget.clientModel.uid,
                             ),
                           ));

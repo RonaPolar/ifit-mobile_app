@@ -112,7 +112,7 @@ class FavoriteProgramScreen extends StatelessWidget {
                   Navigator.push(context,
                     MaterialPageRoute(
                       builder: (context) => MealDetails(
-                        dObj: meal,
+                        workoutMeal: meal,
                         id: id,
                       ),
                     ),

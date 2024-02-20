@@ -69,7 +69,7 @@ class NewArrivalWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) => MealDetails(
-                          dObj: mealItem,
+                          workoutMeal: mealItem,
                           id: clientModel.uid,
                         )),
                     );

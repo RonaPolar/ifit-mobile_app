@@ -17,74 +17,24 @@ class MealDetails extends StatefulWidget {
   
   const MealDetails({
     required this.id,
-    required this.dObj,
+    required this.workoutMeal,
+    // required this.expertMealList,
+    // required this.expertPlanList,
+    // required this.expertModel,
     super.key,
   });
 
   final String id;
-  final WorkoutMeal dObj;
+  final WorkoutMeal workoutMeal;
+  // final List<WorkoutMeal> expertMealList;
+  // final List<WorkoutPlan> expertPlanList;
+  // final ExpertModel expertModel;
 
   @override
   State<MealDetails> createState() => _MealDetailsState();
 }
 
 class _MealDetailsState extends State<MealDetails> {
-
-  List itemsArr = [
-    {
-      "item": "Wheat Flour",
-      "value": "100 gram",
-    },
-    {
-      "item": "Sugar",
-      "value": "100 gram",
-    },
-    {
-      "item": "Sugar",
-      "value": "3 tbsp",
-    },
-    {
-      "item": "Baking Soda",
-      "value": "2 tsp",
-    },
-    {
-      "item": "Eggs",
-      "value": "2x",
-    },
-  ];
-
-  List stepArr = [
-      {"no": "01", "title": "Step 01",
-      "detail": "Prepare all of the ingredients that needed"},
-      {"no": "02", "detail": "Mix flour, sugar, salt, and baking powder"},
-      {
-        "no": "03",
-        "detail":
-            "In a seperate place, mix the eggs and liquid milk until blended"
-      },
-      {
-        "no": "04",
-        "detail":
-            "Put the egg and milk mixture into the dry ingredients, Stir untul smooth and smooth"
-      },
-      {"no": "05", "detail": "Prepare all of the ingredients that needed"},
-    ];
-
-  
-  List discoverExperts = [
-    {
-      "name": "Dr. Octavius Brine",
-      "image": "assets/images/Experts/Expert2.png",
-      "profession": "Nutritionist",
-      "rate": "3.9",
-      "mealCreated": "2",
-      "workoutCreated": "5",
-      "descriptions": "I'm a licensed Nutritionist working in GoFit center at Mandaluyong and has 12 years of experience at the field. If you like my programs I created, you can email or visit me.",
-    },
-  ];
-
- String buttonText = 'Start Now';
-   bool isContainerVisible = false; // Added state for container visibility
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +72,7 @@ class _MealDetailsState extends State<MealDetails> {
               flexibleSpace: Container(
                 padding: const EdgeInsets.only(top: 80, bottom: 10),
                 width: double.maxFinite,
-                child: Image.network(widget.dObj.foodPhoto),
+                child: Image.network(widget.workoutMeal.foodPhoto),
               ),
             ),
           ];
@@ -147,65 +97,7 @@ class _MealDetailsState extends State<MealDetails> {
                   ),
 
                   const Gap(20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.dObj.foodPlanName,
-                                  style: Styles.text18.copyWith(
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                     TextSpan(
-                                        text: 'by ',
-                                        style: Styles.text12
-                                      ),
-                                      TextSpan(
-                                        text: widget.dObj.expertName,
-                                        style: Styles.text12.copyWith(
-                                          color: Colors.blue,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            var exObj = discoverExperts[0];
-                                           // Navigator.push(context,
-                                              // MaterialPageRoute(
-                                              //   builder: (context) => ExpertProfile(
-                                              //     exObj: exObj,
-                                              //     combinedList: [],
-                                              //   ),
-                                              // ),
-                                           // );
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                ),  
-                              ],
-                            ),
-                            Container(
-                              padding: EdgeInsets.zero,
-                              child: FavoriteButton(
-                                onPressed: () {},
-                                favorite: widget.dObj.isFavorite,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
+                  _buildMealDescription(clientProvider),
                   
                   const Gap(15),
                   Column(
@@ -235,26 +127,26 @@ class _MealDetailsState extends State<MealDetails> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.star_sharp, color: Colors.red,),
-                                  Text("${widget.dObj.rating} stars"),
+                                  Text("${widget.workoutMeal.rating} stars"),
                                 ],
                               ),
                             ),
                             const Gap(5), 
                             NutritionDescriptions(
                               imagePath: "assets/icons/calories.png", 
-                              label: "${widget.dObj.calories} calories"),
+                              label: "${widget.workoutMeal.calories} calories"),
                             const Gap(5),  
                             NutritionDescriptions(
                               imagePath: "assets/icons/fat.png", 
-                              label: "${widget.dObj.fats} fats"),
+                              label: "${widget.workoutMeal.fats} fats"),
                             const Gap(5),
                             NutritionDescriptions(
                               imagePath: "assets/icons/sugar.png", 
-                              label: "${widget.dObj.sugar} sugar"),
+                              label: "${widget.workoutMeal.sugar} sugar"),
                             const Gap(5),
                             NutritionDescriptions(
                               imagePath: "assets/icons/protein.png", 
-                              label: "${widget.dObj.protein} proteins"),
+                              label: "${widget.workoutMeal.protein} proteins"),
                           ],
                         ),
                       ),
@@ -269,7 +161,7 @@ class _MealDetailsState extends State<MealDetails> {
                                   fontWeight: FontWeight.w700),
                               ),
                             const Gap(10),
-                            ReadMoreText(widget.dObj.description,
+                            ReadMoreText(widget.workoutMeal.description,
                               style: Styles.seeMore.copyWith(
                                 fontWeight: FontWeight.normal
                               ),
@@ -329,7 +221,7 @@ class _MealDetailsState extends State<MealDetails> {
                                   fontWeight: FontWeight.w700),
                             ),
                             Text(
-                              "${widget.dObj.ingredients.length} Items",
+                              "${widget.workoutMeal.ingredients.length} Items",
                               style: Styles.normal.copyWith(
                                   fontWeight: FontWeight.w700),
                             )
@@ -340,9 +232,9 @@ class _MealDetailsState extends State<MealDetails> {
                           padding: EdgeInsets.zero,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: widget.dObj.ingredients.length,
+                          itemCount: widget.workoutMeal.ingredients.length,
                           itemBuilder: (context, index) {
-                            final String yObj = widget.dObj.ingredients[index];
+                            final String yObj = widget.workoutMeal.ingredients[index];
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -401,7 +293,7 @@ class _MealDetailsState extends State<MealDetails> {
                                 onPressed: () async {
                                   await clientProvider.addWorkoutMealPlan(
                                     id: widget.id,
-                                    workoutMeal: widget.dObj,
+                                    workoutMeal: widget.workoutMeal,
                                   ).then((value) {
                                     Navigator.of(context).pop();
                                   });
@@ -419,6 +311,64 @@ class _MealDetailsState extends State<MealDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMealDescription(ClientProvider clientProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.workoutMeal.foodPlanName,
+                    style: Styles.text18.copyWith(
+                        fontWeight: FontWeight.w700),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                            text: 'by ',
+                            style: Styles.text12
+                        ),
+                        TextSpan(
+                          text: widget.workoutMeal.expertName,
+                          style: Styles.text12.copyWith(
+                            color: Colors.blue,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // Navigator.push(context,
+                              //    MaterialPageRoute(
+                              //      builder: (context) => ExpertProfile(
+                              //      ),
+                              //    ),
+                              // );
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.zero,
+                child: FavoriteButton(
+                  onPressed: () {},
+                  favorite: widget.workoutMeal.isFavorite,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

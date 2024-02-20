@@ -285,7 +285,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) => MealDetails(
-                                    dObj: mealItem,
+                                    workoutMeal: mealItem,
                                     id: widget.clientModel.uid,
                                   )),
                                 );

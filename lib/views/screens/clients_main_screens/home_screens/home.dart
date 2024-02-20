@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/container/big.dart';
 import 'package:ifit/models/meal.dart';
-import 'package:ifit/models/schedule.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/client.dart';
-import 'package:ifit/views/screens/clients_main_screens/home_screens/components/activity.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/bmi.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/components/welcome_back.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
@@ -206,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) => MealDetails(
-                        dObj: mObj,
+                        workoutMeal: mObj,
                         id: widget.clientModel.uid,
                       )),
                   );
