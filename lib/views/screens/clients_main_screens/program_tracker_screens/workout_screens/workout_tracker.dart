@@ -2,13 +2,18 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 
 class WorkoutTrackerScreen extends StatefulWidget {
 
-  const WorkoutTrackerScreen({super.key});
+  const WorkoutTrackerScreen({super.key,
+    required this.workoutPlanList,
+  });
+
+  final List<WorkoutPlan> workoutPlanList;
 
   @override
   State<WorkoutTrackerScreen> createState() => _WorkoutTrackerScreenState();
@@ -81,7 +86,17 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
   
 @override
   Widget build(BuildContext context) {
-  
+
+  double totalCalories = 0;
+
+  for (var data in widget.workoutPlanList) {
+
+    if (data.dayCountFinished != null) {
+      final perDayCalories = double.parse(data.dayCountFinished!.toString()) * double.parse(data.calories);
+      totalCalories += perDayCalories;
+    }
+  }
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -130,7 +145,7 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("789 kcal", 
+                          Text("$totalCalories kcal",
                             style: Styles.normal.copyWith(
                               fontSize: 25, fontWeight: FontWeight.w500, color: Colors.white)),
                           const Gap(20),

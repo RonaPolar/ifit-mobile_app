@@ -228,7 +228,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => const WorkoutTrackerScreen()));
+                          builder: (context) => WorkoutTrackerScreen(
+                            workoutPlanList: widget.workoutPlanList,
+                          )));
                       },
                       child: Text("See More",
                           style: Styles.seeMore

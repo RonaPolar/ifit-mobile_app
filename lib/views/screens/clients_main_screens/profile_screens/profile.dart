@@ -186,9 +186,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 FluentSystemIcons.ic_fluent_activity_regular,
                             title: 'Workout Progress',
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WorkoutTrackerScreen()));
+                              // Navigator.push(context, MaterialPageRoute(
+                              //     builder: (context) => WorkoutTrackerScreen(
+                              //       workoutPlanList: widget.workoutPlanList,
+                              //     )));
                             },
                           ),
                         ],
