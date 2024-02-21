@@ -147,8 +147,8 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                           ..onTap = () {
                                              Navigator.push(context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => ExpertProfileScreen(
-                                                    id: widget.dObj.expertId,
+                                                  builder: (context) => ExpertProfile(
+                                                    expertId: widget.id,
                                                   ),
                                                 ),
                                              );

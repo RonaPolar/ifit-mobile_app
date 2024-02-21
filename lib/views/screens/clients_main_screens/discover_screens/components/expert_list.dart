@@ -3,6 +3,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/profile_screens/expert_profile_screen.dart';
 import 'package:ifit/views/widgets/container/square.dart';
 import 'package:ifit/models/expert.dart';
 
@@ -45,14 +46,11 @@ class ExpertListWidget extends StatelessWidget {
 
             return InkWell(
               onTap: () {
-                // Navigator.push(context, MaterialPageRoute(
-                //   builder: (context) => ExpertProfile(
-                //     exObj: exObj,
-                //     workoutMeals: workoutMeal.isNotEmpty ? workoutMeal[index] : [],
-                //     workoutPlans: workoutPlan.isNotEmpty ? workoutPlan[index] : [],
-                //     clientModel: clientModel,
-                //   )),
-                // );
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => ExpertProfile(
+                    expertId: exObj.uid,
+                  )),
+                );
               },
               child: SquareContainer(
                 image: exObj.professionId,

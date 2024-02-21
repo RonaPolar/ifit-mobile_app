@@ -381,8 +381,8 @@ class _MealDetailsState extends State<MealDetails> {
                             ..onTap = () {
                               Navigator.push(context,
                                  MaterialPageRoute(
-                                   builder: (context) => ExpertProfileScreen(
-                                     id: widget.workoutMeal.expertId,
+                                   builder: (context) => ExpertProfile(
+                                     expertId: widget.workoutMeal.expertId,
                                    ),
                                  ),
                               );
