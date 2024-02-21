@@ -522,5 +522,45 @@ class ExpertProvider extends ChangeNotifier {
 
 
 
+  XFile? photoProfile;
+  String? photoUrl;
+
+  Future<void> uploadPhotoProfile(BuildContext context, {
+    required String id,
+  }) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+
+        if (img != null) {
+          await storePhotoProfile(id);
+        }
+
+        photoProfile = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> storePhotoProfile(String id) async {
+    // store professionId to storage
+    final file = File(photoProfile!.path);
+    final ref = FirebaseStorage.instance.ref()
+        .child(tExpertPath)
+        .child(photoProfile!.name);
+    await ref.putFile(file);
+
+    // store professionId to firestore
+    photoUrl = await ref.getDownloadURL();
+
+    _db.collection(tExpertPath).doc(id).set({
+      "profession_id": photoUrl!,
+    }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update photo successful!"))
+        .onError((error, stackTrace) => debugPrint("Failed uploading photo successful!"));
+    notifyListeners();
+  }
 
 }

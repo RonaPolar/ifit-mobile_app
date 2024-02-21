@@ -29,6 +29,7 @@ class StartWorkout extends StatefulWidget {
 class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<int> _animation;
+  bool restart = false;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     ).animate(_controller);
 
     _controller.addListener(() {
-      if (_controller.status == AnimationStatus.dismissed) {
+      if (_controller.status == AnimationStatus.dismissed && !restart) {
         workoutProvider.updateDoneWorkout(
           workoutPlan: widget.workoutPlan,
           id: widget.id,
@@ -130,6 +131,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
             children: [
               _buildTimer(workoutProvider),
               const Gap(30),
+              /// TODO: ADD EXERCISE VIDEO
               // ExerciseVideoWidget(
               //   urlVideo: exercises[index].url,
               // ),
@@ -212,7 +214,12 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                 child: IconButton(
                   icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
                   onPressed: () {
-                    _controller.reset();
+                    setState(() {
+                      restart = true;
+                      _controller.reset();
+                      _controller.reverse(from: double.parse(time));
+                      restart = false;
+                    });
                   },
                 ),
               ),

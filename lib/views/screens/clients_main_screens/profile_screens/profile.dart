@@ -51,8 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final ClientModel clientModel = widget.clientModel;
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
 
-    print(clientModel.photoUrl);
-
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -60,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         centerTitle: true,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Text("Profile"),
+        title: const Text("Profile"),
       ),
       body: ListView(
         children: [
@@ -75,25 +73,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         InkWell(
                           onTap: () async {
-                            clientProvider.uploadPhotoProfile(context).then((value) {
-                              if (clientProvider.photoProfile != null) {
-                                clientProvider.storePhotoProfile(widget.clientModel.uid);
-                              }
-                            });
+                            clientProvider.uploadPhotoProfile(context,
+                              id: clientModel.uid,
+                            );
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                color: Styles.primaryColor,
-                                width: 2.0, // Replace with your desired border width
+                          borderRadius: BorderRadius.circular(30),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Styles.primaryColor,
+                                  width: 2.0, // Replace with your desired border width
+                                ),
                               ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30.0),
                                 child: clientModel.photoUrl != null
                                     ?  Image.network(widget.clientModel.photoUrl!,
                                   fit: BoxFit.fill,

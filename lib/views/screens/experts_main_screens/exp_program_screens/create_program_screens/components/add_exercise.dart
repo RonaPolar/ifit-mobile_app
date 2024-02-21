@@ -112,7 +112,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                       },
                       child: Text(!expertProvider.isCounting
                         ? "Switch to counting"
-                        : "Switch to seconds",
+                        : "Switch to time",
                       ),
                     ),
                     TextFieldContainer(

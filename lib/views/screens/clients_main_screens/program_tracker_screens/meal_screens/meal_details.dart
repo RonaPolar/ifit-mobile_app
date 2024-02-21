@@ -37,6 +37,18 @@ class MealDetails extends StatefulWidget {
 class _MealDetailsState extends State<MealDetails> {
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ClientProvider clientProvider = Provider.of<ClientProvider>(context, listen: false);
+      clientProvider.getWorkoutMealExisting(
+        id: widget.id,
+        workoutMeal: widget.workoutMeal,
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
@@ -79,9 +91,11 @@ class _MealDetailsState extends State<MealDetails> {
         },
         body: Container(
           decoration: BoxDecoration(
-              color: Styles.bgColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+            color: Styles.bgColor,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(25), topRight: Radius.circular(25),
+            ),
+          ),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
@@ -105,8 +119,7 @@ class _MealDetailsState extends State<MealDetails> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                        'Nutritions',
+                        child: Text('Nutritions',
                         style:  Styles.text18.copyWith(
                             fontWeight: FontWeight.w700),
                         ),
@@ -281,26 +294,33 @@ class _MealDetailsState extends State<MealDetails> {
                         //   },
                         // ),
 
-                        Container(
-                          padding: const EdgeInsets.only(top: 5, bottom: 10),
-                          child: Column(
-                            children: [
-                              const Gap(10),
-                              MainButton(
-                                title: !clientProvider.workoutMealExisting
-                                    ? 'Start Now'
-                                    : "Continue",
-                                onPressed: () async {
-                                  await clientProvider.addWorkoutMealPlan(
-                                    id: widget.id,
-                                    workoutMeal: widget.workoutMeal,
-                                  ).then((value) {
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            MainButton(
+                              title: !clientProvider.workoutMealExisting
+                                  ? 'Start Now'
+                                  : "Start Again",
+                              onPressed: () async {
+                                await clientProvider.addWorkoutMealPlan(
+                                  id: widget.id,
+                                  workoutMeal: widget.workoutMeal,
+                                ).then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("Preparing..."),
+                                    backgroundColor: Styles.primaryColor,
+                                  ));
+                                  // Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                            const Gap(14.0),
+                            MainButton(
+                              title: "Done",
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),

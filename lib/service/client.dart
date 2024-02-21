@@ -277,17 +277,24 @@ class ClientProvider extends ChangeNotifier {
         return debugPrint("Workout meal added successfully!");
       }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
     }
+    notifyListeners();
   }
 
   XFile? photoProfile;
   String? photoUrl;
 
-  Future<void> uploadPhotoProfile(BuildContext context) async {
+  Future<void> uploadPhotoProfile(BuildContext context, {
+    required String id,
+  }) async {
     DialogService().showUploadImage(context,
       onPressed: () async {
         final img = await ImagePicker().pickImage(
           source: ImageSource.gallery,
         );
+
+        if (img != null) {
+          await storePhotoProfile(id);
+        }
         photoProfile = img;
         notifyListeners();
       },

@@ -5,6 +5,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
@@ -17,10 +18,12 @@ import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/vie
 class ExpProgramScreen extends StatefulWidget {
   const ExpProgramScreen({
     required this.expertModel,
+    required this.clientList,
     super.key,
   });
 
   final ExpertModel expertModel;
+  final List<ClientModel> clientList;
 
   @override
   State<ExpProgramScreen> createState() => _ExpProgramScreenState();
@@ -120,26 +123,7 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (context) => const ExpHomeScreen()));
-          },
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            height: 30,
-            width: 30,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10)),
-            child: const Icon(
-              FluentSystemIcons.ic_fluent_chevron_left_filled,
-              size: 20,
-              color: Colors.black,
-            ),
-          ),
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
           'Program Progress',
           style: Styles.headline20,
@@ -176,16 +160,13 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
               children: [
                 Column(
                   children: [
-                    Text(
-                      'Program Clients',
-                      style: Styles.title,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 10),
-                      height: 190,
-                      width: double.maxFinite,
-                      alignment: Alignment.center,
-                      child: ExpClientsChart(),
+                    Center(
+                      child: CircleAvatar(
+                        radius: MediaQuery.of(context).size.width * 0.25,
+                        child: Text("${widget.clientList.length} total clients",
+                          style: Styles.headline25,
+                        ),
+                      ),
                     ),
                   ],
                 ),

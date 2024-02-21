@@ -5,6 +5,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -16,6 +17,7 @@ import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/settings.dart';
+import 'package:provider/provider.dart';
 
 class ExpProfileScreen extends StatelessWidget {
   const ExpProfileScreen({
@@ -32,6 +34,9 @@ class ExpProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final ExpertProvider expert = Provider.of<ExpertProvider>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -55,26 +60,33 @@ class ExpProfileScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: Styles
-                                  .primaryColor, // Replace with your desired border color
-                              width:
-                                  2.0, // Replace with your desired border width
+                        InkWell(
+                          onTap: () async {
+                            await expert.uploadPhotoProfile(context,
+                              id: expertModel.uid,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Styles
+                                    .primaryColor, // Replace with your desired border color
+                                width:
+                                    2.0, // Replace with your desired border width
+                              ),
                             ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: Image.network(expertModel.professionId,
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, object, stackTrace) {
-                                  return const Icon(Icons.question_mark_rounded);
-                                },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: Image.network(expertModel.professionId,
+                                  fit: BoxFit.fill,
+                                  errorBuilder: (context, object, stackTrace) {
+                                    return const Icon(Icons.question_mark_rounded);
+                                  },
+                                ),
                               ),
                             ),
                           ),
