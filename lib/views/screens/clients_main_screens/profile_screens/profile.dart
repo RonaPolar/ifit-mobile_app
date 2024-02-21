@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
@@ -15,6 +16,7 @@ import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/settings.dart'
     as CloudFirestoreSettings;
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -47,6 +49,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final ClientModel clientModel = widget.clientModel;
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
+    print(clientModel.photoUrl);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -68,23 +73,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: Styles.primaryColor,
-                              width: 2.0, // Replace with your desired border width
+                        InkWell(
+                          onTap: () async {
+                            clientProvider.uploadPhotoProfile(context).then((value) {
+                              if (clientProvider.photoProfile != null) {
+                                clientProvider.storePhotoProfile(widget.clientModel.uid);
+                              }
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Styles.primaryColor,
+                                width: 2.0, // Replace with your desired border width
+                              ),
                             ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: clientModel.photoUrl != null
-                                  ? Image.network(widget.clientModel.photoUrl!,
-                                fit: BoxFit.fill,
-                              ) : Image.asset("assets/images/3rdSlide.png"),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: clientModel.photoUrl != null
+                                    ?  Image.network(widget.clientModel.photoUrl!,
+                                  fit: BoxFit.fill,
+                                ) : const Icon(FluentSystemIcons.ic_fluent_camera_add_filled),
+                              ),
                             ),
                           ),
                         ),

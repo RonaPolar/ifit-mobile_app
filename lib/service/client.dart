@@ -1,16 +1,22 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/functions/dialog.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ClientProvider extends ChangeNotifier {
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage ref = FirebaseStorage.instance;
 
   Stream<ClientModel>? clientStream;
 
@@ -271,6 +277,40 @@ class ClientProvider extends ChangeNotifier {
         return debugPrint("Workout meal added successfully!");
       }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
     }
+  }
+
+  XFile? photoProfile;
+  String? photoUrl;
+
+  Future<void> uploadPhotoProfile(BuildContext context) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        photoProfile = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> storePhotoProfile(String id) async {
+    // store professionId to storage
+    final file = File(photoProfile!.path);
+    final ref = FirebaseStorage.instance.ref()
+        .child(tClientPath)
+        .child(photoProfile!.name);
+    await ref.putFile(file);
+
+    // store professionId to firestore
+    photoUrl = await ref.getDownloadURL();
+
+    _db.collection(tClientPath).doc(id).set({
+      "photo_url": photoUrl!,
+    }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update photo successful!"))
+        .onError((error, stackTrace) => debugPrint("Failed uploading photo successful!"));
+    notifyListeners();
   }
 
 }

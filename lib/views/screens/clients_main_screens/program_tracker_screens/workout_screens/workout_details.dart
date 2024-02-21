@@ -12,7 +12,6 @@ import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/add_schedule.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/start_workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_exercises_steps.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -400,12 +399,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                               id: widget.id,
                               workoutPlan: workoutPlan,
                             ).then((value) {
-                                // Navigator.push(context,MaterialPageRoute(
-                                //   builder: (context) => StartWorkout(
-                                //     workoutPlan: workoutPlan,
-                                //     id: widget.id,
-                                //   ),
-                                // ),
                                 Navigator.push(context,MaterialPageRoute(
                                   builder: (context) => CountdownTimerScreen(
                                     workoutPlan: workoutPlan,

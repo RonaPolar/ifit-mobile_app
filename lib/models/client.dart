@@ -16,7 +16,6 @@ class ClientModel {
   final String weight;
   final List<WorkoutPlan> workoutPlanList;
 
-
   ClientModel({
     required this.birthDate,
     required this.email,
