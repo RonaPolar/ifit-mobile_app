@@ -8,7 +8,6 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 
 class WorkoutProvider extends ChangeNotifier {
-
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   int workoutIndex = 0;
@@ -25,50 +24,133 @@ class WorkoutProvider extends ChangeNotifier {
 
   int setFinished = 1;
 
+  bool restart = false;
+
+  void updateRestart(bool value) {
+    restart = value;
+    notifyListeners();
+  }
+
   Future<void> updateDoneWorkout({
     required BuildContext context,
     required WorkoutPlan workoutPlan,
     required String id,
+    required bool skip,
   }) async {
-
     final List<ExerciseElement> exerciseList = workoutPlan.exercise.exercises;
     final int set = workoutPlan.exercise.sets;
     final String workoutId = workoutPlan.id;
 
+    if (!skip) {
+      if (exerciseList.length - 1 != workoutIndex) {
+        workoutIndex++;
+      } else {
+        if ((setFinished + 1) != set) {
 
-      if (exerciseList.length - 1 == workoutIndex) {
-        if (setFinished == set) {
+          workoutIndex = 0;
+          skippedIndex = 0;
+          setFinished++;
 
-          if ((exerciseList.length - skippedIndex) > skippedIndex ) {
-            await updateWorkoutDay(
-              id: id,
-              workoutId: workoutId,
-            ).then((value) {
-              Navigator.of(context)..pop()..pop();
-              setFinished = 1;
-              workoutIndex = 0;
-            });
-          } else {
-            Navigator.of(context)..pop()..pop();
-            setFinished = 1;
-            workoutIndex = 0;
-          }
-        } else {
-
-          Navigator.of(context)..pop()..pop();
+          Navigator.of(context)
+            ..pop()
+            ..pop();
           Navigator.push(context, MaterialPageRoute(
               builder: (context) => CountdownTimerScreen(
                 workoutPlan: workoutPlan,
                 id: id,
               )));
+        } else {
+          if ((exerciseList.length - skippedIndex) > skippedIndex) {
+            await updateWorkoutDay(
+              id: id,
+              workoutId: workoutId,
+            ).then((value) {
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+              setFinished = 0;
+              workoutIndex = 0;
+              skippedIndex = 0;
+            });
+          } else {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+            setFinished = 0;
+            workoutIndex = 0;
+            skippedIndex = 0;
+          }
 
-          workoutIndex = 0;
-          setFinished++;
         }
-      } else {
-        workoutIndex++;
       }
+    } else {
+      workoutIndex++;
+      skippedIndex++;
+    }
 
+
+
+
+    // if ((setFinished + 1) != set) {
+    //   if (exerciseList.length - 1 != workoutIndex) {
+    //     workoutIndex++;
+    //   } else if (exerciseList.length - 1 == workoutIndex) {
+    //
+    //     setFinished++;
+    //     workoutIndex = 0;
+    //     notifyListeners();
+    //
+    //     Navigator.of(context)
+    //       ..pop()
+    //       ..pop();
+    //     Navigator.push(context, MaterialPageRoute(
+    //       builder: (context) => CountdownTimerScreen(
+    //         workoutPlan: workoutPlan,
+    //         id: id,
+    //     )));
+    //   }
+    // } else if ((setFinished + 1) == set) {
+    //   if (exerciseList.length - 1 != workoutIndex) {
+    //     workoutIndex++;
+    //   } else if (exerciseList.length - 1 == workoutIndex) {
+    //
+    //     setFinished++;
+    //     workoutIndex = 0;
+    //     notifyListeners();
+    //
+    //     Navigator.of(context)
+    //       ..pop()
+    //       ..pop();
+    //     Navigator.push(context, MaterialPageRoute(
+    //         builder: (context) => CountdownTimerScreen(
+    //           workoutPlan: workoutPlan,
+    //           id: id,
+    //         )));
+    //   }
+    //
+    //
+    //
+    //   if ((exerciseList.length - skippedIndex + 1) > skippedIndex) {
+    //     await updateWorkoutDay(
+    //       id: id,
+    //       workoutId: workoutId,
+    //     ).then((value) {
+    //       Navigator.of(context)
+    //         ..pop()
+    //         ..pop();
+    //       setFinished = 0;
+    //       workoutIndex = 0;
+    //       skippedIndex = 0;
+    //     });
+    //   } else {
+    //     Navigator.of(context)
+    //       ..pop()
+    //       ..pop();
+    //     setFinished = 0;
+    //     workoutIndex = 0;
+    //     skippedIndex = 0;
+    //   }
+    // }
     notifyListeners();
   }
 
@@ -83,8 +165,8 @@ class WorkoutProvider extends ChangeNotifier {
     required String id,
     required String workoutId,
   }) async {
-
-    final path = _db.collection(tClientPath)
+    final path = _db
+        .collection(tClientPath)
         .doc(id)
         .collection(tWorkoutPlanPath)
         .doc(workoutId);
@@ -94,14 +176,16 @@ class WorkoutProvider extends ChangeNotifier {
     final map = data.data()!["workoutPlan"];
     final WorkoutPlan workoutPlan = WorkoutPlan.fromJson(map);
 
-    await path.set({
-      "workoutPlan": {
-        "dayCountFinished": workoutPlan.dayCountFinished != null
-          ? workoutPlan.dayCountFinished! + 1
-          : 1,
-      }
-    }, SetOptions(merge: true)).then((value) => debugPrint("Day Count Finished Updated!"))
-      .onError((error, stackTrace) => debugPrint("Error Updating! $error"));
+    await path
+        .set({
+          "workoutPlan": {
+            "dayCountFinished": workoutPlan.dayCountFinished != null
+                ? workoutPlan.dayCountFinished! + 1
+                : 1,
+          }
+        }, SetOptions(merge: true))
+        .then((value) => debugPrint("Day Count Finished Updated!"))
+        .onError((error, stackTrace) => debugPrint("Error Updating! $error"));
 
     notifyListeners();
   }
@@ -109,9 +193,10 @@ class WorkoutProvider extends ChangeNotifier {
   void clearExerciseForm({
     required WorkoutPlan workoutPlan,
   }) {
-    setFinished = 1;
+    setFinished = 0;
     workoutIndex = 0;
     isPause = false;
+    skippedIndex = 0;
     notifyListeners();
   }
 
@@ -121,18 +206,20 @@ class WorkoutProvider extends ChangeNotifier {
     required String id,
     required WorkoutPlan workoutPlan,
   }) async {
-    final path = _db.collection(tClientPath)
+    final path = _db
+        .collection(tClientPath)
         .doc(id)
         .collection(tWorkoutPlanPath)
         .doc(workoutPlan.id);
 
-    await path.set({
-      tWorkoutPlanPath: {
-        "isFavorite": !workoutPlan.isFavorite,
-      }
-    }, SetOptions(merge: true))
-      .then((value) => debugPrint("Update favorites successfully!"))
-      .onError((error, stackTrace) => debugPrint("Error! $stackTrace"));
+    await path
+        .set({
+          tWorkoutPlanPath: {
+            "isFavorite": !workoutPlan.isFavorite,
+          }
+        }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update favorites successfully!"))
+        .onError((error, stackTrace) => debugPrint("Error! $stackTrace"));
 
     notifyListeners();
   }
@@ -141,18 +228,18 @@ class WorkoutProvider extends ChangeNotifier {
     required String id,
     required WorkoutPlan workoutPlan,
   }) async {
-    final path = _db.collection(tClientPath)
+    final path = _db
+        .collection(tClientPath)
         .doc(id)
         .collection(tWorkoutPlanPath)
         .doc(workoutPlan.id);
 
-    await path.set({
-      tWorkoutPlanPath: {
-        "isCancelled": !workoutPlan.isCancelled
-      }
-    }, SetOptions(merge: true))
-      .then((value) => debugPrint("Update cancel status!"))
-      .onError((error, stackTrace) => debugPrint("Failed to update! $error"));
+    await path
+        .set({
+          tWorkoutPlanPath: {"isCancelled": !workoutPlan.isCancelled}
+        }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update cancel status!"))
+        .onError((error, stackTrace) => debugPrint("Failed to update! $error"));
 
     notifyListeners();
   }

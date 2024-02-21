@@ -61,78 +61,81 @@ class _MainBottomBarState extends State<MainBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final String uid = snapshot.data!.uid;
-            return ClientAuthWrapper(
-              uid: uid,
-              index: selectTab,
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Something went wrong: ${snapshot.error}"),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final String uid = snapshot.data!.uid;
+              return ClientAuthWrapper(
+                uid: uid,
+                index: selectTab,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Something went wrong: ${snapshot.error}"),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
           }
-        }
-      ),
-      bottomNavigationBar: BottomAppBar(  //the line above the bottombar
-        color: Styles.bgColor,
-        elevation: 100,
-        shadowColor: Colors.black12,
-        height: kBottomNavigationBarHeight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-              BottomBar(
-                icon: FluentSystemIcons.ic_fluent_home_regular,
-                selectIcon: FluentSystemIcons.ic_fluent_home_filled,
-                isActive: selectTab == 0,
-                onTap: () {
-                  setState(() {
-                    selectTab = 0;
-                  });
-                },
-              ),
-              BottomBar(
-                icon: FluentSystemIcons.ic_fluent_grid_regular,
-                selectIcon: FluentSystemIcons.ic_fluent_grid_filled,
-                isActive: selectTab == 1,
-                onTap: () {
-                  setState(() {
-                    selectTab = 1;
-                  });
-                },
-              ),
-              BottomBar(
-                icon: FluentSystemIcons.ic_fluent_activity_regular,
-                selectIcon: FluentSystemIcons.ic_fluent_activity_filled,
-                isActive: selectTab == 2,
-                onTap: () {
-                  setState(() {
-                    selectTab = 2;
-                  });
-                },
-              ),
-              BottomBar(
-                icon: FluentSystemIcons.ic_fluent_person_regular,
-                selectIcon: FluentSystemIcons.ic_fluent_person_filled,
-                isActive: selectTab == 3,
-                onTap: () {
-                  setState(() {
-                    selectTab = 3;
-                  });
-                },
-              ),
-            ],
-          ),
         ),
+        bottomNavigationBar: BottomAppBar(  //the line above the bottombar
+          color: Styles.bgColor,
+          elevation: 100,
+          shadowColor: Colors.black12,
+          height: kBottomNavigationBarHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+                BottomBar(
+                  icon: FluentSystemIcons.ic_fluent_home_regular,
+                  selectIcon: FluentSystemIcons.ic_fluent_home_filled,
+                  isActive: selectTab == 0,
+                  onTap: () {
+                    setState(() {
+                      selectTab = 0;
+                    });
+                  },
+                ),
+                BottomBar(
+                  icon: FluentSystemIcons.ic_fluent_grid_regular,
+                  selectIcon: FluentSystemIcons.ic_fluent_grid_filled,
+                  isActive: selectTab == 1,
+                  onTap: () {
+                    setState(() {
+                      selectTab = 1;
+                    });
+                  },
+                ),
+                BottomBar(
+                  icon: FluentSystemIcons.ic_fluent_activity_regular,
+                  selectIcon: FluentSystemIcons.ic_fluent_activity_filled,
+                  isActive: selectTab == 2,
+                  onTap: () {
+                    setState(() {
+                      selectTab = 2;
+                    });
+                  },
+                ),
+                BottomBar(
+                  icon: FluentSystemIcons.ic_fluent_person_regular,
+                  selectIcon: FluentSystemIcons.ic_fluent_person_filled,
+                  isActive: selectTab == 3,
+                  onTap: () {
+                    setState(() {
+                      selectTab = 3;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/video.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
@@ -29,11 +30,11 @@ class StartWorkout extends StatefulWidget {
 class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<int> _animation;
-  bool restart = false;
 
   @override
   void initState() {
     super.initState();
+
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
 
     final exerciseDuration = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].exerciseDuration;
@@ -49,20 +50,26 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
       _controller.reverse(from: double.parse(time));
     }
 
-
     _animation = IntTween(
       begin: 0,
       end: int.parse(time),
     ).animate(_controller);
 
-    _controller.addListener(() {
-      if (_controller.status == AnimationStatus.dismissed && !restart) {
+    _controller.addStatusListener((status) {
+      print(status);
+      if (status == AnimationStatus.dismissed && !workoutProvider.restart) {
         workoutProvider.updateDoneWorkout(
           workoutPlan: widget.workoutPlan,
           id: widget.id,
-          context: scaffoldKey.currentContext!
+          context: scaffoldKey.currentContext!,
+          skip: false,
         );
       }
+    });
+
+    _controller.addListener(() {
+      print(_animation.value);
+
     });
   }
 
@@ -73,6 +80,55 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     _controller.dispose();
     super.dispose();
   }
+
+  // void init() {
+  //
+  //
+  //   final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
+  //
+  //   final exerciseDuration = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].exerciseDuration;
+  //   final time = exerciseDuration.time;
+  //   final isCounting = exerciseDuration.type;
+  //
+  //   int targetTime = int.parse(time);
+  //
+  //
+  //   if (!isCounting) {
+  //     _controller.reverse(from: double.parse(time));
+  //   }
+  //
+  //   _animation = IntTween(
+  //     begin: 0,
+  //     end: int.parse(time),
+  //   ).animate(_controller);
+  //
+  //   _controller.addListener(() {
+  //     if (_controller.status == AnimationStatus.reverse && targetTime < 0) {
+  //       setState(() {
+  //         targetTime--;
+  //       });
+  //     }
+  //
+  //     if (targetTime == 0) {
+  //       // workoutProvider.updateDoneWorkout(
+  //       //   workoutPlan: widget.workoutPlan,
+  //       //   id: widget.id,
+  //       //   context: scaffoldKey.currentContext!
+  //       // );
+  //     }
+  //
+  //     print(targetTime);
+  //
+  //     // print("Animation status: ${_controller.status}");
+  //     // if (_controller.status == AnimationStatus.dismissed && !workoutProvider.restart) {
+  //     //   workoutProvider.updateDoneWorkout(
+  //     //       workoutPlan: widget.workoutPlan,
+  //     //       id: widget.id,
+  //     //       context: scaffoldKey.currentContext!
+  //     //   );
+  //     // }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +145,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        title: Text("Set: ${workoutProvider.setFinished}"),
+        title: Text("Set: ${workoutProvider.setFinished + 1}"),
         leading: InkWell(
           onTap: () {
             showDialog(context: context,
@@ -123,50 +179,51 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
           ),
         ),
       ),
-      body: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTimer(workoutProvider),
-              const Gap(30),
-              /// TODO: ADD EXERCISE VIDEO
-              // ExerciseVideoWidget(
-              //   urlVideo: exercises[index].url,
-              // ),
-              const Gap(20),
-              Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(exercises[index].title,
-                      style: Styles.text18.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const Gap(2),
-                    ListView.builder(
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: exercises.length,
-                      itemBuilder: (context, index) {
-                        final String step = exercises[index].steps[index];
-                        return ExerStepsDottedLine(
-                          index: index,
-                          step: step,
-                          isLast: step == exercises[index].steps.last,
-                        );
-                      },
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTimer(workoutProvider),
+                const Gap(30),
+                ExerciseVideoWidget(
+                  urlVideo: exercises[index].url,
                 ),
-              ),
-            ],
-          );
-        }
+                const Gap(20),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(exercises[index].title,
+                        style: Styles.text18.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Gap(2),
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: exercises.length,
+                        itemBuilder: (context, index) {
+                          final String step = exercises[index].steps[index];
+                          return ExerStepsDottedLine(
+                            index: index,
+                            step: step,
+                            isLast: step == exercises[index].steps.last,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        ),
       ),
     );
   }
@@ -214,12 +271,10 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                 child: IconButton(
                   icon: const Icon(FluentSystemIcons.ic_fluent_arrow_repeat_all_filled),
                   onPressed: () {
-                    setState(() {
-                      restart = true;
-                      _controller.reset();
-                      _controller.reverse(from: double.parse(time));
-                      restart = false;
-                    });
+                    workoutProvider.updateRestart(true);
+                    _controller.reset();
+                    _controller.reverse(from: double.parse(time));
+                    workoutProvider.updateRestart(false);
                   },
                 ),
               ),
@@ -242,10 +297,19 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                     textStyle: Styles.text18.copyWith(
                       color: Colors.white,
                     ),
-                    onPressed: () {
-                      workoutProvider.updateSkipWorkout(
-                        exerciseList: exercises,
-                      );
+                    onPressed: () async {
+                      // workoutProvider.updateSkipWorkout(
+                      //   exerciseList: exercises,
+                      // );
+                      await workoutProvider.updateDoneWorkout(
+                        id: widget.id,
+                        workoutPlan: widget.workoutPlan,
+                        context: scaffoldKey.currentContext!,
+                        skip: true,
+                      ).then((value) {
+                        _controller.reset();
+                        _controller.reverse(from: double.parse(time));
+                      });
                     },
                   ),
                 ),
@@ -264,7 +328,11 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         id: widget.id,
                         workoutPlan: widget.workoutPlan,
                         context: scaffoldKey.currentContext!,
-                      );
+                        skip: false,
+                      ).then((value) {
+                        _controller.reset();
+                        _controller.reverse(from: double.parse(time));
+                      });
                     },
                   ),
                 ),

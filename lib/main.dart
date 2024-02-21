@@ -11,6 +11,7 @@ import 'package:ifit/service/Expert.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/service/package.dart';
 import 'package:ifit/service/workout.dart';
+import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
 import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
@@ -51,7 +52,7 @@ void main() async {
     homeScreen = const OnboardingScreen();
     await prefs.setBool('isFirstTime', false);
   } else {
-    homeScreen = const Register(); //Registration
+    homeScreen = const LogIn(); //Registration
   }
   await GetStorage.init();
 
