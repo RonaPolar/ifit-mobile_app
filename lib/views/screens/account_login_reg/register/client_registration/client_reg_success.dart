@@ -58,8 +58,7 @@ class _ClientSuccessRegistrationState extends State<ClientSuccessRegistration> {
                     MainButton(
                       title: 'Go to Login',
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
+                        Navigator.pushReplacement(context,
                           MaterialPageRoute(
                             builder: (context) => const LogIn(),
                           ),

@@ -5,7 +5,6 @@ import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/container/square.dart';
 import 'package:ifit/models/expert.dart';
-import 'package:ifit/views/screens/clients_main_screens/discover_screens/expert_screens/expert_profile.dart';
 
 class ExpertListWidget extends StatelessWidget {
   const ExpertListWidget({
@@ -46,14 +45,14 @@ class ExpertListWidget extends StatelessWidget {
 
             return InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => ExpertProfile(
-                    exObj: exObj,
-                    workoutMeals: workoutMeal.isNotEmpty ? workoutMeal[index] : [],
-                    workoutPlans: workoutPlan.isNotEmpty ? workoutPlan[index] : [],
-                    clientModel: clientModel,
-                  )),
-                );
+                // Navigator.push(context, MaterialPageRoute(
+                //   builder: (context) => ExpertProfile(
+                //     exObj: exObj,
+                //     workoutMeals: workoutMeal.isNotEmpty ? workoutMeal[index] : [],
+                //     workoutPlans: workoutPlan.isNotEmpty ? workoutPlan[index] : [],
+                //     clientModel: clientModel,
+                //   )),
+                // );
               },
               child: SquareContainer(
                 image: exObj.professionId,

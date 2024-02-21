@@ -216,7 +216,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                             id: widget.id,
                           ).then((value) {
                             expertProvider.clearWorkoutPlanForm();
-                            Navigator.of(context).pop();
+                            Navigator.of(context)..pop()..pop();
                           });
                         },
                       ),

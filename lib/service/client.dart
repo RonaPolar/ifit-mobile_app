@@ -129,6 +129,7 @@ class ClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   Stream<List<WorkoutPlan>>? clientWorkoutPlanListStream;
 
   Stream<List<WorkoutPlan>> getClientWorkoutPlanListStream(String uid) {

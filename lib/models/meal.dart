@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Meal {
+  final String expertId;
   final String name;
   final String image;
   final String rate;
@@ -11,6 +12,7 @@ class Meal {
   final String categories;
 
   Meal({
+    required this.expertId,
     required this.name,
     required this.image,
     required this.rate,
@@ -22,6 +24,7 @@ class Meal {
   });
 
   Meal copyWith({
+    String? expertId,
     String? name,
     String? image,
     String? rate,
@@ -32,6 +35,7 @@ class Meal {
     String? categories,
   }) =>
       Meal(
+        expertId: expertId ?? this.expertId,
         name: name ?? this.name,
         image: image ?? this.image,
         rate: rate ?? this.rate,
@@ -43,6 +47,7 @@ class Meal {
       );
 
   factory Meal.fromJson(Map<String, dynamic> json) => Meal(
+    expertId: json["expert_id"],
     name: json["name"],
     image: json["image"],
     rate: json["rate"],
@@ -54,6 +59,7 @@ class Meal {
   );
 
   Map<String, dynamic> toJson() => {
+    "expert_id": expertId,
     "name": name,
     "image": image,
     "rate": rate,
@@ -66,6 +72,7 @@ class Meal {
 }
 
 class WorkoutMeal {
+  final String expertId;
   final DateTime dateCreated;
   final String id;
   final String foodCategory;
@@ -84,6 +91,7 @@ class WorkoutMeal {
   final bool isFavorite;
 
   WorkoutMeal({
+    required this.expertId,
     required this.dateCreated,
     required this.id,
     required this.foodCategory,
@@ -103,6 +111,7 @@ class WorkoutMeal {
   });
 
   WorkoutMeal copyWith({
+    String? expertId,
     DateTime? dateCreated,
     String? id,
     String? foodCategory,
@@ -121,6 +130,7 @@ class WorkoutMeal {
     bool? isFavorite,
   }) =>
       WorkoutMeal(
+        expertId: expertId ?? this.expertId,
         dateCreated: dateCreated ?? this.dateCreated,
         id: id ?? this.id,
         foodCategory: foodCategory ?? this.foodCategory,
@@ -140,6 +150,7 @@ class WorkoutMeal {
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
+    expertId: json["expert_id"],
     dateCreated: (json["dateCreated"] as Timestamp).toDate(),
     id: json["id"],
     foodCategory: json["foodCategory"],
@@ -159,6 +170,7 @@ class WorkoutMeal {
   );
 
   Map<String, dynamic> toJson() => {
+    "expert_id": expertId,
     "dateCreated": Timestamp.fromDate(dateCreated),
     "id": id,
     "foodCategory": foodCategory,

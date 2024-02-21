@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -287,59 +288,67 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
+    showHUD(true);
 
-    final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
-    final auth = await _db.collection(tExpertPath).doc(id).get();
-    final String expertName = auth.get("name");
+    try {
+      final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+      final auth = await _db.collection(tExpertPath).doc(id).get();
+      final String expertName = auth.get("name");
 
-    await uploadWorkoutPhoto(id).then((value) async {
-      showHUD(true);
 
-      final WorkoutPlan workoutPlan = WorkoutPlan(
-        dateCreated: DateTime.now(),
-        id: const Uuid().v1(),
-        category: workoutCategory ?? "",
-        purpose: workoutPurpose ?? "",
-        difficulty: workoutDifficulty ?? "",
-        planName: planName.text,
-        description: workoutDescription.text,
-        workoutPicture: workoutPhotoUrl!,
-        daysOfThePlan: daysOfThePlan.text,
-        minutes: minutes.text,
-        calories: calories.text,
-        equipments: equipmentsText.map((e) => e.text).toList(),
-        exercise: WorkoutPlanExercise(
-          sets: sets,
-          exercises: exerciseList,
-        ),
-        rating: 0,
-        expertName: expertName,
-        isFavorite: false,
-        isCancelled: false,
-      );
+      await uploadWorkoutPhoto(id).then((value) async {
 
-      final Map? hasWorkoutPlans = data.data();
+        final WorkoutPlan workoutPlan = WorkoutPlan(
+          expertId: id,
+          dateCreated: DateTime.now(),
+          id: const Uuid().v1(),
+          category: workoutCategory ?? "",
+          purpose: workoutPurpose ?? "",
+          difficulty: workoutDifficulty ?? "",
+          planName: planName.text,
+          description: workoutDescription.text,
+          workoutPicture: workoutPhotoUrl!,
+          daysOfThePlan: daysOfThePlan.text,
+          minutes: minutes.text,
+          calories: calories.text,
+          equipments: equipmentsText.map((e) => e.text).toList(),
+          exercise: WorkoutPlanExercise(
+            sets: sets,
+            exercises: exerciseList,
+          ),
+          rating: 0,
+          expertName: expertName,
+          isFavorite: false,
+          isCancelled: false,
+        );
 
-      if (hasWorkoutPlans == null ) {
-        await _db.collection(tWorkoutPlanPath).doc(id).set({
-          "workoutPlans": [
-            workoutPlan.toJson(),
-          ],
-        })
-          .then((value) => debugPrint("Workout plan added successfully!"))
-          .onError((error, stackTrace) => "Failed: $error");
-      } else {
-        final List objects = data["workoutPlans"];
+        final Map? hasWorkoutPlans = data.data();
 
-        objects.add(workoutPlan.toJson());
-        await _db.collection(tWorkoutPlanPath).doc(id).set({
-          "workoutPlans": objects,
-        })
-          .then((value) => debugPrint("Workout plan added successfully!"))
-          .onError((error, stackTrace) => "Failed: $error");
-      }
+        if (hasWorkoutPlans == null ) {
+          await _db.collection(tWorkoutPlanPath).doc(id).set({
+            "workoutPlans": [
+              workoutPlan.toJson(),
+            ],
+          })
+              .then((value) => debugPrint("Workout plan added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        } else {
+          final List objects = data["workoutPlans"];
+
+          objects.add(workoutPlan.toJson());
+          await _db.collection(tWorkoutPlanPath).doc(id).set({
+            "workoutPlans": objects,
+          })
+              .then((value) => debugPrint("Workout plan added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        }
+        showHUD(false);
+      });
+    } catch (e) {
       showHUD(false);
-    });
+    }
+
+
     notifyListeners();
   }
 
@@ -451,55 +460,63 @@ class ExpertProvider extends ChangeNotifier {
     required String id,
   }) async {
 
+    showHUD(true);
 
-    final data = await _db.collection(tWorkoutMealPath).doc(id).get();
-    final auth = await _db.collection(tExpertPath).doc(id).get();
-    final String expertName = auth.get("name");
+    try {
 
-    await uploadWorkoutMealPhoto(id).then((value) async {
-      showHUD(true);
+      final data = await _db.collection(tWorkoutMealPath).doc(id).get();
+      final auth = await _db.collection(tExpertPath).doc(id).get();
+      final String expertName = auth.get("name");
 
-      final WorkoutMeal workoutMeal = WorkoutMeal(
-        dateCreated: DateTime.now(),
-        id: const Uuid().v1(),
-        foodCategory: foodCategory ?? "",
-        purpose: workoutPurpose ?? "",
-        foodPlanName: foodPlanName.text,
-        description: foodDescription.text,
-        foodPhoto: workoutMealPhoto!,
-        calories: mealCalories.text,
-        fats: mealFats.text,
-        sugar: mealSugar.text,
-        protein: mealSugar.text,
-        rating: 0,
-        expertName: expertName,
-        ingredients: ingredientsList.map((e) => e.text).toList(),
-        stepPrep: mealPreparationsList.map((e) => e.text).toList(),
-      );
+      await uploadWorkoutMealPhoto(id).then((value) async {
 
-      final Map<String, dynamic>? hasWorkoutMeals = data.data();
+        final WorkoutMeal workoutMeal = WorkoutMeal(
+          expertId: id,
+          dateCreated: DateTime.now(),
+          id: const Uuid().v1(),
+          foodCategory: foodCategory ?? "",
+          purpose: workoutPurpose ?? "",
+          foodPlanName: foodPlanName.text,
+          description: foodDescription.text,
+          foodPhoto: workoutMealPhoto!,
+          calories: mealCalories.text,
+          fats: mealFats.text,
+          sugar: mealSugar.text,
+          protein: mealSugar.text,
+          rating: 0,
+          expertName: expertName,
+          ingredients: ingredientsList.map((e) => e.text).toList(),
+          stepPrep: mealPreparationsList.map((e) => e.text).toList(),
+        );
 
-      if (hasWorkoutMeals == null) {
-        await _db.collection(tWorkoutMealPath).doc(id).set({
-          "workoutMeals": [
-            workoutMeal.toJson(),
-          ],
-        })
-          .then((value) => debugPrint("Workout meal added successfully!"))
-          .onError((error, stackTrace) => "Failed: $error");
-      } else {
-        final List objects = data["workoutMeals"];
+        final Map<String, dynamic>? hasWorkoutMeals = data.data();
 
-        objects.add(workoutMeal.toJson());
-        await _db.collection(tWorkoutMealPath).doc(id).set({
-          "workoutMeals": objects,
-        })
-          .then((value) => debugPrint("Workout meal added successfully!"))
-          .onError((error, stackTrace) => "Failed: $error");
-      }
+        if (hasWorkoutMeals == null) {
+          await _db.collection(tWorkoutMealPath).doc(id).set({
+            "workoutMeals": [
+              workoutMeal.toJson(),
+            ],
+          })
+              .then((value) => debugPrint("Workout meal added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        } else {
+          final List objects = data["workoutMeals"];
 
+          objects.add(workoutMeal.toJson());
+          await _db.collection(tWorkoutMealPath).doc(id).set({
+            "workoutMeals": objects,
+          })
+              .then((value) => debugPrint("Workout meal added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        }
+
+        showHUD(false);
+      });
+    } catch (e) {
       showHUD(false);
-    });
+    }
+
+
 
     notifyListeners();
   }
@@ -561,6 +578,46 @@ class ExpertProvider extends ChangeNotifier {
         .then((value) => debugPrint("Update photo successful!"))
         .onError((error, stackTrace) => debugPrint("Failed uploading photo successful!"));
     notifyListeners();
+  }
+
+  Stream<int> getClientPlanStream({
+    required String id,
+  }) {
+
+    StreamController<int> controller = StreamController<int>();
+    int totalClient = 0;
+    final clientQuery = _db.collection(tClientPath).snapshots();
+
+    clientQuery.listen((event) {
+
+      for (QueryDocumentSnapshot mainDocument in event.docs) {
+        final workoutPlan = mainDocument.reference.collection(tWorkoutPlanPath).snapshots();
+        final workoutMeal = mainDocument.reference.collection(tWorkoutMealPath).snapshots();
+
+        workoutPlan.listen((event) {
+          for (QueryDocumentSnapshot subDocument in event.docs) {
+            if (id == subDocument.id) {
+              totalClient++;
+            }
+          }
+
+          controller.add(totalClient);
+        });
+
+        workoutMeal.listen((event) {
+          for (QueryDocumentSnapshot subDocument in event.docs) {
+            if (id == subDocument.id) {
+              totalClient++;
+            }
+          }
+
+          controller.add(totalClient);
+        });
+
+      }
+    });
+
+    return controller.stream;
   }
 
 }

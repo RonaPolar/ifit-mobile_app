@@ -9,6 +9,7 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/program_created.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/rating.dart';
+import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
 import 'package:provider/provider.dart';
@@ -97,13 +98,18 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                     Text("Overall clients",
                       style: Styles.title,
                     ),
-                    Center(
-                      child: CircleAvatar(
-                        radius: MediaQuery.of(context).size.width * 0.3,
-                        child: Text("${widget.clientList.length} total clients",
-                          style: Styles.headline25,
-                        ),
-                      ),
+                    StreamWrapper<int>(
+                      stream: expertProvider.getClientPlanStream(id: expert.uid),
+                      child: (data) {
+                        return Center(
+                          child: CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.3,
+                            child: Text("${widget.clientList.length} total clients",
+                              style: Styles.headline25,
+                            ),
+                          ),
+                        );
+                      }
                     ),
                   ],
                 ),

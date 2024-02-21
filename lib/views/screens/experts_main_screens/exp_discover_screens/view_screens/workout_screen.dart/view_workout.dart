@@ -14,7 +14,6 @@ class ViewWorkoutDetails extends StatefulWidget {
     required this.dObj,
     super.key,
   });
-
   final Workout dObj;
 
   @override

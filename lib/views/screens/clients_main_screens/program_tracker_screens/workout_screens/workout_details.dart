@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/service/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/profile_screens/expert_profile_screen.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/exercise_row.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
@@ -144,14 +145,13 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
 
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
-                                          //    var exObj = discoverExperts[0];
-                                             // Navigator.push(context,
-                                             //    MaterialPageRoute(
-                                             //      builder: (context) => ExpertProfile(exObj: exObj,
-                                             //        combinedList: [],
-                                             //      ),
-                                             //    ),
-                                             // );
+                                             Navigator.push(context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => ExpertProfileScreen(
+                                                    id: widget.dObj.expertId,
+                                                  ),
+                                                ),
+                                             );
                                           },
                                       ),
                                     ],

@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
+import 'package:ifit/views/screens/clients_main_screens/profile_screens/expert_profile_screen.dart';
 import 'package:ifit/views/widgets/button/favorites_button.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -365,12 +366,13 @@ class _MealDetailsState extends State<MealDetails> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // Navigator.push(context,
-                              //    MaterialPageRoute(
-                              //      builder: (context) => ExpertProfile(
-                              //      ),
-                              //    ),
-                              // );
+                              Navigator.push(context,
+                                 MaterialPageRoute(
+                                   builder: (context) => ExpertProfileScreen(
+                                     id: widget.workoutMeal.expertId,
+                                   ),
+                                 ),
+                              );
                             },
                         ),
                       ],
