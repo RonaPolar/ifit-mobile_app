@@ -5,13 +5,22 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/functions/dialog.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/favorites_program.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/finished_program.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/ongoing_program.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
+import 'package:ifit/views/widgets/button/ongoing_row.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
+import 'package:provider/provider.dart';
 
 import 'workout_screens/workout_details.dart';
 
@@ -34,11 +43,35 @@ class ProgramTrackerScreen extends StatefulWidget {
 
 class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+    final DialogService dialog = DialogService();
+
+
+    List<dynamic> combinedList = [...widget.workoutPlanList, ...widget.workoutMealList];
+
+    final List<WorkoutPlan> cancelledWorkoutPlan = widget.workoutPlanList.where((element) {
+      return !element.isCancelled;
+    }).toList();
+
+    final List<dynamic> favoriteCombinedPlan = combinedList.where((element) {
+      if (element is WorkoutPlan) {
+        return element.isFavorite;
+      } else {
+        return (element as WorkoutMeal).isFavorite;
+      }
+    }).toList();
+
+    final List<WorkoutPlan> finishedWorkoutPlan = widget.workoutPlanList.where((element) {
+      return (int.parse(element.daysOfThePlan) == element.dayCountFinished);
+    }).toList();
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
       backgroundColor: Colors.white,
@@ -112,11 +145,75 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
               ),
             ),
 
-            ProgramStatusWidget(
-              workoutMealList: widget.workoutMealList,
-              workoutPlanList: widget.workoutPlanList,
-              clientModel: widget.clientModel,
+            // ProgramStatusWidget(
+            //   workoutMealList: widget.workoutMealList,
+            //   workoutPlanList: widget.workoutPlanList,
+            //   clientModel: widget.clientModel,
+            //   scaffoldKey: scaffoldKey,
+            // ),
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.grey.shade500,
+                    ),
+                    bottom: BorderSide(
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButtonText(
+                      iconData: FluentSystemIcons.ic_fluent_timer_filled,
+                      title: 'Ongoing',
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => OngoingProgramScreen(
+                              workoutPlanList: widget.workoutPlanList,
+                              id: widget.clientModel.uid,
+                            )));
+                      },
+                    ),
+                    IconButtonText(
+                      iconData: FluentSystemIcons.ic_fluent_heart_filled,
+                      title: 'Favorites',
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FavoriteProgramScreen(
+                            combinedList: favoriteCombinedPlan,
+                            id: widget.clientModel.uid,
+                          ),
+                        ));
+                      },
+                    ),
+                    IconButtonText(
+                      iconData: FluentSystemIcons.ic_fluent_checkmark_circle_filled,
+                      title: 'Finished',
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FinishedProgramScreen(
+                            workoutPlan: finishedWorkoutPlan,
+                            id: widget.clientModel.uid,
+                          ),
+                        ));
+                      },
+                    ),
+                    IconButtonText(
+                      iconData: FluentSystemIcons.ic_fluent_star_filled,
+                      title: 'Rate',
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ToRateProgram()));
+                      },
+                    ),
+                  ],
+                )
             ),
+
+
             const Gap(10),
             Container(
               padding: const EdgeInsets.all(15),
@@ -167,8 +264,43 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                             showToggleSwitch: false,
                         ),
                       );
+                      // return OngoingRow(
+                      //   image: item.workoutPicture,
+                      //   title: item.planName,
+                      //   bottomText: "${item.minutes} minutes | ${item.calories} Calories",
+                      //   progress: item.dayCountFinished == null
+                      //       ? 0
+                      //       : (int.parse(item.daysOfThePlan) - item.dayCountFinished!) * 0.01,
+                      //   progressText: item.daysOfThePlan,
+                      //   icon: FluentSystemIcons.ic_fluent_more_vertical_regular,
+                      //   showToggleSwitch: false,
+                      //   onPressed: () async {
+                      //   },
+                      //   leading: SizedBox(
+                      //     height: 30,
+                      //     width: 78,
+                      //     child: MainButton(
+                      //       title: "${widget.workoutPlanList[index].isCancelled}",
+                      //       textStyle: Styles.seeMore.copyWith(
+                      //         color: Colors.white,),
+                      //       buttonColor: Styles.secondColor,
+                      //       onPressed: () {
+                      //         dialog.confirmationDialog(context,
+                      //             onPressed: () async {
+                      //               await workoutProvider.cancelWorkout(
+                      //                 id: widget.clientModel.uid,
+                      //                 workoutPlan: item,
+                      //               );
+                      //             }
+                      //         );
+                      //       },
+                      //     ),
+                      //   ),
+                      // );
                     },
                   ),
+
+
 
                   const Gap(10),
                   Row(

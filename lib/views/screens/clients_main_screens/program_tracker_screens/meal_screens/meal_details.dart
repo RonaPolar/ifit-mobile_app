@@ -296,31 +296,44 @@ class _MealDetailsState extends State<MealDetails> {
                         // ),
 
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Visibility(
+                              visible: clientProvider.startMealDone,
+                              child: Container(
+                                padding: const EdgeInsets.all(6.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Text("Preparing...",
+                                  style: Styles.title,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            const Gap(12.0),
                             MainButton(
-                              title: !clientProvider.workoutMealExisting
-                                  ? 'Start Now'
-                                  : "Start Again",
+                              title: clientProvider.startMealDone
+                                  ? "Done"
+                                  : !clientProvider.workoutMealExisting
+                                      ? 'Start Now'
+                                      : "Start Again",
                               onPressed: () async {
                                 await clientProvider.addWorkoutMealPlan(
                                   id: widget.id,
                                   workoutMeal: widget.workoutMeal,
                                 ).then((value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text("Preparing..."),
-                                    backgroundColor: Styles.primaryColor,
-                                  ));
-                                  // Navigator.of(context).pop();
+                                  if (clientProvider.startMealDone) {
+                                    Navigator.of(context).pop();
+                                    clientProvider.startMeal(false);
+                                  } else {
+                                    clientProvider.startMeal(true);
+                                  }
+
                                 });
                               },
                             ),
                             const Gap(14.0),
-                            MainButton(
-                              title: "Done",
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                              },
-                            ),
                           ],
                         ),
                       ],

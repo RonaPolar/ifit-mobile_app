@@ -16,12 +16,14 @@ class ProgramStatusWidget extends StatelessWidget {
     required this.workoutMealList,
     required this.workoutPlanList,
     required this.clientModel,
+    required this.scaffoldKey,
     super.key,
   });
 
   final List<WorkoutMeal> workoutMealList;
   final List<WorkoutPlan> workoutPlanList;
   final ClientModel clientModel;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class ProgramStatusWidget extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => OngoingProgramScreen(
-                      workoutPlanList: cancelledWorkoutPlan,
+                      workoutPlanList: workoutPlanList,
                       id: clientModel.uid,
                     )));
               },

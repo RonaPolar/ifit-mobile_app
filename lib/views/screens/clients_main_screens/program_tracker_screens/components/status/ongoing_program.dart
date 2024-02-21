@@ -5,6 +5,7 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/button/ongoing_row.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,10 @@ class OngoingProgramScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Ongoing Programs"),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           /// TODO: REVERT SEARCH TEXTFIELD
@@ -72,13 +76,12 @@ class OngoingProgramScreen extends StatelessWidget {
 
             return InkWell(
               onTap: () {
-                Navigator.push(context,
-                  MaterialPageRoute(
+                Navigator.push(context, MaterialPageRoute(
                     builder: (context) =>
-                        WorkoutDetails(
-                          dObj: item,
-                          id: id,
-                        ),
+                      WorkoutDetails(
+                        dObj: item,
+                        id: id,
+                    ),
                   ),
                 );
               },
@@ -93,15 +96,27 @@ class OngoingProgramScreen extends StatelessWidget {
                 icon: FluentSystemIcons.ic_fluent_more_vertical_regular,
                 showToggleSwitch: false,
                 onPressed: () async {
-                  dialog.confirmationDialog(context,
-                      onPressed: () {
-                        workoutProvider.cancelWorkout(
-                          id: id,
-                          workoutPlan: item,
-                        );
-                      }
-                  );
                 },
+                leading: SizedBox(
+                  height: 30,
+                  width: 78,
+                  child: MainButton(
+                    title: "${workoutPlanList[index].isCancelled}",
+                    textStyle: Styles.seeMore.copyWith(
+                      color: Colors.white,),
+                    buttonColor: Styles.secondColor,
+                    onPressed: () {
+                      dialog.confirmationDialog(context,
+                          onPressed: () async {
+                            await workoutProvider.cancelWorkout(
+                              id: id,
+                              workoutPlan: item,
+                            );
+                          }
+                      );
+                    },
+                  ),
+                ),
               ),
             );
           },

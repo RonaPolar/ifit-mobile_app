@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ifit/models/workout.dart';
 
 class ClientModel {
-  final DateTime birthDate;
+  final DateTime? birthDate;
   final DateTime dateCreation;
   final String email;
   final String gender;
@@ -17,16 +17,16 @@ class ClientModel {
   final List<WorkoutPlan> workoutPlanList;
 
   ClientModel({
-    required this.birthDate,
+    this.birthDate,
     required this.email,
-    required this.gender,
-    required this.height,
+    this.gender = "n/a",
+    this.height = "0",
     required this.name,
-    required this.phoneNumber,
+    this.phoneNumber = "n/a",
     required this.photoUrl,
     required this.uid,
     required this.userType,
-    required this.weight,
+    this.weight = "0",
     required this.dateCreation,
     this.clientGoalModel,
     required this.workoutPlanList,
@@ -82,7 +82,9 @@ class ClientModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "birth_date": Timestamp.fromDate(birthDate),
+    "birth_date": birthDate == null
+        ? DateTime.now()
+        : Timestamp.fromDate(birthDate!),
     "email": email,
     "gender": gender,
     "height": height,

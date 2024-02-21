@@ -16,6 +16,7 @@ class OngoingRow extends StatefulWidget {
     required this.bottomText,
     required this.onPressed,
     this.progressText, // Provide a default value to show the ToggleSwitch
+    this.leading,
   });
 
   final String image;
@@ -26,6 +27,7 @@ class OngoingRow extends StatefulWidget {
   final IconData icon;
   final bool showToggleSwitch;
   final Function() onPressed;
+  final Widget? leading;
 
   @override
   State<OngoingRow> createState() => _OngoingRowState();
@@ -108,17 +110,7 @@ class _OngoingRowState extends State<OngoingRow> {
             ),
           ),
 
-          SizedBox(
-            height: 30,
-            width: 78,
-            child: MainButton(
-              title: "Cancel",
-              textStyle: Styles.seeMore.copyWith(
-                color: Colors.white,),
-              buttonColor: Styles.secondColor,
-              onPressed: widget.onPressed,
-            ),
-          ),
+          widget.leading == null ? const SizedBox() : widget.leading!,
         ],
       ),
     );

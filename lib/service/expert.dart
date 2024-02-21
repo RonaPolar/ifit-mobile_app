@@ -552,10 +552,10 @@ class ExpertProvider extends ChangeNotifier {
         );
 
         if (img != null) {
+          photoProfile = img;
           await storePhotoProfile(id);
         }
 
-        photoProfile = img;
         notifyListeners();
       },
     );

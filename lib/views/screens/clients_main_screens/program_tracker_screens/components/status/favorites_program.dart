@@ -26,7 +26,10 @@ class FavoriteProgramScreen extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Styles.bgColor,
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Favorite Programs"),
+          centerTitle: true,
+        ),
         body: Column(
           children: [
             /// TODO: REVERT SEARCH TEXTFIELD
@@ -86,9 +89,6 @@ class FavoriteProgramScreen extends StatelessWidget {
                   image: item.workoutPicture,
                   title: item.planName,
                   bottomText: "${item.minutes} minutes | ${item.calories} Calories",
-                  progress: item.dayCountFinished == null
-                      ? 0
-                      : (int.parse(item.daysOfThePlan) - item.dayCountFinished!) * 0.01,
                   progressText: item.daysOfThePlan,
                   icon: FluentSystemIcons.ic_fluent_more_vertical_regular,
                   showToggleSwitch: false,
@@ -102,6 +102,13 @@ class FavoriteProgramScreen extends StatelessWidget {
                         }
                     );
                   },
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.red,
+                    child: const Icon(Icons.favorite,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               );
             } else {

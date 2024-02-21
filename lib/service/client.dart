@@ -249,6 +249,13 @@ class ClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool startMealDone = false;
+
+  void startMeal(value) {
+    startMealDone = value;
+    notifyListeners();
+  }
+
   Future<void> addWorkoutMealPlan({
     required String id,
     required WorkoutMeal workoutMeal,
@@ -294,11 +301,12 @@ class ClientProvider extends ChangeNotifier {
         );
 
         if (img != null) {
+          photoProfile = img;
           await storePhotoProfile(id);
         }
-        photoProfile = img;
         notifyListeners();
       },
+
     );
   }
 

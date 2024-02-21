@@ -95,6 +95,10 @@ class _CancelledProgramScreenState extends State<CancelledProgramScreen> {
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
+      appBar: AppBar(
+        title: Text("Cancelled Programs"),
+        centerTitle: true,
+      ),
       body: ListView(
         children: [
           Column(

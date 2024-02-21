@@ -62,7 +62,7 @@ class Expert {
 
 ///
 class ExpertModel {
-  final DateTime birthDate;
+  final DateTime? birthDate;
   final DateTime dateCreation;
   final String? datejoined;
   final String email;
@@ -80,22 +80,22 @@ class ExpertModel {
   final String description;
 
   ExpertModel({
-    required this.birthDate,
+    this.birthDate,
     this.datejoined,
     required this.email,
-    required this.gender,
+    this.gender = "n/a",
     required this.name,
-    required this.phoneNumber,
+    this.phoneNumber = "n/a",
     this.photoUrl,
-    required this.profession,
-    required this.professionId,
-    required this.proofOfFieldOfStudy,
+    this.profession = "n/a",
+    this.professionId = "",
+    this.proofOfFieldOfStudy = "",
     this.rating = 0.0,
     required this.uid,
     required this.userType,
     required this.verified,
     required this.dateCreation,
-    required this.description,
+    this.description = "n/a",
   });
 
   ExpertModel copyWith({
@@ -155,7 +155,9 @@ class ExpertModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "birth_date": Timestamp.fromDate(birthDate),
+    "birth_date": birthDate == null
+        ? DateTime.now()
+        : Timestamp.fromDate(birthDate!),
     "datejoined": datejoined,
     "email": email,
     "gender": gender,

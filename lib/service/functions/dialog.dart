@@ -94,19 +94,19 @@ class DialogService {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Are you sure?"),
-          content: Text("Please confirm if you want to cancel the program."),
+          title: const Text("Are you sure?"),
+          content: const Text("Please confirm if you want to cancel the program."),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 onPressed();
+                Navigator.of(context).pop();
               },
               child: Text("Confirm"),
             ),

@@ -34,10 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   int calculateAge() {
     final DateTime now = DateTime.now();
-    int age = now.year - widget.clientModel.birthDate.year;
+    int age = now.year - widget.clientModel.birthDate!.year;
     final birthday = widget.clientModel.birthDate;
 
-    if (now.month < birthday.month
+    if (now.month < birthday!.month
         || now.month == birthday.month
             && now.day < birthday.day) {
       age--;
@@ -109,9 +109,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: Styles.title,
                               ),
                               const Gap(5),
-                              Text("Lose a Fat Program",
-                                style: Styles.text15normal,
-                              )
+                              Row(
+                                children: widget.clientModel.clientGoalModel!.fitnessGoals.map((e) {
+                                  return Expanded(
+                                    child: Text(e,
+                                      style: Styles.text15normal,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ],
                           ),
                         ),
@@ -287,10 +293,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   builder: (BuildContext context) {
                                     return ConfirmationDialog(
                                       onYesPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LogIn()));
+                                        Navigator.of(context).popUntil((route) => route.isFirst);
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (context) => LogIn()));
                                       },
                                     );
                                   });

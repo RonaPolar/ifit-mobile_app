@@ -18,7 +18,10 @@ class FinishedProgramScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Finished Programs"),
+          centerTitle: true,
+        ),
       body: Column(
         children: [
           // Padding(

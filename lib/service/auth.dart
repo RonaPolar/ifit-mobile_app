@@ -241,43 +241,50 @@ class Auth extends ChangeNotifier {
   Future<void> login() async {
     debugPrint("Signing in...");
     showHUD(true);
-    await _auth.signInWithEmailAndPassword(
-      email: email.text,
-      password: password.text,
-    ).then((user) async {
-      if (user.user != null) {
-        await FirebaseFirestore.instance
-            .collection(tExpertPath)
-            .where('email', isEqualTo: email.text)
-            .get()
-            .then((QuerySnapshot querySnapshot) {
-          if (querySnapshot.docs.isEmpty) {
-            return "";
-          } else {
-            final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
-            userType = data["user_type"];
-          }
-        });
 
-        await FirebaseFirestore.instance
-            .collection(tClientPath)
-            .where('email', isEqualTo: email.text)
-            .get()
-            .then((QuerySnapshot querySnapshot) {
-          if (querySnapshot.docs.isEmpty) {
-            return "";
-          } else {
-            final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
-            userType = data["user_type"];
-          }
-        });
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      ).then((user) async {
+        if (user.user != null) {
+          await FirebaseFirestore.instance
+              .collection(tExpertPath)
+              .where('email', isEqualTo: email.text)
+              .get()
+              .then((QuerySnapshot querySnapshot) {
+            if (querySnapshot.docs.isEmpty) {
+              return "";
+            } else {
+              final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+              userType = data["user_type"];
+            }
+          });
 
-        notifyListeners();
+          await FirebaseFirestore.instance
+              .collection(tClientPath)
+              .where('email', isEqualTo: email.text)
+              .get()
+              .then((QuerySnapshot querySnapshot) {
+            if (querySnapshot.docs.isEmpty) {
+              return "";
+            } else {
+              final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+              userType = data["user_type"];
+            }
+          });
 
-      } else {
-      }
-    });
-    showHUD(false);
+          showHUD(false);
+          email.clear();
+          password.clear();
+          notifyListeners();
+
+        }
+      });
+    } catch (e) {
+      showHUD(false);
+    }
+
   }
 
   Stream<User?> get userStream => FirebaseAuth.instance.authStateChanges();
