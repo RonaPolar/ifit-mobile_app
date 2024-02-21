@@ -81,55 +81,6 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     super.dispose();
   }
 
-  // void init() {
-  //
-  //
-  //   final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
-  //
-  //   final exerciseDuration = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].exerciseDuration;
-  //   final time = exerciseDuration.time;
-  //   final isCounting = exerciseDuration.type;
-  //
-  //   int targetTime = int.parse(time);
-  //
-  //
-  //   if (!isCounting) {
-  //     _controller.reverse(from: double.parse(time));
-  //   }
-  //
-  //   _animation = IntTween(
-  //     begin: 0,
-  //     end: int.parse(time),
-  //   ).animate(_controller);
-  //
-  //   _controller.addListener(() {
-  //     if (_controller.status == AnimationStatus.reverse && targetTime < 0) {
-  //       setState(() {
-  //         targetTime--;
-  //       });
-  //     }
-  //
-  //     if (targetTime == 0) {
-  //       // workoutProvider.updateDoneWorkout(
-  //       //   workoutPlan: widget.workoutPlan,
-  //       //   id: widget.id,
-  //       //   context: scaffoldKey.currentContext!
-  //       // );
-  //     }
-  //
-  //     print(targetTime);
-  //
-  //     // print("Animation status: ${_controller.status}");
-  //     // if (_controller.status == AnimationStatus.dismissed && !workoutProvider.restart) {
-  //     //   workoutProvider.updateDoneWorkout(
-  //     //       workoutPlan: widget.workoutPlan,
-  //     //       id: widget.id,
-  //     //       context: scaffoldKey.currentContext!
-  //     //   );
-  //     // }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
 
@@ -287,31 +238,30 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Visibility(
-                visible: (exercises.length - 1) != index,
-                child: SizedBox(
-                  width: 120,
-                  height: 35,
-                  child: MainButton(
-                    title: "Skip",
-                    textStyle: Styles.text18.copyWith(
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      // workoutProvider.updateSkipWorkout(
-                      //   exerciseList: exercises,
-                      // );
-                      await workoutProvider.updateDoneWorkout(
-                        id: widget.id,
-                        workoutPlan: widget.workoutPlan,
-                        context: scaffoldKey.currentContext!,
-                        skip: true,
-                      ).then((value) {
+              SizedBox(
+                width: 120,
+                height: 35,
+                child: MainButton(
+                  title: "Skip",
+                  textStyle: Styles.text18.copyWith(
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    // workoutProvider.updateSkipWorkout(
+                    //   exerciseList: exercises,
+                    // );
+                    await workoutProvider.updateDoneWorkout(
+                      id: widget.id,
+                      workoutPlan: widget.workoutPlan,
+                      context: scaffoldKey.currentContext!,
+                      skip: true,
+                    ).then((value) {
+                      if (workoutProvider.workoutIndex + 1 != widget.workoutPlan.exercise.exercises.length) {
                         _controller.reset();
                         _controller.reverse(from: double.parse(time));
-                      });
-                    },
-                  ),
+                      }
+                    });
+                  },
                 ),
               ),
               const Gap(5),

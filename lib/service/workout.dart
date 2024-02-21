@@ -22,12 +22,17 @@ class WorkoutProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int setFinished = 1;
+  int setFinished = 0;
 
   bool restart = false;
 
   void updateRestart(bool value) {
     restart = value;
+    notifyListeners();
+  }
+
+  void updateSkipExercise() {
+    skippedIndex++;
     notifyListeners();
   }
 
@@ -41,51 +46,50 @@ class WorkoutProvider extends ChangeNotifier {
     final int set = workoutPlan.exercise.sets;
     final String workoutId = workoutPlan.id;
 
-    if (!skip) {
-      if (exerciseList.length - 1 != workoutIndex) {
-        workoutIndex++;
-      } else {
-        if ((setFinished + 1) != set) {
+    if (skip) {
+      skippedIndex++;
+    }
 
-          workoutIndex = 0;
-          skippedIndex = 0;
-          setFinished++;
+    if (exerciseList.length - 1 != workoutIndex) {
+      workoutIndex++;
+    } else {
+      if ((setFinished + 1) != set) {
 
-          Navigator.of(context)
-            ..pop()
-            ..pop();
-          Navigator.push(context, MaterialPageRoute(
-              builder: (context) => CountdownTimerScreen(
-                workoutPlan: workoutPlan,
-                id: id,
-              )));
-        } else {
-          if ((exerciseList.length - skippedIndex) > skippedIndex) {
-            await updateWorkoutDay(
+        workoutIndex = 0;
+        skippedIndex = 0;
+        setFinished++;
+
+        Navigator.of(context)
+          ..pop()
+          ..pop();
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => CountdownTimerScreen(
+              workoutPlan: workoutPlan,
               id: id,
-              workoutId: workoutId,
-            ).then((value) {
-              Navigator.of(context)
-                ..pop()
-                ..pop();
-              setFinished = 0;
-              workoutIndex = 0;
-              skippedIndex = 0;
-            });
-          } else {
+            )));
+      } else {
+        if ((exerciseList.length - skippedIndex) > skippedIndex) {
+          await updateWorkoutDay(
+            id: id,
+            workoutId: workoutId,
+          ).then((value) {
             Navigator.of(context)
               ..pop()
               ..pop();
             setFinished = 0;
             workoutIndex = 0;
             skippedIndex = 0;
-          }
-
+          });
+        } else {
+          Navigator.of(context)
+            ..pop()
+            ..pop();
+          setFinished = 0;
+          workoutIndex = 0;
+          skippedIndex = 0;
         }
+
       }
-    } else {
-      workoutIndex++;
-      skippedIndex++;
     }
 
 
