@@ -204,7 +204,9 @@ class _CreateMealState extends State<CreateMeal> {
                       MainButton(
                         title: 'Done',
                         onPressed: () {
-                          expertProvider.addWorkoutMeal(id: widget.id).then((value) {
+                          expertProvider.addWorkoutMeal(
+                            id: widget.id,
+                          ).then((value) {
                             Navigator.of(context)..pop()..pop();
                             expertProvider.clearWorkoutMealForm();
                           });

@@ -39,7 +39,7 @@ class _StatusProgramScreenState extends State<StatusProgramScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ClientProvider clientProvider = Provider.of<ClientProvider>(contextjay);
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
 
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
     final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);

@@ -51,7 +51,6 @@ class _ExpertProfileState extends State<ExpertProfile> {
     String buttonText = isFollowing ? 'Following' : 'Follow';
 
     return Scaffold(
-      appBar: AppBar(),
       body: StreamWrapper<ExpertModel>(
         stream: expertProvider.expertStream,
         child: (data) {

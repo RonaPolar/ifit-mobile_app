@@ -37,12 +37,14 @@ class ExpertProvider extends ChangeNotifier {
 
   void updateExpertListStream() {
     expertListStream = getExpertList();
+
     notifyListeners();
   }
 
   Stream<ExpertModel>? expertStream;
 
   Stream<ExpertModel> getExpert(String uid) {
+    print(uid);
     return _db.collection(tExpertPath).doc(uid).snapshots().map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       return ExpertModel.fromJson(data);
@@ -77,6 +79,10 @@ class ExpertProvider extends ChangeNotifier {
     required String uid,
   }) {
     workoutPlanListStream = getWorkoutPlanListStream(uid);
+
+    getWorkoutPlanListStream(uid).listen((event) {
+      print(event);
+    });
     notifyListeners();
   }
 
@@ -102,6 +108,10 @@ class ExpertProvider extends ChangeNotifier {
     required String uid,
   }) {
     workoutMealListStream = getWorkoutMealListStream(uid);
+
+    getWorkoutMealListStream(uid).listen((event) {
+      print(event);
+    });
     notifyListeners();
   }
 

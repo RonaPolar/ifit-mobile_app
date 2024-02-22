@@ -148,7 +148,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                              Navigator.push(context,
                                                 MaterialPageRoute(
                                                   builder: (context) => ExpertProfile(
-                                                    expertId: widget.id,
+                                                    expertId: widget.dObj.expertId,
                                                   ),
                                                 ),
                                              );
