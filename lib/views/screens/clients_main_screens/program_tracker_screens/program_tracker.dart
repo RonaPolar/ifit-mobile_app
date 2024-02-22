@@ -145,72 +145,11 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
               ),
             ),
 
-            // ProgramStatusWidget(
-            //   workoutMealList: widget.workoutMealList,
-            //   workoutPlanList: widget.workoutPlanList,
-            //   clientModel: widget.clientModel,
-            //   scaffoldKey: scaffoldKey,
-            // ),
-            Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.grey.shade500,
-                    ),
-                    bottom: BorderSide(
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButtonText(
-                      iconData: FluentSystemIcons.ic_fluent_timer_filled,
-                      title: 'Ongoing',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OngoingProgramScreen(
-                              workoutPlanList: widget.workoutPlanList,
-                              id: widget.clientModel.uid,
-                            )));
-                      },
-                    ),
-                    IconButtonText(
-                      iconData: FluentSystemIcons.ic_fluent_heart_filled,
-                      title: 'Favorites',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FavoriteProgramScreen(
-                            combinedList: favoriteCombinedPlan,
-                            id: widget.clientModel.uid,
-                          ),
-                        ));
-                      },
-                    ),
-                    IconButtonText(
-                      iconData: FluentSystemIcons.ic_fluent_checkmark_circle_filled,
-                      title: 'Finished',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FinishedProgramScreen(
-                            workoutPlan: finishedWorkoutPlan,
-                            id: widget.clientModel.uid,
-                          ),
-                        ));
-                      },
-                    ),
-                    IconButtonText(
-                      iconData: FluentSystemIcons.ic_fluent_star_filled,
-                      title: 'Rate',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ToRateProgram()));
-                      },
-                    ),
-                  ],
-                )
+            ProgramStatusWidget(
+              workoutMealList: widget.workoutMealList,
+              workoutPlanList: widget.workoutPlanList,
+              clientModel: widget.clientModel,
+              scaffoldKey: scaffoldKey,
             ),
 
 

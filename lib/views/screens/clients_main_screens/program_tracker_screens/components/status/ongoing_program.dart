@@ -28,7 +28,7 @@ class OngoingProgramScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
-        title: Text("Ongoing Programs"),
+        title: const Text("Ongoing Programs"),
         centerTitle: true,
       ),
       body: Column(
@@ -101,7 +101,7 @@ class OngoingProgramScreen extends StatelessWidget {
                   height: 30,
                   width: 78,
                   child: MainButton(
-                    title: "${workoutPlanList[index].isCancelled}",
+                    title: "Cancel",
                     textStyle: Styles.seeMore.copyWith(
                       color: Colors.white,),
                     buttonColor: Styles.secondColor,
