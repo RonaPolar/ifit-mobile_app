@@ -54,7 +54,6 @@ class WorkoutProvider extends ChangeNotifier {
       workoutIndex++;
     } else {
       if ((setFinished + 1) != set) {
-
         workoutIndex = 0;
         skippedIndex = 0;
         setFinished++;
@@ -92,69 +91,9 @@ class WorkoutProvider extends ChangeNotifier {
       }
     }
 
+    print(exerciseList.length - 1);
+    print(workoutIndex);
 
-
-
-    // if ((setFinished + 1) != set) {
-    //   if (exerciseList.length - 1 != workoutIndex) {
-    //     workoutIndex++;
-    //   } else if (exerciseList.length - 1 == workoutIndex) {
-    //
-    //     setFinished++;
-    //     workoutIndex = 0;
-    //     notifyListeners();
-    //
-    //     Navigator.of(context)
-    //       ..pop()
-    //       ..pop();
-    //     Navigator.push(context, MaterialPageRoute(
-    //       builder: (context) => CountdownTimerScreen(
-    //         workoutPlan: workoutPlan,
-    //         id: id,
-    //     )));
-    //   }
-    // } else if ((setFinished + 1) == set) {
-    //   if (exerciseList.length - 1 != workoutIndex) {
-    //     workoutIndex++;
-    //   } else if (exerciseList.length - 1 == workoutIndex) {
-    //
-    //     setFinished++;
-    //     workoutIndex = 0;
-    //     notifyListeners();
-    //
-    //     Navigator.of(context)
-    //       ..pop()
-    //       ..pop();
-    //     Navigator.push(context, MaterialPageRoute(
-    //         builder: (context) => CountdownTimerScreen(
-    //           workoutPlan: workoutPlan,
-    //           id: id,
-    //         )));
-    //   }
-    //
-    //
-    //
-    //   if ((exerciseList.length - skippedIndex + 1) > skippedIndex) {
-    //     await updateWorkoutDay(
-    //       id: id,
-    //       workoutId: workoutId,
-    //     ).then((value) {
-    //       Navigator.of(context)
-    //         ..pop()
-    //         ..pop();
-    //       setFinished = 0;
-    //       workoutIndex = 0;
-    //       skippedIndex = 0;
-    //     });
-    //   } else {
-    //     Navigator.of(context)
-    //       ..pop()
-    //       ..pop();
-    //     setFinished = 0;
-    //     workoutIndex = 0;
-    //     skippedIndex = 0;
-    //   }
-    // }
     notifyListeners();
   }
 

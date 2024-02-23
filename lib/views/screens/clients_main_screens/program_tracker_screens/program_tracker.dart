@@ -8,13 +8,7 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/favorites_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/finished_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/ongoing_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/widgets/button/ongoing_row.dart';
-import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
@@ -54,20 +48,13 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
     List<dynamic> combinedList = [...widget.workoutPlanList, ...widget.workoutMealList];
 
-    final List<WorkoutPlan> cancelledWorkoutPlan = widget.workoutPlanList.where((element) {
-      return !element.isCancelled;
-    }).toList();
-
-    final List<dynamic> favoriteCombinedPlan = combinedList.where((element) {
-      if (element is WorkoutPlan) {
-        return element.isFavorite;
+    final List<WorkoutPlan> completedWorkoutPlan = widget.workoutPlanList.where((element) {
+      if (element.dayCountFinished != null) {
+        return int.parse(element.daysOfThePlan) > int.parse(element.dayCountFinished.toString());
       } else {
-        return (element as WorkoutMeal).isFavorite;
+        return true;
       }
-    }).toList();
 
-    final List<WorkoutPlan> finishedWorkoutPlan = widget.workoutPlanList.where((element) {
-      return (int.parse(element.daysOfThePlan) == element.dayCountFinished);
     }).toList();
 
     return Scaffold(
@@ -181,9 +168,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: widget.workoutPlanList.length,
+                    itemCount: completedWorkoutPlan.length,
                     itemBuilder: (context, index) {
-                      var wObj = widget.workoutPlanList[index];
+                      var wObj = completedWorkoutPlan[index];
 
                       return InkWell(
                         onTap: () {
@@ -200,7 +187,8 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                             bottomText: "${wObj.minutes} minutes | ${wObj.calories} Calories",
                             progress: wObj.dayCountFinished == null
                                 ? 0
-                                : (int.parse(wObj.daysOfThePlan) - wObj.dayCountFinished!) * 0.01,
+                                : 1 - ((int.parse(wObj.daysOfThePlan)
+                                - wObj.dayCountFinished!) / double.parse(wObj.daysOfThePlan)),
                             progressText: wObj.daysOfThePlan,
                             showToggleSwitch: false,
                         ),

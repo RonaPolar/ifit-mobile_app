@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/timeline.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/components/video.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:provider/provider.dart';
@@ -56,20 +54,17 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     ).animate(_controller);
 
     _controller.addStatusListener((status) {
-      print(status);
       if (status == AnimationStatus.dismissed && !workoutProvider.restart) {
         workoutProvider.updateDoneWorkout(
           workoutPlan: widget.workoutPlan,
           id: widget.id,
           context: scaffoldKey.currentContext!,
           skip: false,
-        );
+        ).then((value) {
+          _controller.reset();
+          _controller.reverse(from: double.parse(time));
+        });
       }
-    });
-
-    _controller.addListener(() {
-      print(_animation.value);
-
     });
   }
 
@@ -158,9 +153,9 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: exercises.length,
-                        itemBuilder: (context, index) {
-                          final String step = exercises[index].steps[index];
+                        itemCount: exercises[index].steps.length,
+                        itemBuilder: (context, aIndex) {
+                          final String step = exercises[index].steps[aIndex];
                           return ExerStepsDottedLine(
                             index: index,
                             step: step,
@@ -256,10 +251,8 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                       context: scaffoldKey.currentContext!,
                       skip: true,
                     ).then((value) {
-                      if (workoutProvider.workoutIndex + 1 != widget.workoutPlan.exercise.exercises.length) {
                         _controller.reset();
                         _controller.reverse(from: double.parse(time));
-                      }
                     });
                   },
                 ),
@@ -280,6 +273,8 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         context: scaffoldKey.currentContext!,
                         skip: false,
                       ).then((value) {
+                        print("HI");
+
                         _controller.reset();
                         _controller.reverse(from: double.parse(time));
                       });

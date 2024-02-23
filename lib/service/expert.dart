@@ -42,11 +42,12 @@ class ExpertProvider extends ChangeNotifier {
   }
 
   Stream<ExpertModel>? expertStream;
+  Stream<ExpertModel>? otherExpertStream;
 
   Stream<ExpertModel> getExpert(String uid) {
-    print(uid);
     return _db.collection(tExpertPath).doc(uid).snapshots().map((doc) {
       final data = doc.data() as Map<String, dynamic>;
+
       return ExpertModel.fromJson(data);
     });
   }
@@ -58,7 +59,15 @@ class ExpertProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateOtherExpertStream({
+    required String uid,
+  }) {
+    otherExpertStream = getExpert(uid);
+    notifyListeners();
+  }
+
   Stream<List<WorkoutPlan>>? workoutPlanListStream;
+  Stream<List<WorkoutPlan>>? otherWorkoutPlanListStream;
 
   Stream<List<WorkoutPlan>> getWorkoutPlanListStream(String uid) {
 
@@ -79,14 +88,18 @@ class ExpertProvider extends ChangeNotifier {
     required String uid,
   }) {
     workoutPlanListStream = getWorkoutPlanListStream(uid);
+    notifyListeners();
+  }
 
-    getWorkoutPlanListStream(uid).listen((event) {
-      print(event);
-    });
+  void updateOtherWorkoutPlanListStream({
+    required String uid,
+  }) {
+    otherWorkoutPlanListStream = getWorkoutPlanListStream(uid);
     notifyListeners();
   }
 
   Stream<List<WorkoutMeal>>? workoutMealListStream;
+  Stream<List<WorkoutMeal>>? otherWorkoutMealListStream;
 
   Stream<List<WorkoutMeal>> getWorkoutMealListStream(String uid) {
 
@@ -108,10 +121,13 @@ class ExpertProvider extends ChangeNotifier {
     required String uid,
   }) {
     workoutMealListStream = getWorkoutMealListStream(uid);
+    notifyListeners();
+  }
 
-    getWorkoutMealListStream(uid).listen((event) {
-      print(event);
-    });
+  void updateOtherWorkoutMealListStream({
+    required String uid,
+  }) {
+    otherWorkoutMealListStream = getWorkoutMealListStream(uid);
     notifyListeners();
   }
 

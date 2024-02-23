@@ -4,8 +4,8 @@ import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/exp_discover.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/wrapper.dart';
 import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:provider/provider.dart';
 
@@ -53,7 +53,7 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
         workoutPlanList: workoutPlan,
         clientList: clientList,
       ),
-      ExpDiscoverScreen(),
+      const ExpDiscoverWrapperScreen(),
       ExpProgramScreen(
         expertModel: expertModel,
         clientList: clientList,

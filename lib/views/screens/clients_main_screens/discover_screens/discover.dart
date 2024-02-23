@@ -87,9 +87,6 @@ class DiscoverScreen extends StatelessWidget {
                 const Gap(15),
                 ExpertListWidget(
                   discoverExperts: expertList,
-                  workoutMeal: workoutMealList,
-                  workoutPlan: workoutPlanList,
-                  clientModel: clientModel,
                 ),
                 const Gap(10)
               ],//main Children

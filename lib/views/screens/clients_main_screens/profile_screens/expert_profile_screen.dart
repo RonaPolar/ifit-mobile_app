@@ -38,7 +38,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context, listen: false);
-      expertProvider.updateExpertListStream();
+      expertProvider.updateExpertStream(uid: widget.expertId);
       expertProvider.updateWorkoutMealListStream(uid: widget.expertId);
       expertProvider.updateWorkoutPlanListStream(uid: widget.expertId);
     });
