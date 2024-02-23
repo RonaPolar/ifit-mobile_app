@@ -153,7 +153,10 @@ class _ExpMealScreenState extends State<ExpMealScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                        builder: (context) => const ExpCreatedProgram()));
+                        builder: (context) => const ExpCreatedProgram(
+                          workoutPlanList: [],
+                          workoutMealList: [],
+                        )));
                     },
                     child: Text(
                       "See More",

@@ -118,7 +118,10 @@ class _ExpMealCategoryState extends State<ExpMealCategory> {
             onTap: () {
             Navigator.of(context).push(
                 MaterialPageRoute(
-                builder: (context) => const ExpCreatedProgram()));
+                builder: (context) => const ExpCreatedProgram(
+                  workoutMealList: [],
+                  workoutPlanList: [],
+                )));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal:15, vertical: 10),

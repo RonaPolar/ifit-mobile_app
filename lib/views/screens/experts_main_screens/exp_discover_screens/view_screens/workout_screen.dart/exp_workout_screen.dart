@@ -154,7 +154,10 @@ class _ExpWorkoutScreenState extends State<ExpWorkoutScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ExpCreatedProgram()));
+                          builder: (context) => ExpCreatedProgram(
+                            workoutMealList: [],
+                            workoutPlanList: [],
+                          )));
                       },
                       child: Text(
                         "See More",

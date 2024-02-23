@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
+import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 
@@ -185,5 +184,73 @@ class WorkoutProvider extends ChangeNotifier {
         .onError((error, stackTrace) => debugPrint("Failed to update! $error"));
 
     notifyListeners();
+  }
+
+  Future<void> updateExpertProgram({
+    required bool deleteProgram,
+    required bool isWorkoutPlan,
+    required String id,
+    required String expertId,
+  }) async {
+
+    if (isWorkoutPlan) {
+      final path = _db.collection(tWorkoutPlanPath).doc(expertId);
+
+      await path.get().then((value) async {
+        final map = value.data();
+
+        if (map != null) {
+          final List<WorkoutPlan> workoutPlanList = (map["${tWorkoutPlanPath}s"] as List).map((e) =>
+              WorkoutPlan.fromJson(e)).toList();
+
+          for (int i = 0; i < workoutPlanList.length; i++) {
+            if (id == workoutPlanList[i].id) {
+              workoutPlanList[i] = workoutPlanList[i].copyWith(
+                isDeleted: deleteProgram,
+              );
+              break; // Exit the loop once the item is found and updated
+            }
+          }
+
+          final Map<String, dynamic> data = {
+            "workoutPlans": workoutPlanList.map((e) => e.toJson()).toList(),
+          };
+
+          await path.set(data, SetOptions(merge: true))
+              .then((value) => debugPrint("Deleted: $id successfully!"))
+              .onError((error, stackTrace) => debugPrint("Failed to delete! $error"));
+        }
+      });
+
+    } else {
+      final path = _db.collection(tWorkoutMealPath).doc(expertId);
+
+      await path.get().then((value) async {
+        final map = value.data();
+
+        if (map != null) {
+          final List<WorkoutMeal> workoutMealList = (map["${tWorkoutMealPath}s"] as List).map((e) => WorkoutMeal.fromJson(e)).toList();
+
+          for (int i = 0; i < workoutMealList.length; i++) {
+            if (id == workoutMealList[i].id) {
+              workoutMealList[i] = workoutMealList[i].copyWith(
+                isDeleted: deleteProgram,
+              );
+              break; // Exit the loop once the item is found and updated
+            }
+          }
+
+          final Map<String, dynamic> data = {
+            "workoutMeals": workoutMealList.map((e) => e.toJson()).toList(),
+          };
+
+
+          await path.set(data, SetOptions(merge: true))
+              .then((value) => debugPrint("Deleted: $id successfully!"))
+              .onError((error, stackTrace) => debugPrint("Failed to delete!: $error"));
+        }
+
+      });
+    }
   }
 }

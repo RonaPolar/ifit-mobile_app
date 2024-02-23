@@ -1,100 +1,53 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/search.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
+import 'package:provider/provider.dart';
 
 class ExpCreatedProgramScreen extends StatefulWidget {
-  const ExpCreatedProgramScreen({super.key});
+  const ExpCreatedProgramScreen({
+    required this.workoutMealList,
+    required this.workoutPlanList,
+    super.key,
+  });
+
+  final List<WorkoutMeal> workoutMealList;
+  final List<WorkoutPlan> workoutPlanList;
 
   @override
   State<ExpCreatedProgramScreen> createState() => _ExpCreatedProgramScreenState();
 }
 
 class _ExpCreatedProgramScreenState extends State<ExpCreatedProgramScreen> {
- List latestWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "rate": "4.7",
-      "kcal": "180",
-      "days": "14",
-      "duration": "30",
-      "exercise": "10",
-      "progress": 0.3,
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "rate": "4.3",
-      "kcal": "200",
-      "duration": "30",
-      "days": "10",
-      "exercise": "11",
-      "progress": 0.5,
-    },
-    {
-      "name": "Upper Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "rate": "4.5",
-      "kcal": "300",
-      "duration": "20",
-      "days": "15",
-      "exercise": "12",
-      "progress": 0.6,
-    },
-  ];
-
-    List latestMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "rate": "4.9",
-      "kcal": "190",
-      "fats": "100",
-      "proteins": "176",
-      "sugar": "50",
-      "categories": "Breakfast",
-      "days": "15",
-      "progress": 0.2,
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "rate": "4.6",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "categories": "Lunch",
-      "days": "15",
-      "progress": 0.9,
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "rate": "4.3",
-      "kcal": "300",
-      "fats": "170",
-      "proteins": "400",
-      "sugar": "79",
-      "categories": "Dinner",
-      "days": "15",
-      "progress": 0.5,
-    },
-  ];
 
 
   @override
   Widget build(BuildContext context) {
     TextEditingController txtSearch = TextEditingController();
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+    List<dynamic> combinedList = [];
 
-  List<dynamic> combinedList = [...latestWorkoutArr, ...latestMealArr];
-  combinedList.shuffle(Random());
-  // List<Widget> items = [];
+    final List<WorkoutPlan> createdWorkoutPlans = widget.workoutPlanList.where((element) {
+      if (element.isDeleted != null) {
+        return !element.isDeleted!;
+      } else {
+        return false;
+      }
+    }).toList();
+
+    final List<WorkoutMeal> createdWorkoutMeals = widget.workoutMealList.where((element) {
+
+      if (element.isDeleted != null) {
+        return !element.isDeleted!;
+      } else {
+        return false;
+      }
+    }).toList();
+
+    combinedList = [...createdWorkoutMeals, ...createdWorkoutPlans];
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -124,38 +77,66 @@ class _ExpCreatedProgramScreenState extends State<ExpCreatedProgramScreen> {
                     itemCount: combinedList.length,
                     itemBuilder: (context, index) {
                       var item = combinedList[index];
-              
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
-                        // It's a workout item
+
+                      if (item is WorkoutPlan) {
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewWorkoutDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //       ViewWorkoutDetails(dObj: item),
+                            //   ),
+                            // );
                           },
-                          child: CreatedRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
+                          child: CreatedRow(
+                              image: item.workoutPicture,
+                              title: item.planName,
+                              bottomText: "${item.minutes} minutes | ${item.calories} Calories",
+                              onPressed: () async {
+                                await workoutProvider.updateExpertProgram(
+                                  isWorkoutPlan: true,
+                                  id: item.id,
+                                  expertId: item.expertId,
+                                  deleteProgram: true,
+                                ).then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Text("Deleted Workout Plan!"),
+                                  ));
+                                  Navigator.of(context).pop();
+                                });
+                              },
                             )
                           );
                       } else {
                         // It's a meal item
+
+                        final meal = item as WorkoutMeal;
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewMealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //       ViewMealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
-                          child: CreatedRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            ));
+                          child: CreatedRow(
+                            image: meal.foodPhoto,
+                            title: meal.foodPlanName,
+                            bottomText: "${meal.purpose} | ${meal.calories} Calories",
+                            onPressed: () async {
+                              await workoutProvider.updateExpertProgram(
+                                isWorkoutPlan: false,
+                                id: meal.id,
+                                expertId: meal.expertId,
+                                deleteProgram: true,
+                              ).then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text("Deleted Workout Meal!"),
+                                ));
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
+                        );
                       }
                     },
                   ),
@@ -170,26 +151,26 @@ class _ExpCreatedProgramScreenState extends State<ExpCreatedProgramScreen> {
 }
 
 
-class CreatedRow extends StatefulWidget {
+class CreatedRow extends StatelessWidget {
   final String image;
   final String title;
   final String bottomText;
+  final Function() onPressed;
 
 
   const CreatedRow({
     super.key,
     required this.image,
     required this.title,
-    required this.bottomText, 
+    required this.bottomText,
+    required this.onPressed,
   });
 
   @override
-  State<CreatedRow> createState() => _CreatedRowState();
-}
-
-class _CreatedRowState extends State<CreatedRow> {
-  @override
   Widget build(BuildContext context) {
+
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -206,8 +187,7 @@ class _CreatedRowState extends State<CreatedRow> {
               width: 60,
               height: 60,
               color: Styles.secondColor.withOpacity(0.6),
-              child: Image.asset(
-                widget.image,
+              child: Image.network(image,
                 fit: BoxFit.contain,
               ),
             ),
@@ -219,9 +199,9 @@ class _CreatedRowState extends State<CreatedRow> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.title, style: Styles.text15bold),
+                Text(title, style: Styles.text15bold),
                 Text(
-                  widget.bottomText,
+                  bottomText,
                   style: Styles.normal.copyWith(
                     fontSize: 12,
                   ),
@@ -234,12 +214,14 @@ class _CreatedRowState extends State<CreatedRow> {
           ),
           SizedBox(
             height: 30,
-              width: 88,
-              child: MainButton(title: "Delete",
+            width: 88,
+            child: MainButton(
+              title: "Delete",
               textStyle: Styles.seeMore.copyWith(
-              color: Colors.white,),
+                color: Colors.white,
+              ),
               buttonColor: Styles.secondColor,
-              onPressed: () {},
+              onPressed: onPressed,
             ),
           )
         ],

@@ -48,8 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final ClientProvider clientProvider =  Provider.of<ClientProvider>(context);
     final ClientModel client = widget.clientModel;
 
-
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Styles.bgColor,

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
@@ -7,23 +5,26 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
-import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
 
 class ExpProgramScreen extends StatefulWidget {
   const ExpProgramScreen({
     required this.expertModel,
     required this.clientList,
+    required this.workoutPlanList,
+    required this.workoutMealList,
     super.key,
   });
 
   final ExpertModel expertModel;
   final List<ClientModel> clientList;
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
   @override
   State<ExpProgramScreen> createState() => _ExpProgramScreenState();
@@ -114,9 +115,9 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
   Widget build(BuildContext context) {
     final ExpertModel expert = widget.expertModel;
     final DialogService dialog = DialogService();
-    List<dynamic> combinedList = [...latestWorkoutArr, ...latestMealArr];
-    combinedList.shuffle(Random());
-  
+
+
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -132,7 +133,10 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ExpCreatedProgram()));
+                  builder: (context) => ExpCreatedProgram(
+                    workoutMealList: widget.workoutMealList,
+                    workoutPlanList: widget.workoutPlanList,
+                  )));
             },
             child: Container(
               margin: const EdgeInsets.all(12),
@@ -176,100 +180,100 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                   "Highest Clients",
                   style: Styles.title,
                 ),
-                ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      var item = combinedList[index];
-              
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
-                        // It's a workout item
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewWorkoutDetails(dObj: item),
-                              ),
-                            );
-                          },
-                          child: ProgramRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                            showToggleSwitch: false,
-                            )
-                          );
-                      } else {
-                        // It's a meal item
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewMealDetails(dObj: item),
-                              ),
-                            );
-                          },
-                          child: ProgramRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            showToggleSwitch: false,
-                            ));
-                      }
-                    },
-                  ),
+                // ListView.builder(
+                //     padding: EdgeInsets.zero,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     shrinkWrap: true,
+                //     itemCount: 3,
+                //     itemBuilder: (context, index) {
+                //       var item = combinedList[index];
+                //
+                //       if (item is WorkoutPlan) {
+                //         // It's a workout item
+                //         return InkWell(
+                //           onTap: () {
+                //             // Navigator.push(context,
+                //             //   MaterialPageRoute(
+                //             //     builder: (context) =>
+                //             //       ViewWorkoutDetails(dObj: item),
+                //             //   ),
+                //             // );
+                //           },
+                //           child: ProgramRow(image: item.workoutPicture,
+                //             title: item["name"],
+                //             bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
+                //             showToggleSwitch: false,
+                //             )
+                //           );
+                //       } else {
+                //         // It's a meal item
+                //         return InkWell(
+                //           onTap: () {
+                //             Navigator.push(context,
+                //               MaterialPageRoute(
+                //                 builder: (context) =>
+                //                   ViewMealDetails(dObj: item),
+                //               ),
+                //             );
+                //           },
+                //           child: ProgramRow(image: item["image"],
+                //             title: item["name"],
+                //             bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
+                //             showToggleSwitch: false,
+                //             ));
+                //       }
+                //     },
+                //   ),
 
                 const Gap(20),
                 Text(
                   "Lowest Clients",
                   style: Styles.title,
                 ),
-                ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      var item = combinedList[index];
-              
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
-                        // It's a workout item
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewWorkoutDetails(dObj: item),
-                              ),
-                            );
-                          },
-                          child: ProgramRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                            showToggleSwitch: false,
-                            )
-                          );
-                      } else {
-                        // It's a meal item
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewMealDetails(dObj: item),
-                              ),
-                            );
-                          },
-                          child: ProgramRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            showToggleSwitch: false,
-                            ));
-                      }
-                    },
-                  ),
+                // ListView.builder(
+                //     padding: EdgeInsets.zero,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     shrinkWrap: true,
+                //     itemCount: 3,
+                //     itemBuilder: (context, index) {
+                //       var item = combinedList[index];
+                //
+                //       if (item.containsKey("duration") && item.containsKey("kcal")) {
+                //         // It's a workout item
+                //         return InkWell(
+                //           onTap: () {
+                //             Navigator.push(context,
+                //               MaterialPageRoute(
+                //                 builder: (context) =>
+                //                   ViewWorkoutDetails(dObj: item),
+                //               ),
+                //             );
+                //           },
+                //           child: ProgramRow(image: item["image"],
+                //             title: item["name"],
+                //             bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
+                //             showToggleSwitch: false,
+                //             )
+                //           );
+                //       } else {
+                //         // It's a meal item
+                //         return InkWell(
+                //           onTap: () {
+                //             Navigator.push(context,
+                //               MaterialPageRoute(
+                //                 builder: (context) =>
+                //                   ViewMealDetails(dObj: item),
+                //               ),
+                //             );
+                //           },
+                //           child: ProgramRow(image: item["image"],
+                //             title: item["name"],
+                //             bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
+                //             showToggleSwitch: false,
+                //             ));
+                //       }
+                //     },
+                //   ),
               ],
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_created_program.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_deleted_program.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/body/exp_favorites_program.dart';
@@ -99,15 +101,19 @@ import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_
 //   }
 // }
 
-
-
 class ExpProgramScreen extends StatefulWidget {
+  const ExpProgramScreen({
+    super.key,
+    required this.initialSelectTab,
+    required this.initialCurrentTab,
+    required this.workoutMealList,
+    required this.workoutPlanList,
+  });
+
   final int initialSelectTab;
   final Widget initialCurrentTab;
-  
-  const ExpProgramScreen({super.key, 
-  required this.initialSelectTab, 
-  required this.initialCurrentTab});
+  final List<WorkoutMeal> workoutMealList;
+  final List<WorkoutPlan> workoutPlanList;
 
   @override
   State<ExpProgramScreen> createState() => _ExpProgramScreenState();
@@ -169,9 +175,15 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> with SingleTickerPr
       ),
       body: TabBarView(
         controller: tabController,
-        children: const <Widget>[
-          ExpCreatedProgramScreen(),
-          ExpDeletedProgramScreen(),
+        children: <Widget>[
+          ExpCreatedProgramScreen(
+            workoutMealList: widget.workoutMealList,
+            workoutPlanList: widget.workoutPlanList,
+          ),
+          ExpDeletedProgramScreen(
+            workoutPlanList: widget.workoutPlanList,
+            workoutMealList: widget.workoutMealList,
+          ),
           ExpFavoritesProgramScreen(),
         ],
       ),
@@ -181,35 +193,54 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> with SingleTickerPr
 }
 
 
-class ExpCreatedProgram extends StatefulWidget {
-  const ExpCreatedProgram({super.key});
+class ExpCreatedProgram extends StatelessWidget {
+  const ExpCreatedProgram({
+    super.key,
+    required this.workoutPlanList,
+    required this.workoutMealList,
+  });
 
-  @override
-  State<ExpCreatedProgram> createState() => _ExpCreatedProgramState();
-}
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
-class _ExpCreatedProgramState extends State<ExpCreatedProgram> {
   @override
   Widget build(BuildContext context) {
-    return const ExpProgramScreen(initialSelectTab: 0, initialCurrentTab: ExpCreatedProgramScreen());
+    return ExpProgramScreen(
+      initialSelectTab: 0,
+      initialCurrentTab: ExpCreatedProgramScreen(
+        workoutMealList: workoutMealList,
+        workoutPlanList: workoutPlanList,
+      ),
+      workoutMealList: workoutMealList,
+      workoutPlanList: workoutPlanList,
+    );
   }
 }
 
+class ExpDeletedProgram extends StatelessWidget {
+  const ExpDeletedProgram({
+    required this.workoutMealList,
+    required this.workoutPlanList,
+    super.key,
+  });
 
-class ExpDeletedProgram extends StatefulWidget {
-  const ExpDeletedProgram({super.key});
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
-  @override
-  State<ExpDeletedProgram> createState() => _ExpDeletedProgramState();
-}
 
-class _ExpDeletedProgramState extends State<ExpDeletedProgram> {
   @override
   Widget build(BuildContext context) {
-    return const ExpProgramScreen(initialSelectTab: 0, initialCurrentTab: ExpDeletedProgramScreen());
+    return ExpProgramScreen(
+      initialSelectTab: 0,
+      initialCurrentTab: ExpDeletedProgramScreen(
+        workoutMealList: workoutMealList,
+        workoutPlanList: workoutPlanList,
+      ),
+      workoutMealList: workoutMealList,
+      workoutPlanList: workoutPlanList,
+    );
   }
 }
-
 
 class ExpFavorites extends StatefulWidget {
   const ExpFavorites({super.key});
@@ -221,6 +252,11 @@ class ExpFavorites extends StatefulWidget {
 class _ExpFavoritesState extends State<ExpFavorites> {
   @override
   Widget build(BuildContext context) {
-    return const ExpProgramScreen(initialSelectTab: 0, initialCurrentTab: ExpFavoritesProgramScreen());
+    return ExpProgramScreen(
+      initialSelectTab: 0,
+      initialCurrentTab: ExpFavoritesProgramScreen(),
+      workoutMealList: [],
+      workoutPlanList: [],
+    );
   }
 }

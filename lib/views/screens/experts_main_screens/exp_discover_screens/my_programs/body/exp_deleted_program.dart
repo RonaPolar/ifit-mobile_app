@@ -1,14 +1,21 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/search.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/meal_screen.dart/view_meal.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/view_screens/workout_screen.dart/view_workout.dart';
+import 'package:provider/provider.dart';
 
 class ExpDeletedProgramScreen extends StatefulWidget {
-  const ExpDeletedProgramScreen({super.key});
+  const ExpDeletedProgramScreen({
+    required this.workoutPlanList,
+    required this.workoutMealList,
+    super.key,
+  });
+
+  final List<WorkoutPlan> workoutPlanList;
+  final List<WorkoutMeal> workoutMealList;
 
   @override
   State<ExpDeletedProgramScreen> createState() => _ExpDeletedProgramScreenState();
@@ -91,9 +98,28 @@ class _ExpDeletedProgramScreenState extends State<ExpDeletedProgramScreen> {
   @override
   Widget build(BuildContext context) {
     TextEditingController txtSearch = TextEditingController();
-    List<dynamic> combinedList = [...latestWorkoutArr, ...latestMealArr];
-    combinedList.shuffle(Random());
-    // List<Widget> items = [];
+    List<dynamic> combinedList = [];
+
+    final List<WorkoutPlan> createdWorkoutPlans = widget.workoutPlanList.where((element) {
+      if (element.isDeleted != null) {
+        return element.isDeleted!;
+      } else {
+        return false;
+      }
+    }).toList();
+
+    final List<WorkoutMeal> createdWorkoutMeals = widget.workoutMealList.where((element) {
+
+      if (element.isDeleted != null) {
+        return element.isDeleted!;
+      } else {
+        return false;
+      }
+    }).toList();
+
+    combinedList = [...createdWorkoutMeals, ...createdWorkoutPlans];
+
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -124,37 +150,68 @@ class _ExpDeletedProgramScreenState extends State<ExpDeletedProgramScreen> {
                     itemBuilder: (context, index) {
                       var item = combinedList[index];
               
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
+                      if (item is WorkoutPlan) {
                         // It's a workout item
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewWorkoutDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       ViewWorkoutDetails(dObj: item),
+                            //   ),
+                            // );
                           },
-                          child: DeletedRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
+                          child: DeletedRow(
+                              image: item.workoutPicture,
+                              title: item.planName,
+                              bottomText: "${item.minutes} minutes | ${item.calories} Calories",
+                              onPressed: () async {
+                                await workoutProvider.updateExpertProgram(
+                                  isWorkoutPlan: true,
+                                  id: item.id,
+                                  expertId: item.expertId,
+                                  deleteProgram: false,
+                                ).then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Text("Restore Workout Meal!"),
+                                  ));
+                                  Navigator.of(context).pop();
+                                });
+                              },
                             )
                           );
                       } else {
                         // It's a meal item
+
+                        final meal = item as WorkoutMeal;
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  ViewMealDetails(dObj: item),
-                              ),
-                            );
+                            // Navigator.push(context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //       ViewMealDetails(dObj: item),
+                            //   ),
+                            // );
                           },
-                          child: DeletedRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            ));
+                          child: DeletedRow(
+                            image: meal.foodPhoto,
+                            title: meal.foodPlanName,
+                            bottomText: "${meal.purpose} | ${meal.calories} Calories",
+                            onPressed: () async {
+                              await workoutProvider.updateExpertProgram(
+                                isWorkoutPlan: false,
+                                id: meal.id,
+                                expertId: meal.expertId,
+                                deleteProgram: false,
+                              ).then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text("Restore Workout Meal!"),
+                                ));
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
+                        );
                       }
                     },
                   ),
@@ -173,13 +230,15 @@ class DeletedRow extends StatefulWidget {
   final String image;
   final String title;
   final String bottomText;
+  final Function() onPressed;
 
 
   const DeletedRow({
     super.key,
     required this.image,
     required this.title,
-    required this.bottomText, 
+    required this.bottomText,
+    required this.onPressed,
   });
 
   @override
@@ -189,6 +248,8 @@ class DeletedRow extends StatefulWidget {
 class _DeletedRowState extends State<DeletedRow> {
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -205,8 +266,7 @@ class _DeletedRowState extends State<DeletedRow> {
               width: 60,
               height: 60,
               color: Styles.secondColor.withOpacity(0.6),
-              child: Image.asset(
-                widget.image,
+              child: Image.network(widget.image,
                 fit: BoxFit.contain,
               ),
             ),
@@ -234,11 +294,12 @@ class _DeletedRowState extends State<DeletedRow> {
           SizedBox(
             height: 30,
               width: 88,
-              child: MainButton(title: "Restore",
-              textStyle: Styles.seeMore.copyWith(
-              color: Colors.white,),
-              buttonColor: Styles.secondColor,
-              onPressed: () {},
+              child: MainButton(
+                title: "Restore",
+                textStyle: Styles.seeMore.copyWith(
+                color: Colors.white,),
+                buttonColor: Styles.secondColor,
+                onPressed: widget.onPressed,
             ),
           )
         ],

@@ -89,6 +89,7 @@ class WorkoutMeal {
   final List<String> stepPrep;
   final double rating;
   final bool isFavorite;
+  final bool? isDeleted;
 
   WorkoutMeal({
     required this.expertId,
@@ -108,6 +109,7 @@ class WorkoutMeal {
     required this.stepPrep,
     required this.rating,
     this.isFavorite = false,
+    this.isDeleted = false,
   });
 
   WorkoutMeal copyWith({
@@ -128,6 +130,7 @@ class WorkoutMeal {
     List<String>? stepPrep,
     double? rating,
     bool? isFavorite,
+    bool? isDeleted,
   }) =>
       WorkoutMeal(
         expertId: expertId ?? this.expertId,
@@ -147,6 +150,7 @@ class WorkoutMeal {
         stepPrep: stepPrep ?? this.stepPrep,
         rating: rating ?? this.rating,
         isFavorite: isFavorite ?? this.isFavorite,
+        isDeleted: isDeleted ?? this.isDeleted,
       );
 
   factory WorkoutMeal.fromJson(Map<String, dynamic> json) => WorkoutMeal(
@@ -167,6 +171,7 @@ class WorkoutMeal {
     stepPrep: List<String>.from(json["stepPrep"].map((x) => x)),
     rating: double.parse(json["rating"].toString()),
     isFavorite: json["isFavorite"],
+    isDeleted: json["isDeleted"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -187,6 +192,7 @@ class WorkoutMeal {
     "stepPrep": List<dynamic>.from(stepPrep.map((x) => x)),
     "rating": rating,
     "isFavorite": isFavorite,
+    "isDeleted": isDeleted,
   };
 }
 
