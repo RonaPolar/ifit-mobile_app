@@ -28,6 +28,7 @@ class StartWorkout extends StatefulWidget {
 class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<int> _animation;
+  bool flag = false;
 
   @override
   void initState() {
@@ -54,7 +55,13 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     ).animate(_controller);
 
     _controller.addStatusListener((status) {
-      if (status == AnimationStatus.dismissed && !workoutProvider.restart) {
+
+      print(status);
+      print(flag);
+
+      if (status == AnimationStatus.dismissed && !workoutProvider.restart && !flag) {
+        flag = true;
+
         workoutProvider.updateDoneWorkout(
           workoutPlan: widget.workoutPlan,
           id: widget.id,
@@ -64,6 +71,10 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
           _controller.reset();
           _controller.reverse(from: double.parse(time));
         });
+      }
+
+      if (status == AnimationStatus.completed) {
+        flag = false;
       }
     });
   }
@@ -129,6 +140,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
         child: AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -242,17 +254,17 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                     color: Colors.white,
                   ),
                   onPressed: () async {
-                    // workoutProvider.updateSkipWorkout(
-                    //   exerciseList: exercises,
-                    // );
                     await workoutProvider.updateDoneWorkout(
                       id: widget.id,
                       workoutPlan: widget.workoutPlan,
                       context: scaffoldKey.currentContext!,
                       skip: true,
                     ).then((value) {
-                        _controller.reset();
-                        _controller.reverse(from: double.parse(time));
+                      setState(() {
+                        flag = true;
+                      });
+                      _controller.reset();
+                      _controller.reverse(from: double.parse(time));
                     });
                   },
                 ),
@@ -273,8 +285,9 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         context: scaffoldKey.currentContext!,
                         skip: false,
                       ).then((value) {
-                        print("HI");
-
+                        setState(() {
+                          flag = true;
+                        });
                         _controller.reset();
                         _controller.reverse(from: double.parse(time));
                       });

@@ -89,9 +89,7 @@ class WorkoutProvider extends ChangeNotifier {
 
       }
     }
-
-    print(exerciseList.length - 1);
-    print(workoutIndex);
+    isPause = false;
 
     notifyListeners();
   }
