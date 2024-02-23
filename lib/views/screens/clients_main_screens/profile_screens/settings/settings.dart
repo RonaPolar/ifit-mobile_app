@@ -6,16 +6,19 @@ import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_email.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_pass.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/delete_account.dart';
-import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class ClientSettingsScreen extends StatefulWidget {
+  const ClientSettingsScreen({super.key,
+    required this.id,
+  });
+
+  final String id;
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<ClientSettingsScreen> createState() => _ClientSettingsScreenState();
 }
 
-class _SettingsState extends State<Settings> {
+class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +90,9 @@ class _SettingsState extends State<Settings> {
                             title: 'Change Email',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ChangeEmail()));
+                                  builder: (context) => ChangeEmail(
+                                    id: widget.id,
+                                  )));
                             },
                           ),
                           NextNavigation(

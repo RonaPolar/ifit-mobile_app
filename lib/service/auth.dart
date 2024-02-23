@@ -26,6 +26,7 @@ class Auth extends ChangeNotifier {
   static TextEditingController lastName = TextEditingController();
   static TextEditingController name = TextEditingController();
   static TextEditingController email = TextEditingController();
+  static TextEditingController newEmail = TextEditingController();
   static TextEditingController password = TextEditingController();
   static TextEditingController birthday = TextEditingController();
   static TextEditingController phone = TextEditingController();
@@ -404,6 +405,29 @@ class Auth extends ChangeNotifier {
         .onError((error, stackTrace) => debugPrint("Error updating! $error"));
 
     notifyListeners();
+  }
+
+  Future<void> updateEmail(String id) async {
+    showHUD(true);
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        await user.updateEmail(newEmail.text);
+
+        db.collection(tClientPath).doc(id).set({
+          "email": newEmail.text,
+        }, SetOptions(merge: true));
+      } else {
+        print("User is null");
+      }
+
+      showHUD(false);
+    } catch (e) {
+      print("Failed to update email: $e");
+      showHUD(false);
+
+    }
   }
 
 }

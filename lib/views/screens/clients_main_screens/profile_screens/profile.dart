@@ -5,6 +5,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/service/client.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
+import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/settings.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -13,9 +14,6 @@ import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
-import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/settings.dart'
-    as CloudFirestoreSettings;
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -281,10 +279,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: 'Settings',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      CloudFirestoreSettings.Settings()));
+                                builder: (context) => ClientSettingsScreen(
+                                  id: widget.clientModel.uid,
+                                ),
+                              ));
                             },
                           ),
+
                           NextNavigation(
                             iconData: Icons.logout_outlined,
                             title: 'Log Out',

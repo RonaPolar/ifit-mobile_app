@@ -9,6 +9,7 @@ class NextNavigation extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? leftIcon; // Change the type to Widget?
   final Color? nextIconColor;
+  final Color? color;
 
   const NextNavigation({
     Key? key,
@@ -18,6 +19,7 @@ class NextNavigation extends StatelessWidget {
     required this.onTap,
     this.leftIcon,
     this.nextIconColor,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class NextNavigation extends StatelessWidget {
           if (iconData != null) ...[
             Icon(
               iconData,
+              color: color,
             ),
             const Gap(10), // Add some spacing between icon and text
           ],
@@ -41,12 +44,13 @@ class NextNavigation extends StatelessWidget {
                   title,
                   style: titleTextStyle ??
                     Styles.text12.copyWith(
-                      fontSize: 16
+                      fontSize: 16,
+                      color: color,
                      ),
                 ),
                 Icon(
                   leftIcon ?? Icons.navigate_next,
-                  color: nextIconColor ?? Colors.black,
+                  color: color ?? nextIconColor ?? Colors.black,
                 ),
               ],
             ),

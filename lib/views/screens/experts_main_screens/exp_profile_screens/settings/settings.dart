@@ -88,8 +88,8 @@ class _SettingsState extends State<Settings> {
                             iconData: FluentSystemIcons.ic_fluent_lock_regular,
                             title: 'Change Email',
                             onTap: () {
-                              Navigator.of(context).push( MaterialPageRoute(
-                                builder: (context) => const ChangeEmail()));
+                              // Navigator.of(context).push( MaterialPageRoute(
+                              //   builder: (context) => const ChangeEmail()));
                             },
                           ),
                           NextNavigation(
