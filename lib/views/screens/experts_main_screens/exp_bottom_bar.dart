@@ -15,11 +15,9 @@ class ExpBottomBar extends StatefulWidget {
 class _ExpBottomBarState extends State<ExpBottomBar> {
   int selectTab = 0;
 
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
       child: Scaffold(
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),

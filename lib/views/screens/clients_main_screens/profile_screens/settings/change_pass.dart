@@ -2,14 +2,21 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/screens/account_login_reg/password/pass_success.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/widgets/verification_text_box.dart';
-import 'package:ifit/views/screens/account_login_reg/password/pass_success.dart';
+import 'package:provider/provider.dart';
 
 class ChangePass extends StatefulWidget {
-  const ChangePass({super.key});
+  const ChangePass({
+    super.key,
+    required this.id,
+  });
+
+  final String id;
 
   @override
   State<ChangePass> createState() => _ChangePassState();
@@ -18,6 +25,8 @@ class ChangePass extends StatefulWidget {
 class _ChangePassState extends State<ChangePass> {
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -63,19 +72,28 @@ class _ChangePassState extends State<ChangePass> {
                           style: Styles.title
                         ),
                         const Gap(20),
-                        const TextFieldContainer(hintText: 'Current Password',
+                        TextFieldContainer(
+                          controller: Auth.password,
+                          hintText: 'Current Password',
                           icon: FluentSystemIcons.ic_fluent_lock_regular,
-                          obscureText: false,
+                          obscureText: true,
+                          maxLines: 1,
                         ),
                         const Gap(15),
-                        const TextFieldContainer(hintText: 'New Password',
+                        TextFieldContainer(
+                          controller: Auth.newPassword,
+                          hintText: 'New Password',
                           icon: FluentSystemIcons.ic_fluent_mail_regular,
-                          obscureText: false,
+                          obscureText: true,
+                          maxLines: 1,
                         ),
                         const Gap(15),
-                        const TextFieldContainer(hintText: 'Confirm Password',
+                        TextFieldContainer(
+                          controller: Auth.confirmPassword,
+                          hintText: 'Confirm Password',
                           icon: FluentSystemIcons.ic_fluent_mail_regular,
-                          obscureText: false,
+                          obscureText: true,
+                          maxLines: 1,
                         ),
                         const Gap(5),
                         Align(
@@ -103,11 +121,23 @@ class _ChangePassState extends State<ChangePass> {
                 builder: (BuildContext context) {
                   return ConfirmationDialog(
                     onYesPressed: () {
-                      Navigator.pushReplacement(context,MaterialPageRoute(
-                        builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
-                          Navigator.pushReplacement(context,MaterialPageRoute(
-                            builder: (context) => const SuccessPassword()),);
-                        },)),);
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) => VerificationCodeScreen(
+                            onConfirmPressed: () async {
+                              await auth.updatePassword(widget.id).then((value) {
+                                Navigator.of(context).pop();
+                                Navigator.pushReplacement(context, MaterialPageRoute(
+                                    builder: (
+                                        context) => const SuccessPassword()));
+                              });
+                          }),
+                        ),
+                      );
+                      // Navigator.pushReplacement(context,MaterialPageRoute(
+                      //   builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
+                      //     Navigator.pushReplacement(context,MaterialPageRoute(
+                      //       builder: (context) => const SuccessPassword()),);
+                      //   },)),);
                     },
                   );});
             }),

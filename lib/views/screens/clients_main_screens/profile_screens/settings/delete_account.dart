@@ -2,9 +2,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
+import 'package:provider/provider.dart';
 
 class DeleteAccount extends StatefulWidget {
   const DeleteAccount({super.key});
@@ -16,6 +19,8 @@ class DeleteAccount extends StatefulWidget {
 class _DeleteAccountState extends State<DeleteAccount> {
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -57,23 +62,22 @@ class _DeleteAccountState extends State<DeleteAccount> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Please enter your password to confirm identity",
+                          "Please enter your email and password to confirm identity",
                           style: Styles.title
                         ),
                         const Gap(20),
-                        const TextFieldContainer(hintText: 'Enter your Password',
-                          icon: FluentSystemIcons.ic_fluent_lock_regular,
-                          obscureText: false,
+                        TextFieldContainer(
+                          controller: Auth.email,
+                          hintText: 'Enter your Email',
+                          icon: FluentSystemIcons.ic_fluent_mail_add_filled,
                         ),
-                        Align(
-                          //make a condition that make if any of it wasnt filled it will display "Enter _____"
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Wrong Password',
-                            style: Styles.text15normal.copyWith(
-                              color: Colors.red,
-                            ),
-                          ),
+                        const Gap(20),
+                        TextFieldContainer(
+                          controller: Auth.password,
+                          hintText: 'Enter your Password',
+                          icon: FluentSystemIcons.ic_fluent_lock_regular,
+                          obscureText: true,
+                          maxLines: 1,
                         ),
                       ],
                     ),
@@ -85,13 +89,19 @@ class _DeleteAccountState extends State<DeleteAccount> {
           ),
           Padding(
             padding: const EdgeInsets.all(15),
-            child: MainButton(title: "Delete Account", onPressed: (){
+            child: MainButton(
+              title: "Delete Account",
+              onPressed: () {
               showDialog(context: context,
                 builder: (BuildContext context) {
                   return ConfirmationDialog(
-                    onYesPressed: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (context) => const LogIn()));
+                    onYesPressed: () async {
+                      Navigator.of(context).pop();
+                      await auth.deleteAccount().then((value) {
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const LogIn()));
+                      });
                     },
                   );});
             }),

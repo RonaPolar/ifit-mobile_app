@@ -2,14 +2,25 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/views/widgets/icon_text_icon.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_email.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/change_pass.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/change_email.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/change_pass.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/delete_account.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/delete_account.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({super.key});
+  const Settings({
+    required this.id,
+    required this.expertModel,
+    super.key,
+  });
+
+  final String id;
+  final ExpertModel expertModel;
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -74,22 +85,31 @@ class _SettingsState extends State<Settings> {
                             style: Styles.title
                           ),
                           const Gap(1),
-                          // NextNavigation(
-                          //   iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
-                          //   title: 'Edit Profile Details',
-                          //   onTap: () {
-                          //     Navigator.of(context).push(MaterialPageRoute(
-                          //       builder: (context) => const EditProfile(
-                          //
-                          //       )));
-                          //   },
-                          // ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
+                            title: 'Edit Profile Details',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EditProfile(
+                                  expertModel: widget.expertModel,
+                                )));
+                            },
+                          ),
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_lock_regular,
                             title: 'Change Email',
                             onTap: () {
-                              // Navigator.of(context).push( MaterialPageRoute(
-                              //   builder: (context) => const ChangeEmail()));
+                              Navigator.of(context).push( MaterialPageRoute(
+                                builder: (context) => ExpertChangeEmail(
+                                  id: widget.id,
+                                )));
+                            },
+                          ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_lock_regular,
+                            title: 'revert',
+                            onTap: () {
+                              Navigator.of(context).popUntil((route) => route.isFirst);
                             },
                           ),
                           NextNavigation(
@@ -97,7 +117,9 @@ class _SettingsState extends State<Settings> {
                             title: 'Change Password',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ChangePass()));
+                                builder: (context) => ExpertChangePass(
+                                  id: widget.id,
+                                )));
                             },
                           ),
                           NextNavigation(
@@ -105,7 +127,7 @@ class _SettingsState extends State<Settings> {
                             title: 'Delete Account',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const DeleteAccount()));
+                                builder: (context) => const ExpertDeleteAccount()));
                             },
                           ),
                         ],

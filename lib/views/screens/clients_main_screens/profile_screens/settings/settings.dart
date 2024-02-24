@@ -100,7 +100,9 @@ class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
                             title: 'Change Password',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ChangePass()));
+                                  builder: (context) => ChangePass(
+                                    id: widget.id,
+                                  )));
                             },
                           ),
                           NextNavigation(

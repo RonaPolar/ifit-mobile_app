@@ -28,6 +28,8 @@ class Auth extends ChangeNotifier {
   static TextEditingController email = TextEditingController();
   static TextEditingController newEmail = TextEditingController();
   static TextEditingController password = TextEditingController();
+  static TextEditingController newPassword = TextEditingController();
+  static TextEditingController confirmPassword = TextEditingController();
   static TextEditingController birthday = TextEditingController();
   static TextEditingController phone = TextEditingController();
   static TextEditingController profession = TextEditingController();
@@ -407,26 +409,89 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateEmail(String id) async {
+  Future<void> updateEmail(String id, {
+    bool isClient = true,
+  }) async {
     showHUD(true);
     try {
-      User? user = _auth.currentUser;
+
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      );
+      User? user = userCredential.user;
 
       if (user != null) {
-        await user.updateEmail(newEmail.text);
+        await user.updateEmail(newEmail.text)
+            .then((value) => debugPrint("Email updated successfully on auth!"));
 
-        db.collection(tClientPath).doc(id).set({
+        db.collection(isClient ? tClientPath : tExpertPath).doc(id).set({
           "email": newEmail.text,
-        }, SetOptions(merge: true));
+        }, SetOptions(merge: true))
+            .then((value) => debugPrint("Email updated succesfully!"));
       } else {
         print("User is null");
       }
 
       showHUD(false);
+      password.clear();
+      email.clear();
+      newEmail.clear();
     } catch (e) {
       print("Failed to update email: $e");
       showHUD(false);
 
+    }
+  }
+
+  Future<void> updatePassword(String id) async {
+    showHUD(true);
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        await user.updatePassword(password.text)
+            .then((value) => debugPrint("Password updated successfully on auth!"));
+      }
+
+      showHUD(false);
+      password.clear();
+      newPassword.clear();
+      confirmPassword.clear();
+    } catch (e) {
+      print("Failed to update password: $e");
+      showHUD(false);
+
+    }
+  }
+
+  Future<void> deleteAccount({
+    bool isClient = true,
+}) async {
+    showHUD(true);
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        await user.delete()
+            .then((value) => debugPrint("Deleted account! ${user.uid}"));
+
+        await db.collection(isClient ? tClientPath : tExpertPath).doc(user.uid).delete()
+            .then((value) => debugPrint("Deleted account! ${user.uid}"));
+      }
+      password.clear();
+      email.clear();
+      showHUD(false);
+
+
+    } catch (e) {
+      showHUD(false);
+      throw e;
     }
   }
 

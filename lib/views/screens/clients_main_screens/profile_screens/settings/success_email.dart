@@ -51,14 +51,9 @@ class _SuccessEmailState extends State<SuccessEmail> {
                 child: Column(
                   children: [
                     MainButton(
-                      title: 'Login',
+                      title: 'Done',
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LogIn(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                     ),
                   ],

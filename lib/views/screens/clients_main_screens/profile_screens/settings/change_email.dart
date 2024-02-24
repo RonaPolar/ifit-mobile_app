@@ -120,18 +120,18 @@ class _ChangeEmailState extends State<ChangeEmail> {
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
                         onYesPressed: () async {
-                          await auth.updateEmail(widget.id).then((value) {
-                            Navigator.pushReplacement(context,MaterialPageRoute(
-                                builder: (context) => const SuccessEmail()));
-                          });
-                          // Navigator.pushReplacement(context,MaterialPageRoute(
-                          //   builder: (context) => VerificationCodeScreen(
-                          //     onConfirmPressed: () {
-                          //       Navigator.pushReplacement(context,MaterialPageRoute(
-                          //         builder: (context) => const SuccessEmail()));
-                          //     },
-                          //   )
-                          // ),);
+                          Navigator.pushReplacement(context,MaterialPageRoute(
+                              builder: (context) => VerificationCodeScreen(
+                                onConfirmPressed: () async {
+                                  await auth.updateEmail(widget.id).then((value) {
+                                    Navigator.of(context).pop();
+                                    Navigator.pushReplacement(context, MaterialPageRoute(
+                                        builder: (
+                                            context) => const SuccessEmail()));
+                                  });
+                              })
+                            ),
+                          );
                         },
                       );
                     },

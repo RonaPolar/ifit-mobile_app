@@ -130,7 +130,7 @@ class _LogInState extends State<LogIn> {
         await auth.login().then((_) {
           bool isExpert = auth.userType == "Expert";
 
-          Navigator.pushReplacement(context,
+          Navigator.push(context,
             MaterialPageRoute(
               builder: (context) => isExpert
                 ? const ExpBottomBar()

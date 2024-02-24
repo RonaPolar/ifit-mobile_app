@@ -27,15 +27,19 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
 
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    getData(scaffoldKey.currentContext!);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getData(scaffoldKey.currentContext!);
+    });
   }
 
   void getData(BuildContext context) {
+
     final Auth auth = Provider.of<Auth>(context, listen: false);
 
     final ExpertModel expertModel = widget.expertModel;
@@ -219,17 +223,12 @@ class _EditProfileState extends State<EditProfile> {
                             },
                           ),
                           const Gap(15),
-                          DatePickerField(
-                            onDateSelected: auth.updateDateOfBirth,
-                            hintText: 'Date of Birth',
-                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
         ),

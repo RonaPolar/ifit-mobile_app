@@ -269,7 +269,10 @@ class ExpProfileScreen extends StatelessWidget {
                             title: 'Settings',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const Settings()));
+                                builder: (context) => Settings(
+                                  id: expertModel.uid,
+                                  expertModel: expertModel,
+                              )));
                             },
                           ),
                           NextNavigation(
