@@ -7,9 +7,12 @@ import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
+import 'package:ifit/screens/account-login&reg/register/client_registration/register_part2.dart';
+import 'package:ifit/screens/account-login&reg/register/client_registration/register_part3.dart';
 import 'package:ifit/screens/account-login&reg/register/expert_registration/expert_registration1.dart';
 import 'package:ifit/screens/clients_main_screens/home_screens/home.dart';
 import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
+import 'package:ifit/screens/clients_main_screens/program_tracker_screens/feedback_screens/feedback.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
@@ -76,7 +79,7 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'I-Fit',
 
-      // home: const CreateWorkout(), //for testing
+      // home: const FeedbackForm(), //for testing
       home: widget.homeScreen, //either Onboarding or Register Screen
     );
   }
