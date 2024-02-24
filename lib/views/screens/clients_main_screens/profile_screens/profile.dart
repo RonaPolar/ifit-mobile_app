@@ -107,12 +107,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: Styles.title,
                               ),
                               const Gap(5),
-                              Row(
+                              Column(
                                 children: widget.clientModel.clientGoalModel!.fitnessGoals.map((e) {
-                                  return Expanded(
-                                    child: Text(e,
-                                      style: Styles.text15normal,
-                                    ),
+                                  return Row(
+                                    children: [
+                                      const Icon(Icons.circle,
+                                        size: 4,
+                                      ),
+                                      const SizedBox(width: 4.0),
+                                      Expanded(
+                                        child: Text(e,
+                                          style: Styles.text15normal,
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 }).toList(),
                               ),
@@ -240,7 +248,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: const [
                             BoxShadow(color: Colors.black26, blurRadius: 2)
-                          ]),
+                          ],
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,8 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           ),
                           NextNavigation(
-                            iconData:
-                                FluentSystemIcons.ic_fluent_shield_regular,
+                            iconData: FluentSystemIcons.ic_fluent_shield_regular,
                             title: 'Privacy Policy',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
@@ -274,8 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           ),
                           NextNavigation(
-                            iconData:
-                                FluentSystemIcons.ic_fluent_settings_regular,
+                            iconData: FluentSystemIcons.ic_fluent_settings_regular,
                             title: 'Settings',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
@@ -291,14 +298,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: 'Log Out',
                             onTap: () {
                               showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ConfirmationDialog(
-                                      onYesPressed: () {
-                                        Navigator.of(context).popUntil((route) => route.isFirst);
-                                      },
-                                    );
-                                  });
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ConfirmationDialog(
+                                    onYesPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                    },
+                                );
+                              });
                             },
                           ),
                         ],

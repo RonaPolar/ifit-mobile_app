@@ -337,7 +337,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
                                       MainButton(
                                         title: 'Contact Now',
                                         onPressed: () {
-                                          sendEmail("pajunar0@gmail.com");
+                                          sendEmail(expertModel.email);
                                         },
                                       ),
                                     ],
@@ -361,17 +361,14 @@ class _ExpertProfileState extends State<ExpertProfile> {
   }
 
   void sendEmail(String email) async {
-    final Uri params = Uri(
-      scheme: "mailto",
-      path: email,
-      query: "subject=Test%20Email&body=This is a test.",
-    );
 
-    if (await canLaunchUrl(params)) {
-      debugPrint("Going to email");
-      // await launchUrl(params);
-      Uri uri = Uri.parse("mailto:pajunar0@gmail.com?subject=This is test. &body=Hello");
+    final String url = "mailto:$email";
+    final Uri uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
+    } else {
+      throw "Cant open email app";
     }
   }
 }
