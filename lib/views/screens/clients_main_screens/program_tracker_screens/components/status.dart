@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/cancelled_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/favorites_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/finished_program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/ongoing_program.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status/program.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 
@@ -32,7 +32,9 @@ class ProgramStatusWidget extends StatelessWidget {
     List<dynamic> combinedList = [...workoutPlanList, ...workoutMealList];
 
     final List<WorkoutPlan> ongoingWorkoutPlan = workoutPlanList.where((element) {
-      return element.isCancelled;
+      final bool isCompleted = (int.parse(element.daysOfThePlan) == element.dayCountFinished);
+
+      return !element.isCancelled && !isCompleted;
     }).toList();
 
     final List<WorkoutPlan> cancelledWorkoutPlan = workoutPlanList.where((element) {
@@ -70,15 +72,15 @@ class ProgramStatusWidget extends StatelessWidget {
               iconData: FluentSystemIcons.ic_fluent_timer_filled,
               title: 'Ongoing',
               onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => OngoingProgramScreen(
+                    workoutPlanList: ongoingWorkoutPlan,
+                    id: clientModel.uid,
+                )));
                 // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => OngoingProgramScreen(
-                //       workoutPlanList: ongoingWorkoutPlan,
+                //     builder: (context) => StatusProgramScreen(
                 //       id: clientModel.uid,
                 //     )));
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => StatusProgramScreen(
-                      id: clientModel.uid,
-                    )));
               },
             ),
             IconButtonText(
@@ -103,6 +105,21 @@ class ProgramStatusWidget extends StatelessWidget {
                     id: clientModel.uid,
                   ),
                 ));
+              },
+            ),
+            IconButtonText(
+              iconData: FluentSystemIcons.ic_fluent_calendar_cancel_filled,
+              title: 'Cancelled',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CancelledProgramScreen(
+                      workoutPlanList: cancelledWorkoutPlan,
+                      id: clientModel.uid,
+                    )));
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => StatusProgramScreen(
+                //       id: clientModel.uid,
+                //     )));
               },
             ),
             IconButtonText(

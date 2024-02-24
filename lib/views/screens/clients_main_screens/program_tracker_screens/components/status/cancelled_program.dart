@@ -1,95 +1,30 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/widgets/search.dart';
+import 'package:provider/provider.dart';
 
 class CancelledProgramScreen extends StatefulWidget {
-  const CancelledProgramScreen({super.key});
+  const CancelledProgramScreen({
+    super.key,
+    required this.workoutPlanList,
+    required this.id,
+  });
+
+  final List<WorkoutPlan> workoutPlanList;
+  final String id;
 
   @override
   State<CancelledProgramScreen> createState() => _CancelledProgramScreenState();
 }
 
 class _CancelledProgramScreenState extends State<CancelledProgramScreen> {
- List latestWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "rate": "4.7",
-      "kcal": "180",
-      "days": "14",
-      "duration": "30",
-      "exercise": "10",
-      "progress": 0.3,
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "rate": "4.3",
-      "kcal": "200",
-      "duration": "30",
-      "days": "10",
-      "exercise": "11",
-      "progress": 0.5,
-    },
-    {
-      "name": "Upper Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "rate": "4.5",
-      "kcal": "300",
-      "duration": "20",
-      "days": "15",
-      "exercise": "12",
-      "progress": 0.6,
-    },
-  ];
-
-    List latestMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "rate": "4.9",
-      "kcal": "190",
-      "fats": "100",
-      "proteins": "176",
-      "sugar": "50",
-      "categories": "Breakfast",
-      "days": "15",
-      "progress": 0.2,
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "rate": "4.6",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "categories": "Lunch",
-      "days": "15",
-      "progress": 0.9,
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "rate": "4.3",
-      "kcal": "300",
-      "fats": "170",
-      "proteins": "400",
-      "sugar": "79",
-      "categories": "Dinner",
-      "days": "15",
-      "progress": 0.5,
-    },
-  ];
-
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController txtSearch = TextEditingController();
-    List<dynamic> combinedList = [...latestWorkoutArr, ...latestMealArr];
-    combinedList.shuffle(Random());
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -97,71 +32,51 @@ class _CancelledProgramScreenState extends State<CancelledProgramScreen> {
         title: Text("Cancelled Programs"),
         centerTitle: true,
       ),
-      body: ListView(
+      body: Column(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical:10, horizontal: 5),
-                child: Container(
-                  height: 35,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10)),
-                  alignment: Alignment.center,
-                  child: SearchContainer(controller: txtSearch, hintText: "Search")
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: SizedBox(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: widget.workoutPlanList.length,
+                itemBuilder: (context, index) {
+                  final WorkoutPlan item = widget.workoutPlanList[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                              WorkoutDetails(
+                                dObj: item,
+                                id: widget.id,
+                              ),
+                          ),
+                        );
+                      },
+                      child: CancelledRow(
+                        image: item.workoutPicture,
+                        title: item.planName,
+                        bottomText: "${item.minutes} minutes | ${item.calories} Calories",
+                        onPressed: () async {
+                          await workoutProvider.cancelWorkout(
+                            id: widget.id,
+                            workoutPlan: item,
+                          ).then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Restored: ${item.planName}")));
+                            Navigator.of(context).pop();
+                          });
+                        },
+                    ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: SizedBox(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: combinedList.length,
-                    itemBuilder: (context, index) {
-                      var item = combinedList[index];
-              
-                      if (item.containsKey("duration") && item.containsKey("kcal")) {
-                        // It's a workout item
-                        return InkWell(
-                          onTap: () {
-                            // Navigator.push(context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //       WorkoutDetails(dObj: item),
-                            //   ),
-                            // );
-                          },
-                          child: CancelledRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                            ));
-                      } else {
-                        // It's a meal item
-                        return InkWell(
-                          onTap: () {
-                            // Navigator.push(context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //       MealDetails(dObj: item),
-                            //   ),
-                            // );
-                          },
-                          child: CancelledRow(image: item["image"], 
-                            title: item["name"], 
-                            bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                            ));
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ],
-          )
-        ]
+            ),
+          ),
+        ],
       )
     );
   }
@@ -173,13 +88,14 @@ class CancelledRow extends StatefulWidget {
   final String image;
   final String title;
   final String bottomText;
-
+  final Function() onPressed;
 
   const CancelledRow({
     super.key,
     required this.image,
     required this.title,
-    required this.bottomText, 
+    required this.bottomText,
+    required this.onPressed,
   });
 
   @override
@@ -189,6 +105,7 @@ class CancelledRow extends StatefulWidget {
 class _CancelledRowState extends State<CancelledRow> {
   @override
   Widget build(BuildContext context) {
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -205,8 +122,7 @@ class _CancelledRowState extends State<CancelledRow> {
               width: 60,
               height: 60,
               color: Styles.secondColor.withOpacity(0.6),
-              child: Image.asset(
-                widget.image,
+              child: Image.network(widget.image,
                 fit: BoxFit.contain,
               ),
             ),
@@ -238,9 +154,10 @@ class _CancelledRowState extends State<CancelledRow> {
             child: MainButton(
               title: "Start Again",
               textStyle: Styles.seeMore.copyWith(
-              color: Colors.white,),
+              color: Colors.white,
+            ),
               buttonColor: Styles.secondColor,
-              onPressed: () {},
+              onPressed: widget.onPressed,
             ),
           )
         ],

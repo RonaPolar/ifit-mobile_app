@@ -23,7 +23,6 @@ class OngoingProgramScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
-    final DialogService dialog = DialogService();
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -103,7 +102,8 @@ class OngoingProgramScreen extends StatelessWidget {
                   child: MainButton(
                     title: "Cancel",
                     textStyle: Styles.seeMore.copyWith(
-                      color: Colors.white,),
+                      color: Colors.white,
+                    ),
                     buttonColor: Styles.secondColor,
                     onPressed: () {
                       dialog.confirmationDialog(context,
@@ -111,7 +111,11 @@ class OngoingProgramScreen extends StatelessWidget {
                             await workoutProvider.cancelWorkout(
                               id: id,
                               workoutPlan: item,
-                            );
+                            ).then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text("Cancelled: ${item.planName}")));
+                              Navigator.of(context).pop();
+                            });
                           }
                       );
                     },

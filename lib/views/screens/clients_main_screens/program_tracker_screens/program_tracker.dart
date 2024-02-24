@@ -1,12 +1,9 @@
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
-import 'package:ifit/service/functions/dialog.dart';
-import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
@@ -14,7 +11,6 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
-import 'package:provider/provider.dart';
 
 import 'workout_screens/workout_details.dart';
 
@@ -42,12 +38,6 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
-    final DialogService dialog = DialogService();
-
-
-    List<dynamic> combinedList = [...widget.workoutPlanList, ...widget.workoutMealList];
-
     final List<WorkoutPlan> completedWorkoutPlan = widget.workoutPlanList.where((element) {
       if (element.dayCountFinished != null) {
         return int.parse(element.daysOfThePlan) > int.parse(element.dayCountFinished.toString());
@@ -66,31 +56,8 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
       elevation: 0,
       automaticallyImplyLeading: false,
       title: Text('Program Tracker',
-        style: Styles.headline20,
-      ),
-      actions: [
-          InkWell(
-            onTap: () {
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context) => const OngoingPrograms()),
-            //   );
-            },
-            child: Container(
-              margin: const EdgeInsets.all(12),
-              height: 30,
-              width: 30,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(FluentSystemIcons.ic_fluent_person_regular,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
+          style: Styles.headline20,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
