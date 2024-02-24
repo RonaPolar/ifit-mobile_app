@@ -8,3 +8,4 @@ const String tExpertPath = "experts";
 const String tClientPath = "clients";
 const String tWorkoutPlanPath = "workoutPlan";
 const String tWorkoutMealPath = "workoutMeal";
+const String tNotification = "notification";

@@ -6,10 +6,12 @@ import 'package:ifit/views/screens/clients_main_screens/home_screens/notificatio
 class WelcomeBackWidget extends StatelessWidget {
   const WelcomeBackWidget({
     required this.name,
+    required this.id,
     super.key,
   });
 
   final String name;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,10 @@ class WelcomeBackWidget extends StatelessWidget {
         IconButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const NotificationScreen()));
+                builder: (context) => NotificationScreen(
+                  id: id,
+                )),
+              );
             },
             icon: const Icon(FluentSystemIcons.ic_fluent_alert_regular,
           ),

@@ -8,9 +8,11 @@ import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/notification.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class ClientProvider extends ChangeNotifier {
 
@@ -222,6 +224,23 @@ class ClientProvider extends ChangeNotifier {
         getWorkoutPlanExisting(id: id, workoutPlan: workoutPlan);
         return debugPrint("Workout plan added successfully!");
       }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
+
+      final uid = const Uuid().v1();
+
+      final NotifModel notifModel = NotifModel(
+        id: uid,
+        photoUrl: workoutPlan.workoutPicture,
+        title: workoutPlan.planName,
+        dateCreated: DateTime.now(),
+        planId: workoutPlan.id,
+      );
+
+      await _db.collection(tClientPath)
+          .doc(id).collection(tNotification)
+          .doc(uid).set({
+        tNotification: notifModel.toJson(),
+      }).then((value) => debugPrint("Notif added! ${workoutPlan.id}"))
+        .onError((error, stackTrace) => debugPrint("Error adding notification!"));
     }
   }
 
@@ -327,6 +346,39 @@ class ClientProvider extends ChangeNotifier {
         .then((value) => debugPrint("Update photo successful!"))
         .onError((error, stackTrace) => debugPrint("Failed uploading photo successful!"));
     notifyListeners();
+  }
+
+  Stream<List<NotifModel>>? notifStream;
+
+  Stream<List<NotifModel>> getNotifStream(String uid) {
+    return _db.collection(tClientPath)
+        .doc(uid).collection(tNotification)
+        .snapshots().map((doc) {
+
+      return doc.docs.map((data) {
+        final map = data.data();
+        return NotifModel.fromJson(map[tNotification]);
+
+      }).toList();
+    });
+  }
+
+  void updateNotifStream({
+    required String uid,
+  }) {
+    notifStream = getNotifStream(uid);
+    notifyListeners();
+  }
+
+  Future<void> deleteNotif({
+    required String id,
+    required String notifId,
+  }) async {
+    await _db.collection(tClientPath)
+        .doc(id).collection(tNotification)
+        .doc(notifId).delete()
+      .then((value) => debugPrint("Deleted notif successfully!"))
+      .onError((error, stackTrace) => debugPrint("Deleted notif failed!"));
   }
 
 }

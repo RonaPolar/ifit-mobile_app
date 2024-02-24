@@ -59,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 WelcomeBackWidget(
                   name: client.name,
+                  id: widget.clientModel.uid,
                 ),
                 const Gap(20),
                 const BMIWidget(),
