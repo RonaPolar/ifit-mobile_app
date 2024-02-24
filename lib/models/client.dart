@@ -102,7 +102,7 @@ class ClientModel {
 
 class ClientGoalModel {
   final String level;
-  final List<String> fitnessGoals;
+  final String fitnessGoals;
   final List<String> bodyPart;
   final String goalPlan;
   final String exerciseDuration;
@@ -121,7 +121,7 @@ class ClientGoalModel {
 
   ClientGoalModel copyWith({
     String? level,
-    List<String>? fitnessGoals,
+    String? fitnessGoals,
     List<String>? bodyPart,
     String? goalPlan,
     String? exerciseDuration,
@@ -140,7 +140,7 @@ class ClientGoalModel {
 
   factory ClientGoalModel.fromJson(Map<String, dynamic> json) => ClientGoalModel(
     level: json["level"],
-    fitnessGoals: List<String>.from(json["fitnessGoals"].map((x) => x)),
+    fitnessGoals: json["fitnessGoals"],
     bodyPart: List<String>.from(json["bodyPart"].map((x) => x)),
     goalPlan: json["goalPlan"],
     exerciseDuration: json["exerciseDuration"],
@@ -150,7 +150,7 @@ class ClientGoalModel {
 
   Map<String, dynamic> toJson() => {
     "level": level,
-    "fitnessGoals": List<dynamic>.from(fitnessGoals.map((x) => x)),
+    "fitnessGoals": fitnessGoals,
     "bodyPart": List<dynamic>.from(bodyPart.map((x) => x)),
     "goalPlan": goalPlan,
     "exerciseDuration": exerciseDuration,

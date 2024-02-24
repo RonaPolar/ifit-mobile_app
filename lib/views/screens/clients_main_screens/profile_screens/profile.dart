@@ -107,22 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: Styles.title,
                               ),
                               const Gap(5),
-                              Column(
-                                children: widget.clientModel.clientGoalModel!.fitnessGoals.map((e) {
-                                  return Row(
-                                    children: [
-                                      const Icon(Icons.circle,
-                                        size: 4,
-                                      ),
-                                      const SizedBox(width: 4.0),
-                                      Expanded(
-                                        child: Text(e,
-                                          style: Styles.text15normal,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
+                              Text(widget.clientModel.clientGoalModel!.fitnessGoals,
+                                style: Styles.text15normal,
                               ),
                             ],
                           ),

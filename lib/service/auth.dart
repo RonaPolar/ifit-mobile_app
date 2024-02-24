@@ -108,7 +108,7 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> fitnessGoal = [];
+  String? fitnessGoal;
 
   List<String> fitnessGoalList = [
     "Loss Weight",
@@ -116,12 +116,8 @@ class Auth extends ChangeNotifier {
     "Gain Muscles"
   ];
 
-  void updateFitnessGoal(String value) {
-    if (!fitnessGoal.contains(value)) {
-      fitnessGoal.add(value);
-    } else {
-      fitnessGoal.remove(value);
-    }
+  void updateFitnessGoal(String? value) {
+    fitnessGoal = value;
     notifyListeners();
   }
 
@@ -226,7 +222,7 @@ class Auth extends ChangeNotifier {
   Future<void> updateClientGoalProfile(String id) async {
     final ClientGoalModel clientGoalModel = ClientGoalModel(
       level: goalDifficulty!,
-      fitnessGoals: fitnessGoal,
+      fitnessGoals: fitnessGoal!,
       bodyPart: specificBody,
       goalPlan: goalPlan!,
       exerciseDuration: goalDuration!,

@@ -107,12 +107,11 @@ class _RegisterPart3State extends State<RegisterPart3> {
                     ),
                     Column(
                       children: auth.fitnessGoalList.map((data) {
-                        return CustomCheckbox(
+                        return CustomRadioButton(
                           title: data,
-                          onSelectionChanged: (val) {
-                            auth.updateFitnessGoal(data);
-                          },
-                          value: auth.fitnessGoal.contains(data),
+                          value: data,
+                          groupValue: auth.fitnessGoal ?? "",
+                          onChanged: auth.updateFitnessGoal,
                         );
                       }).toList(),
                     ),
