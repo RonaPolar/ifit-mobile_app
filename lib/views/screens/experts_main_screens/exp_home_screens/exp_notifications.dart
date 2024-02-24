@@ -1,28 +1,41 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/notification.dart';
+import 'package:ifit/service/Expert.dart';
+import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:ifit/views/widgets/more_icon.dart';
+import 'package:provider/provider.dart';
 
 class ExpNotifications extends StatefulWidget {
-  const ExpNotifications({super.key});
+  const ExpNotifications({
+    required this.id,
+    super.key,
+  });
+
+  final String id;
 
   @override
   State<ExpNotifications> createState() => _ExpNotificationsState();
 }
 
 class _ExpNotificationsState extends State<ExpNotifications> {
-  List notificationArr = [
-    {"image": "assets/images/meal/nigiri.png", "title": "You got 3 stars for Dinner Plan", "time": "About 1 minutes ago"},
-    {"image": "assets/icons/Lower-Weights.png", "title": "You got 4 stars for Lowerbody Weights", "time": "About 3 hours ago"},
-    {"image": "assets/images/meal/salad.png", "title": "Hey, let’s add some meals plan", "time": "About 3 hours ago"},
-    {"image": "assets/icons/workout-pic.png", "title": "Congratulations, You have reached 100 clients for Full Bo...", "time": "29 May"},
-    {"image": "assets/images/meal/pancake.png", "title": "Hey, your Dessert Plan has 4.3 ratings", "time": "8 April"},
-    {"image": "assets/icons/inbox.png", "title": "Ups, You have 2 messages", "time": "8 April"},
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context, listen: false);
+      expertProvider.updateNotifStream(uid: widget.id);
+    });
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -49,38 +62,57 @@ class _ExpNotificationsState extends State<ExpNotifications> {
           ),
         ),
         title: Text('Notification',
-        style: Styles.headline20,),
-      actions: const [
-           MoreIcon(options: ['Today','This Week','This Month']
-          ),
-        ],
+        style: Styles.headline20,
+        ),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-        itemBuilder: ((context, index) {
-          var nObj = notificationArr[index];
-          return NotificationRow(nObj: nObj);
-      }), separatorBuilder: (context, index){
-        return Divider(color: Colors.grey.withOpacity(0.5), height: 1, );
-      }, itemCount: notificationArr.length),
+      body: StreamWrapper<List<NotifModel>>(
+        stream: expertProvider.notifStream,
+        child: (data) {
+          final List<NotifModel> notifList = data!;
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+            itemCount: notifList.length,
+            itemBuilder: (context, index) {
+              var nObj = notifList[index];
+              return NotificationRow(
+                id: widget.id,
+                nObj: nObj,
+              );
+            },
+            separatorBuilder: (context, index) {
+                return Divider(color: Colors.grey.withOpacity(0.5), height: 1,
+              );
+            },
+          );
+        }
+      ),
     );
   }
 }
 
 class NotificationRow extends StatelessWidget {
-  final Map nObj;
-  const NotificationRow({super.key, required this.nObj});
+  final NotifModel nObj;
+  final String id;
+
+  const NotificationRow({
+    super.key,
+    required this.nObj,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+    final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Image.asset(
-              nObj["image"].toString(),
+            child: Image.network(nObj.photoUrl,
               width: 40,
               height: 40,
               fit: BoxFit.contain,
@@ -93,14 +125,12 @@ class NotificationRow extends StatelessWidget {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                nObj["title"].toString(),
+              Text(nObj.title,
                 style: Styles.text12.copyWith(
                     fontWeight: FontWeight.bold,
                     ),
               ),
-              Text(
-                nObj["time"].toString(),
+              Text("About ${now.difference(nObj.dateCreated).inMinutes} minutes",
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -108,7 +138,19 @@ class NotificationRow extends StatelessWidget {
               ),
             ],
           )),
-          const MoreIcon(options: ['Remove'], iconData: FluentSystemIcons.ic_fluent_more_vertical_filled,)
+          MoreIcon(
+            options: ['Remove'],
+            iconData: FluentSystemIcons.ic_fluent_more_vertical_filled,
+            onTap: (val) async {
+              await expertProvider.deleteNotif(
+                id: id,
+                notifId: nObj.id,
+              ).then((value) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Deleted!")));
+              });
+            },
+          )
         ],
       ),
     );

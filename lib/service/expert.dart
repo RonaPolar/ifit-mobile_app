@@ -8,6 +8,7 @@ import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/notification.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
@@ -368,6 +369,23 @@ class ExpertProvider extends ChangeNotifier {
               .then((value) => debugPrint("Workout plan added successfully!"))
               .onError((error, stackTrace) => "Failed: $error");
         }
+
+        final String uid = const Uuid().v1();
+
+        final NotifModel notifModel = NotifModel(
+          id: uid,
+          photoUrl: workoutPlan.workoutPicture,
+          title: workoutPlan.planName,
+          dateCreated: DateTime.now(),
+          planId: workoutPlan.id,
+        );
+
+        await _db.collection(tExpertPath).doc(id).collection(tNotification).doc(uid).set({
+          tNotification: notifModel.toJson(),
+        }).then((value) => debugPrint("Notif added successfully!"))
+            .onError((error, stackTrace) => debugPrint("Error notif: $error"));
+
+
         showHUD(false);
       });
     } catch (e) {
@@ -536,6 +554,21 @@ class ExpertProvider extends ChangeNotifier {
               .onError((error, stackTrace) => "Failed: $error");
         }
 
+        final String uid = const Uuid().v1();
+
+        final NotifModel notifModel = NotifModel(
+          id: uid,
+          photoUrl: workoutMeal.foodPhoto,
+          title: workoutMeal.foodPlanName,
+          dateCreated: DateTime.now(),
+          planId: workoutMeal.id,
+        );
+        
+        await _db.collection(tExpertPath).doc(id).collection(tNotification).doc(uid).set({
+          tNotification: notifModel.toJson()
+        }).then((value) => debugPrint("Notif added successfully!"))
+          .onError((error, stackTrace) => debugPrint("Error notif: $error"));
+
         showHUD(false);
       });
     } catch (e) {
@@ -644,6 +677,38 @@ class ExpertProvider extends ChangeNotifier {
     });
 
     return controller.stream;
+  }
+
+  Stream<List<NotifModel>>? notifStream;
+
+  Stream<List<NotifModel>> getNotifStream(String uid) {
+    return _db.collection(tExpertPath)
+        .doc(uid).collection(tNotification)
+        .snapshots().map((doc) {
+
+      return doc.docs.map((data) {
+        final map = data.data();
+        return NotifModel.fromJson(map[tNotification]);
+      }).toList();
+    });
+  }
+
+  void updateNotifStream({
+    required String uid,
+  }) {
+    notifStream = getNotifStream(uid);
+    notifyListeners();
+  }
+
+  Future<void> deleteNotif({
+    required String id,
+    required String notifId,
+  }) async {
+    await _db.collection(tExpertPath)
+        .doc(id).collection(tNotification)
+        .doc(notifId).delete()
+        .then((value) => debugPrint("Deleted notif successfully!"))
+        .onError((error, stackTrace) => debugPrint("Deleted notif failed!"));
   }
 
 }

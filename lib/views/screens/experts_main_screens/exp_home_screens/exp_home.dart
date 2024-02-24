@@ -10,7 +10,6 @@ import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/program_created.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/components/rating.dart';
 import 'package:ifit/views/widgets/body/stream.dart';
-import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_notifications.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +66,9 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                     IconButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ExpNotifications()));
+                              builder: (context) => ExpNotifications(
+                                id: widget.expertModel.uid,
+                              )));
                         },
                         icon: const Icon(
                             FluentSystemIcons.ic_fluent_alert_regular))
