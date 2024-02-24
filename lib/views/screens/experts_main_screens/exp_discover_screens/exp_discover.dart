@@ -7,8 +7,9 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/expert_list.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/new_arrival.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/popular.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
 
-class ExpDiscoverScreen extends StatelessWidget {
+class ExpDiscoverScreen extends StatefulWidget {
   const ExpDiscoverScreen({
     required this.workoutPlanList,
     required this.workoutMealList,
@@ -21,15 +22,21 @@ class ExpDiscoverScreen extends StatelessWidget {
   final List<ExpertModel> expertList;
 
   @override
+  State<ExpDiscoverScreen> createState() => _ExpDiscoverScreenState();
+}
+
+class _ExpDiscoverScreenState extends State<ExpDiscoverScreen> {
+
+  bool isMeal = true;
+  bool isPlan = true;
+
+  @override
   Widget build(BuildContext context) {
-    List<dynamic> newArrivalCombination = [];
-    List<dynamic> popularCombination = [];
 
-
-    final List<WorkoutMeal> newArrivalMeal = workoutMealList.expand((element) => element).toList();
-    final List<WorkoutMeal> popularMeal = workoutMealList.expand((element) => element).toList();
-    final List<WorkoutPlan> newArrivalPlan = workoutPlanList.expand((element) => element).toList();
-    final List<WorkoutPlan> popularPlan = workoutPlanList.expand((element) => element).toList();
+    final List<WorkoutMeal> newArrivalMeal = widget.workoutMealList.expand((element) => element).toList();
+    final List<WorkoutMeal> popularMeal = widget.workoutMealList.expand((element) => element).toList();
+    final List<WorkoutPlan> newArrivalPlan = widget.workoutPlanList.expand((element) => element).toList();
+    final List<WorkoutPlan> popularPlan = widget.workoutPlanList.expand((element) => element).toList();
 
     newArrivalMeal.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
     newArrivalPlan.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
@@ -37,8 +44,31 @@ class ExpDiscoverScreen extends StatelessWidget {
     popularMeal.sort((a, b) => a.rating.compareTo(b.rating));
     popularPlan.sort((a, b) => a.rating.compareTo(b.rating));
 
-    newArrivalCombination = [...newArrivalMeal, ...newArrivalPlan];
-    popularCombination = [...popularMeal, ...popularPlan];
+    // newArrivalCombination =  [...newArrivalMeal, ...newArrivalPlan];
+
+    List newArrivalCombination() {
+      if (isMeal && isPlan) {
+        return [...newArrivalPlan, ...newArrivalMeal];
+      } else if (isPlan) {
+        return newArrivalPlan;
+      } else if (isMeal) {
+        return newArrivalMeal;
+      } else {
+        return [];
+      }
+    }
+
+    List popularCombination() {
+      if (isMeal && isPlan) {
+        return [...popularPlan, ...popularMeal];
+      } else if (isPlan) {
+        return popularPlan;
+      } else if (isMeal) {
+        return popularMeal;
+      } else {
+        return [];
+      }
+    }
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -51,8 +81,50 @@ class ExpDiscoverScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top:15, right:15, left:15),
-                  child: Text("Daily Discover",
-                      style: Styles.title
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text("Daily Discover",
+                            style: Styles.title
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 30,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: MainButton(
+                                  title: "Meal",
+                                  onPressed: () {
+                                    setState(() {
+                                      isMeal = !isMeal;
+                                    });
+                                  },
+                                  buttonColor: isMeal
+                                      ? Colors.red
+                                      : Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(width: 4.0),
+                              Expanded(
+                                child: MainButton(
+                                  title: "Plan",
+                                  onPressed: () {
+                                    setState(() {
+                                      isPlan = !isPlan;
+                                    });
+                                  },
+                                  buttonColor: isPlan
+                                    ? Colors.red
+                                    : Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const Gap(10),
@@ -70,11 +142,11 @@ class ExpDiscoverScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         ExpertNewArrivalWidget(
-                          combinedList: newArrivalCombination,
+                          combinedList: newArrivalCombination(),
                         ),
                         const Gap(10),
                         ExpertPopularWidget(
-                          combinedList: popularCombination,
+                          combinedList: popularCombination(),
                         ),
                       ],
                     ),
@@ -82,7 +154,7 @@ class ExpDiscoverScreen extends StatelessWidget {
                 ),
                 const Gap(15),
                 ExpertExpertListWidget(
-                  discoverExperts: expertList,
+                  discoverExperts: widget.expertList,
                 ),
                 const Gap(10)
               ],//main Children
