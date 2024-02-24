@@ -303,6 +303,23 @@ class ClientProvider extends ChangeNotifier {
         getWorkoutMealExisting(id: id, workoutMeal: workoutMeal);
         return debugPrint("Workout meal added successfully!");
       }).catchError((error, stackTrace) => debugPrint("Failed! $stackTrace"));
+
+      final uid = const Uuid().v1();
+
+      final NotifModel notifModel = NotifModel(
+        id: uid,
+        photoUrl: workoutMeal.foodPhoto,
+        title: workoutMeal.foodPlanName,
+        dateCreated: DateTime.now(),
+        planId: workoutMeal.id,
+      );
+
+      await _db.collection(tClientPath)
+          .doc(id).collection(tNotification)
+          .doc(uid).set({
+        tNotification: notifModel.toJson(),
+      }).then((value) => debugPrint("Notif added! ${workoutMeal.id}"))
+          .onError((error, stackTrace) => debugPrint("Error adding notification!"));
     }
     notifyListeners();
   }
