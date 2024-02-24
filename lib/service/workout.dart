@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/feedback.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/start_workout/countdown.dart';
 
 class WorkoutProvider extends ChangeNotifier {
@@ -48,6 +49,7 @@ class WorkoutProvider extends ChangeNotifier {
     if (skip) {
       skippedIndex++;
     }
+    final bool isCompleted = int.parse(workoutPlan.daysOfThePlan) > int.parse(workoutPlan.dayCountFinished.toString());
 
     if (exerciseList.length - 1 != workoutIndex) {
       workoutIndex++;
@@ -77,6 +79,14 @@ class WorkoutProvider extends ChangeNotifier {
             setFinished = 0;
             workoutIndex = 0;
             skippedIndex = 0;
+          }).then((value) {
+            if (isCompleted) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FeedbackFormScreen(
+                    id: id,
+                    workoutPlan: workoutPlan,
+                  )));
+            }
           });
         } else {
           Navigator.of(context)

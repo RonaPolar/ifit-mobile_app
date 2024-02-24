@@ -3,28 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/checkbox/custom.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
+import 'package:provider/provider.dart';
 
-class FeedbackForm extends StatefulWidget {
-  const FeedbackForm({super.key});
+class FeedbackFormScreen extends StatefulWidget {
+  const FeedbackFormScreen({
+    required this.id,
+    required this.workoutPlan,
+    super.key,
+  });
+
+  final String id;
+  final WorkoutPlan workoutPlan;
 
   @override
-  State<FeedbackForm> createState() => _FeedbackFormState();
+  State<FeedbackFormScreen> createState() => _FeedbackFormScreenState();
 }
 
-class _FeedbackFormState extends State<FeedbackForm> {
-  String? selectedWorkoutCategory;
-  String? selectedWorkoutDifficulty;
-  String? selectedWorkoutPurpose;
-  String? selectedValue;
-  final weightController = TextEditingController();
-  final heightController = TextEditingController();
+class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -60,7 +66,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                               Expanded(
                                 child: TextFieldContainer(
                                     keyboardType: TextInputType.number,
-                                    controller: weightController,
+                                    controller: Auth.weight,
                                     hintText: 'Weight',
                                     icon: FluentSystemIcons
                                         .ic_fluent_data_funnel_regular,
@@ -87,11 +93,11 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             children: [
                               Expanded(
                                 child: TextFieldContainer(
-                                    keyboardType: TextInputType.number,
-                                    controller: heightController,
-                                    hintText: 'Height',
-                                    icon: FluentSystemIcons
-                                        .ic_fluent_arrow_sort_regular,
+                                  keyboardType: TextInputType.number,
+                                  controller: Auth.height,
+                                  hintText: 'Height',
+                                  icon: FluentSystemIcons
+                                      .ic_fluent_arrow_sort_regular,
                                 ),
                               ),
                               const Gap(5),
@@ -123,11 +129,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             allowHalfRating: true,
                             itemCount: 5,
                             itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-
                             itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange,),
-                            onRatingUpdate: (rating) {
-                                print(rating);
-                            },
+                            onRatingUpdate: auth.updateRating,
                           ),
 
                           const Gap(30),
@@ -147,26 +150,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           RegisterDropDown(
                             hintText: 'Difficulty', // hint will be from what they put to registration
                             icon: Icons.fitness_center_outlined,
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: "Beginner",
-                                child: Text("Beginner"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Intermediate",
-                                child: Text("Intermediate"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Expert",
-                                child: Text("Expert"),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedWorkoutDifficulty = value;
-                              });
-                            },
-                            selectedValue: selectedWorkoutDifficulty,
+                            items: auth.goalDifficultyList.map((data) {
+                              return DropdownMenuItem<String>(
+                                value: data,
+                                child: Text(data),
+                              );
+                            }).toList(),
+                            onChanged: auth.updateGoalDifficulty,
+                            selectedValue: auth.goalDifficulty,
                           ),
                           const Gap(15),
                           Text(
@@ -176,32 +167,30 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           RegisterDropDown(
                             hintText: 'Purpose', // hint will be from what they put to registration
                             icon: Icons.fitness_center_outlined,
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: "Lose Weight",
-                                child: Text("Lose Weight"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Gain Muscles",
-                                child: Text("Gain Muscles"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Body Toning",
-                                child: Text("Body Toning"),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedWorkoutPurpose = value;
-                              });
-                            },
-                            selectedValue: selectedWorkoutPurpose,
+                            items: auth.fitnessGoalList.map((data) {
+                              return DropdownMenuItem<String>(
+                                value: data,
+                                child: Text(data),
+                              );
+                            }).toList(),
+                            onChanged: auth.updateFitnessGoal,
+                            selectedValue: auth.fitnessGoal,
                           ),
                           const Gap(15),
-                          // CustomCheckbox(
-                          //   questionText: '   What next specific body part do you want for it?',
-                          //   choices: const ['Upper Body', 'Shoulders' , 'Arms', 'Biceps', 'Triceps', 'Forearms', 'Chest' , 'Upper Back', 'Lower Back' , 'Abdominals', 'Lower Body', 'Glutes', 'Legs', 'Quadriceps', 'Hamstrings', 'Calves', 'Full Body'], onSelectionChanged: (List<bool> value) {  },
-                          // ),
+                          Text("What next specific body part do you want for it?",
+                            style: Styles.text15bold,
+                          ),
+                          Column(
+                            children: auth.specificBodyList.map((data) {
+                              return CustomCheckbox(
+                                title: data,
+                                onSelectionChanged: (val) {
+                                  auth.updateSpecificBody(data);
+                                },
+                                value: auth.specificBody.contains(data),
+                              );
+                            }).toList(),
+                          ),
                           const Gap(15),
                         ],
                       ),
@@ -210,14 +199,18 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(
-                    right: 20, left: 20, bottom: 30, top: 20),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
                     MainButton(
                       title: 'Update',
-                      onPressed: () {
-
+                      onPressed: () async {
+                        Future.wait([
+                          auth.updateAddRating(id: widget.id, workoutPlan: widget.workoutPlan),
+                          auth.updateProfileAssessment(id: widget.id),
+                        ]).then((value) {
+                          Navigator.of(context).pop();
+                        });
                       },
                     ),
                   ],

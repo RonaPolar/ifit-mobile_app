@@ -98,6 +98,7 @@ class WorkoutPlan {
   final bool isCancelled;
   final int? dayCountFinished;
   final bool? isDeleted;
+  final int? ratingCount;
 
   WorkoutPlan({
     required this.expertId,
@@ -120,6 +121,7 @@ class WorkoutPlan {
     this.isFavorite = false,
     this.dayCountFinished,
     this.isDeleted = false,
+    this.ratingCount = 0,
   });
 
   WorkoutPlan copyWith({
@@ -143,6 +145,7 @@ class WorkoutPlan {
     bool? isFavorite,
     int? dayCountFinished,
     bool? isDeleted,
+    int? ratingCount,
   }) =>
       WorkoutPlan(
         expertId: expertId ?? this.expertId,
@@ -165,6 +168,7 @@ class WorkoutPlan {
         isFavorite: isFavorite ?? this.isFavorite,
         dayCountFinished: dayCountFinished ?? this.dayCountFinished,
         isDeleted: isDeleted ?? this.isDeleted,
+        ratingCount: ratingCount ?? this.ratingCount,
       );
 
   factory WorkoutPlan.fromJson(Map<String, dynamic> json) => WorkoutPlan(
@@ -188,6 +192,7 @@ class WorkoutPlan {
     isFavorite: json["isFavorite"],
     dayCountFinished: json["dayCountFinished"],
     isDeleted: json["isDeleted"],
+    ratingCount: json["ratingCount"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -211,6 +216,7 @@ class WorkoutPlan {
     "isFavorite": isFavorite,
     "dayCountFinished": dayCountFinished,
     "isDeleted": isDeleted,
+    "ratingCount": ratingCount,
   };
 }
 

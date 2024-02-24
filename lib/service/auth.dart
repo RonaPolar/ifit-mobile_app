@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -491,4 +492,55 @@ class Auth extends ChangeNotifier {
     }
   }
 
+  double rating = 0;
+
+  void updateRating(double value) {
+    rating = value;
+    notifyListeners();
+  }
+
+  Future<void> updateAddRating({
+    required String id,
+    required WorkoutPlan workoutPlan,
+  }) async {
+    final clientPath = db.collection(tClientPath).doc(id).collection(tWorkoutPlanPath).doc(workoutPlan.id);
+
+
+    await clientPath.set({
+      tWorkoutPlanPath: workoutPlan.copyWith(
+        ratingCount: (workoutPlan.ratingCount ?? 0) + 1,
+      ).toJson(),
+    }).then((value) => debugPrint("Added rating successfully!"))
+        .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
+
+    num ratingCount = workoutPlan.ratingCount ?? 1;
+
+    await clientPath.set({
+      tWorkoutPlanPath: workoutPlan.copyWith(
+        rating: (rating / ratingCount),
+      ).toJson(),
+    }).then((value) => debugPrint("Added rating successfully!"))
+      .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
+  }
+
+  Future<void> updateProfileAssessment({
+    required String id,
+  }) async {
+    final path = db.collection(tClientPath).doc(id);
+
+    final ClientGoalModel goalModel = await path.get().then((value) {
+      final map = value.data()!;
+
+      return ClientGoalModel.fromJson(map["goal"]);
+    });
+
+    await path.set({
+      "goal": goalModel.copyWith(
+        fitnessGoals: fitnessGoal,
+        level: goalDifficulty,
+        bodyPart: specificBody,
+      ).toJson(),
+    }).then((value) => debugPrint("Update feedback assessment!"))
+      .onError((error, stackTrace) => debugPrint("Error feedback! $error"));
+  }
 }

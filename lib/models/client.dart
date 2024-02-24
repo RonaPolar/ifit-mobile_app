@@ -126,7 +126,7 @@ class ClientGoalModel {
     String? goalPlan,
     String? exerciseDuration,
     String? exerciseInAWeek,
-    String? healthComplications,
+    String? healthComplication,
   }) =>
       ClientGoalModel(
         level: level ?? this.level,
@@ -135,7 +135,7 @@ class ClientGoalModel {
         goalPlan: goalPlan ?? this.goalPlan,
         exerciseDuration: exerciseDuration ?? this.exerciseDuration,
         exerciseInAWeek: exerciseInAWeek ?? this.exerciseInAWeek,
-        healthComplication: healthComplications ?? this.healthComplication,
+        healthComplication: healthComplication ?? this.healthComplication,
       );
 
   factory ClientGoalModel.fromJson(Map<String, dynamic> json) => ClientGoalModel(
