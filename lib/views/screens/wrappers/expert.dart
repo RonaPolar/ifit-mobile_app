@@ -6,6 +6,7 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_home.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/wrapper.dart';
+import 'package:ifit/views/screens/experts_main_screens/unverified.dart';
 import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:provider/provider.dart';
 
@@ -72,39 +73,42 @@ class _ExpertAuthWrapperState extends State<ExpertAuthWrapper> {
   Widget build(BuildContext context) {
     final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
 
+
     return StreamWrapper<ExpertModel>(
       stream: expertProvider.expertStream,
       child: (data) {
         final ExpertModel expertModel = data!;
 
-        return StreamWrapper<List<WorkoutPlan>>(
-          stream: expertProvider.workoutPlanListStream,
-          child: (data) {
-            final List<WorkoutPlan> workoutPlan = data!;
-
-
-            return StreamWrapper<List<WorkoutMeal>>(
-              stream: expertProvider.workoutMealListStream,
+        if (data.verified) {
+          return StreamWrapper<List<WorkoutPlan>>(
+              stream: expertProvider.workoutPlanListStream,
               child: (data) {
-                final List<WorkoutMeal> workoutMeal = data!;
+                final List<WorkoutPlan> workoutPlan = data!;
+                return StreamWrapper<List<WorkoutMeal>>(
+                    stream: expertProvider.workoutMealListStream,
+                    child: (data) {
+                      final List<WorkoutMeal> workoutMeal = data!;
 
-                return StreamWrapper<List<ClientModel>>(
-                  stream: expertProvider.clientListStream,
-                  child: (data) {
-                    final List<ClientModel> clientList = data!;
+                      return StreamWrapper<List<ClientModel>>(
+                          stream: expertProvider.clientListStream,
+                          child: (data) {
+                            final List<ClientModel> clientList = data!;
 
-                    return bodyList(
-                      expertModel: expertModel,
-                      workoutPlan: workoutPlan,
-                      workoutMeal: workoutMeal,
-                      clientList: clientList
-                    )[widget.index];
-                  }
+                            return bodyList(
+                                expertModel: expertModel,
+                                workoutPlan: workoutPlan,
+                                workoutMeal: workoutMeal,
+                                clientList: clientList
+                            )[widget.index];
+                          }
+                      );
+                    }
                 );
               }
-            );
-          }
-        );
+          );
+        } else {
+          return const UnverifiedScreen();
+        }
       },
     );
   }

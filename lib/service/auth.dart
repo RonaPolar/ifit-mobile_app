@@ -553,4 +553,8 @@ class Auth extends ChangeNotifier {
     }, SetOptions(merge: true)).then((value) => debugPrint("Update feedback assessment!"))
       .onError((error, stackTrace) => debugPrint("Error feedback! $error"));
   }
+
+  Future<void> changeAccount() async {
+    await _auth.signOut();
+  }
 }
