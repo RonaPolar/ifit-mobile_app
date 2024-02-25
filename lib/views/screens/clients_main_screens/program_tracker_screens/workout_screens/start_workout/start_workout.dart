@@ -68,14 +68,30 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
           context: scaffoldKey.currentContext!,
           skip: false,
         ).then((value) {
-          _controller.reset();
-          _controller.reverse(from: double.parse(time));
+          final exerciseDuration = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].exerciseDuration;
+          final isCounting = exerciseDuration.type;
+
+          if (!isCounting) {
+            _controller.reset();
+            _controller.reverse(from: double.parse(time));
+          } else {
+            _controller.stop();
+          }
+
         });
       }
 
       if (status == AnimationStatus.completed) {
         flag = false;
       }
+    });
+
+    _controller.addListener(() {
+      if (isCounting) {
+        _controller.stop();
+      }
+      print(isCounting);
+      print(_animation.value);
     });
   }
 

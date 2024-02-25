@@ -52,26 +52,31 @@ class Auth extends ChangeNotifier {
   Future<String?> createUser() async {
     final String path = "${registerUserType}s".toLowerCase();
     showHUD(true);
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email.text,
+          password: password.text
+      );
 
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email.text,
-      password: password.text
-    );
+      String? uid = userCredential.user?.uid;
 
-    String? uid = userCredential.user?.uid;
+      await db.collection(path).doc(uid).set({
+        'date_creation': FieldValue.serverTimestamp(),
+        'uid': uid,
+        'name': firstName.text,
+        'email': email.text,
+        'user_type': registerUserType,
+        'verified': false,
+      }).then((value) => debugPrint("Added successfully!"));
 
-    await db.collection(path).doc(uid).set({
-      'date_creation': FieldValue.serverTimestamp(),
-      'uid': uid,
-      'name': firstName.text,
-      'email': email.text,
-      'user_type': registerUserType,
-      'verified': false,
-    }).then((value) => debugPrint("Added successfully!"));
+      showHUD(false);
 
-    showHUD(false);
+      return uid;
+    } catch (e) {
 
-    return uid;
+      showHUD(false);
+    }
+    return null;
   }
 
   String? gender;
@@ -503,14 +508,15 @@ class Auth extends ChangeNotifier {
     required String id,
     required WorkoutPlan workoutPlan,
   }) async {
-    final clientPath = db.collection(tClientPath).doc(id).collection(tWorkoutPlanPath).doc(workoutPlan.id);
-
+    final clientPath = db.collection(tClientPath)
+        .doc(id).collection(tWorkoutPlanPath)
+        .doc(workoutPlan.id);
 
     await clientPath.set({
       tWorkoutPlanPath: workoutPlan.copyWith(
         ratingCount: (workoutPlan.ratingCount ?? 0) + 1,
       ).toJson(),
-    }).then((value) => debugPrint("Added rating successfully!"))
+    }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
         .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
 
     num ratingCount = workoutPlan.ratingCount ?? 1;
@@ -519,7 +525,7 @@ class Auth extends ChangeNotifier {
       tWorkoutPlanPath: workoutPlan.copyWith(
         rating: (rating / ratingCount),
       ).toJson(),
-    }).then((value) => debugPrint("Added rating successfully!"))
+    }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
       .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
   }
 
@@ -540,7 +546,7 @@ class Auth extends ChangeNotifier {
         level: goalDifficulty,
         bodyPart: specificBody,
       ).toJson(),
-    }).then((value) => debugPrint("Update feedback assessment!"))
+    }, SetOptions(merge: true)).then((value) => debugPrint("Update feedback assessment!"))
       .onError((error, stackTrace) => debugPrint("Error feedback! $error"));
   }
 }

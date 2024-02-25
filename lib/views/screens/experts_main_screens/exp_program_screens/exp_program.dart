@@ -7,10 +7,16 @@ import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_discover_screens/my_programs/exp_my_programs.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/meal_details.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/workout_details.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/category.dart';
+import 'package:ifit/views/widgets/program_widgets.dart';
+import 'package:provider/provider.dart';
 
 class ExpProgramScreen extends StatefulWidget {
   const ExpProgramScreen({
@@ -31,90 +37,15 @@ class ExpProgramScreen extends StatefulWidget {
 }
 
 class _ExpProgramScreenState extends State<ExpProgramScreen> {
+
   
- List latestWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "rate": "4.7",
-      "kcal": "180",
-      "days": "14",
-      "duration": "30",
-      "exercise": "10",
-      "progress": 0.3,
-      "clients": 100,
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "rate": "4.3",
-      "kcal": "200",
-      "duration": "30",
-      "days": "10",
-      "exercise": "11",
-      "progress": 0.5,
-      "clients": 160,
-    },
-    {
-      "name": "Upper Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "rate": "4.5",
-      "kcal": "300",
-      "duration": "20",
-      "days": "15",
-      "exercise": "12",
-      "progress": 0.6,
-      "clients": 129,
-    },
-  ];
-
-    List latestMealArr = [
-    {
-      "name": "Blueberry Pancake",
-      "image": "assets/images/meal/pancake.png",
-      "rate": "4.9",
-      "kcal": "190",
-      "fats": "100",
-      "proteins": "176",
-      "sugar": "50",
-      "categories": "Breakfast",
-      "days": "15",
-      "progress": 0.2,
-      "clients": 111,
-    },
-    {
-      "name": "Salad",
-      "image": "assets/images/meal/salad.png",
-      "rate": "4.6",
-      "kcal": "200",
-      "fats": "100",
-      "proteins": "300",
-      "sugar": "50",
-      "categories": "Lunch",
-      "days": "15",
-      "progress": 0.9,
-      "clients": 78,
-    },
-    {
-      "name": "Salmon Nigiri",
-      "image": "assets/images/meal/nigiri.png",
-      "rate": "4.3",
-      "kcal": "300",
-      "fats": "170",
-      "proteins": "400",
-      "sugar": "79",
-      "categories": "Dinner",
-      "days": "15",
-      "progress": 0.5,
-      "clients": 138,
-    },
-  ];
-
-
   @override
   Widget build(BuildContext context) {
     final ExpertModel expert = widget.expertModel;
     final DialogService dialog = DialogService();
+    final Auth auth = Provider.of<Auth>(context);
+
+    final List combinedList = [...widget.workoutMealList, ...widget.workoutPlanList];
 
 
 
@@ -155,129 +86,159 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    Center(
-                      child: CircleAvatar(
-                        radius: MediaQuery.of(context).size.width * 0.25,
-                        child: Text("${widget.clientList.length} total clients",
-                          style: Styles.headline25,
-                        ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: MediaQuery.of(context).size.width * 0.25,
+                      child: Text("${widget.clientList.length} total clients",
+                        style: Styles.headline25,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+        
+              const Gap(20),
+              Text(
+                "Workout Plans Created",
+                style: Styles.title,
+              ),
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: widget.workoutPlanList.length,
+                itemBuilder: (context, index) {
+                  var item = widget.workoutPlanList[index];
+        
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => ExpertWorkoutDetails(
+                          dObj: item,
+                          clientWorkoutPlan: item,
+                        ),
+                      ));
+                    },
+                    child: ProgramRow(
+                      image: item.workoutPicture,
+                      title: item.planName,
+                      bottomText: "${item.minutes} minutes | ${item.calories} Calories",
+                      showToggleSwitch: false,
+                      )
+                    );
+                },
+              ),
+        
+              const Gap(20),
+              Text(
+                "Workout Meals Created",
+                style: Styles.title,
+              ),
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: widget.workoutMealList.length,
+                itemBuilder: (context, index) {
+                  var item = widget.workoutMealList[index];
+        
+                  return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => ExpertMealDetails(
+                              workoutMeal: item,
+                            )),
+                        );
+                      },
+                      child: ProgramRow(
+                        image: item.foodPhoto,
+                        title: item.foodPlanName,
+                        bottomText: "${item.purpose} | ${item.calories} Calories",
+                        showToggleSwitch: false,
+                      )
+                  );
+                },
+              ),
+              Text(
+                "Category",
+                style: Styles.title,
+              ),
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: auth.fitnessGoalList.length,
+                itemBuilder: (context, index) {
+                  final String item = auth.fitnessGoalList[index];
+                  final List<String> imageList = [
+                    "assets/icons/workout-pic.png",
+                    "assets/icons/Upper-Weights.png",
+                    "assets/icons/Ab-workout.png",
+                  ];
 
-                const Gap(20),
-                Text(
-                  "Highest Clients",
-                  style: Styles.title,
-                ),
-                // ListView.builder(
-                //     padding: EdgeInsets.zero,
-                //     physics: const NeverScrollableScrollPhysics(),
-                //     shrinkWrap: true,
-                //     itemCount: 3,
-                //     itemBuilder: (context, index) {
-                //       var item = combinedList[index];
-                //
-                //       if (item is WorkoutPlan) {
-                //         // It's a workout item
-                //         return InkWell(
-                //           onTap: () {
-                //             // Navigator.push(context,
-                //             //   MaterialPageRoute(
-                //             //     builder: (context) =>
-                //             //       ViewWorkoutDetails(dObj: item),
-                //             //   ),
-                //             // );
-                //           },
-                //           child: ProgramRow(image: item.workoutPicture,
-                //             title: item["name"],
-                //             bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                //             showToggleSwitch: false,
-                //             )
-                //           );
-                //       } else {
-                //         // It's a meal item
-                //         return InkWell(
-                //           onTap: () {
-                //             Navigator.push(context,
-                //               MaterialPageRoute(
-                //                 builder: (context) =>
-                //                   ViewMealDetails(dObj: item),
-                //               ),
-                //             );
-                //           },
-                //           child: ProgramRow(image: item["image"],
-                //             title: item["name"],
-                //             bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                //             showToggleSwitch: false,
-                //             ));
-                //       }
-                //     },
-                //   ),
-
-                const Gap(20),
-                Text(
-                  "Lowest Clients",
-                  style: Styles.title,
-                ),
-                // ListView.builder(
-                //     padding: EdgeInsets.zero,
-                //     physics: const NeverScrollableScrollPhysics(),
-                //     shrinkWrap: true,
-                //     itemCount: 3,
-                //     itemBuilder: (context, index) {
-                //       var item = combinedList[index];
-                //
-                //       if (item.containsKey("duration") && item.containsKey("kcal")) {
-                //         // It's a workout item
-                //         return InkWell(
-                //           onTap: () {
-                //             Navigator.push(context,
-                //               MaterialPageRoute(
-                //                 builder: (context) =>
-                //                   ViewWorkoutDetails(dObj: item),
-                //               ),
-                //             );
-                //           },
-                //           child: ProgramRow(image: item["image"],
-                //             title: item["name"],
-                //             bottomText: "${item["duration"]} minutes | ${item["kcal"]} Calories",
-                //             showToggleSwitch: false,
-                //             )
-                //           );
-                //       } else {
-                //         // It's a meal item
-                //         return InkWell(
-                //           onTap: () {
-                //             Navigator.push(context,
-                //               MaterialPageRoute(
-                //                 builder: (context) =>
-                //                   ViewMealDetails(dObj: item),
-                //               ),
-                //             );
-                //           },
-                //           child: ProgramRow(image: item["image"],
-                //             title: item["name"],
-                //             bottomText: "${item["categories"]} | ${item["kcal"]} Calories",
-                //             showToggleSwitch: false,
-                //             ));
-                //       }
-                //     },
-                //   ),
-              ],
-            ),
+                  List programList() {
+                    return combinedList.where((element) {
+                      if (element is WorkoutPlan) {
+                        return element.purpose == item;
+                      } else if (element is WorkoutMeal) {
+                        return element.purpose == item;
+                      } else {
+                        return false;
+                      }
+                    }).toList();
+                  }
+        
+                  return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                              ExpertCategoryScreen(
+                                combinedList: combinedList,
+                                category: item,
+                              ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ListTile(
+                          title: Text(item,
+                            style: Styles.title,
+                          ),
+                          subtitle: Text("${programList().length} programs",
+                            style: Styles.normal.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          trailing: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                            child: Image.asset(
+                              imageList[index],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(

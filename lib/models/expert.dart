@@ -64,12 +64,10 @@ class Expert {
 class ExpertModel {
   final DateTime? birthDate;
   final DateTime dateCreation;
-  final String? datejoined;
   final String email;
   final String gender;
   final String name;
   final String phoneNumber;
-  final String? photoUrl;
   final String profession;
   final String professionId;
   final String proofOfFieldOfStudy;
@@ -81,12 +79,10 @@ class ExpertModel {
 
   ExpertModel({
     this.birthDate,
-    this.datejoined,
     required this.email,
     this.gender = "n/a",
     required this.name,
     this.phoneNumber = "n/a",
-    this.photoUrl,
     this.profession = "n/a",
     this.professionId = "",
     this.proofOfFieldOfStudy = "",
@@ -100,7 +96,6 @@ class ExpertModel {
 
   ExpertModel copyWith({
     DateTime? birthDate,
-    String? datejoined,
     String? email,
     String? gender,
     String? name,
@@ -118,12 +113,10 @@ class ExpertModel {
   }) =>
       ExpertModel(
         birthDate: birthDate ?? this.birthDate,
-        datejoined: datejoined ?? this.datejoined,
         email: email ?? this.email,
         gender: gender ?? this.gender,
         name: name ?? this.name,
         phoneNumber: phoneNumber ?? this.phoneNumber,
-        photoUrl: photoUrl ?? this.photoUrl,
         profession: profession ?? this.profession,
         professionId: professionId ?? this.professionId,
         proofOfFieldOfStudy: proofOfFieldOfStudy ?? this.proofOfFieldOfStudy,
@@ -138,12 +131,10 @@ class ExpertModel {
   factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
     birthDate: (json["birth_date"] as Timestamp).toDate(),
     dateCreation: (json["date_creation"] as Timestamp).toDate(),
-    datejoined: json["datejoined"],
     email: json["email"],
     gender: json["gender"],
     name: json["name"],
     phoneNumber: json["phone_number"],
-    photoUrl: json["photo_url"],
     profession: json["profession"],
     professionId: json["profession_id"],
     proofOfFieldOfStudy: json["proof_of_field_of_study"],
@@ -156,14 +147,12 @@ class ExpertModel {
 
   Map<String, dynamic> toJson() => {
     "birth_date": birthDate == null
-        ? DateTime.now()
+        ? Timestamp.fromDate(DateTime.now())
         : Timestamp.fromDate(birthDate!),
-    "datejoined": datejoined,
     "email": email,
     "gender": gender,
     "name": name,
     "phone_number": phoneNumber,
-    "photo_url": photoUrl,
     "profession": profession,
     "profession_id": professionId,
     "proof_of_field_of_study": proofOfFieldOfStudy,
