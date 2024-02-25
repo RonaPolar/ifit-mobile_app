@@ -90,8 +90,6 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
       if (isCounting) {
         _controller.stop();
       }
-      print(isCounting);
-      print(_animation.value);
     });
   }
 

@@ -98,7 +98,7 @@ class WorkoutPlan {
   final bool isCancelled;
   final int? dayCountFinished;
   final bool? isDeleted;
-  final int? ratingCount;
+  final int ratingCount;
 
   WorkoutPlan({
     required this.expertId,
@@ -119,7 +119,7 @@ class WorkoutPlan {
     required this.category,
     this.isCancelled = false,
     this.isFavorite = false,
-    this.dayCountFinished,
+    this.dayCountFinished = 0,
     this.isDeleted = false,
     this.ratingCount = 0,
   });

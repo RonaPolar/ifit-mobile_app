@@ -512,18 +512,20 @@ class Auth extends ChangeNotifier {
         .doc(id).collection(tWorkoutPlanPath)
         .doc(workoutPlan.id);
 
+    final WorkoutPlan plan =  await clientPath.get().then((value) {
+      final map = value.data()!;
+
+      return WorkoutPlan.fromJson(map[tWorkoutPlanPath]);
+    });
+
+    final int ratingCount = plan.ratingCount;
+    final double totalRating = rating + plan.rating;
+
     await clientPath.set({
       tWorkoutPlanPath: workoutPlan.copyWith(
-        ratingCount: (workoutPlan.ratingCount ?? 0) + 1,
-      ).toJson(),
-    }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
-        .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
-
-    num ratingCount = workoutPlan.ratingCount ?? 1;
-
-    await clientPath.set({
-      tWorkoutPlanPath: workoutPlan.copyWith(
-        rating: (rating / ratingCount),
+        ratingCount: ratingCount + 1,
+        rating: totalRating,
+        dayCountFinished: workoutPlan.dayCountFinished! + 1,
       ).toJson(),
     }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
       .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
@@ -546,6 +548,8 @@ class Auth extends ChangeNotifier {
         level: goalDifficulty,
         bodyPart: specificBody,
       ).toJson(),
+      "height": height.text,
+      "weight": weight.text,
     }, SetOptions(merge: true)).then((value) => debugPrint("Update feedback assessment!"))
       .onError((error, stackTrace) => debugPrint("Error feedback! $error"));
   }

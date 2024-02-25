@@ -53,6 +53,8 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
+    final double rating = (workoutPlan.rating / workoutPlan.ratingCount);
+
     return Container(
       color: Colors.red,
       child: NestedScrollView(
@@ -206,7 +208,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                   const Icon(Icons.star_sharp,
                                     color: Colors.red,
                                   ),
-                                  Text("${workoutPlan.rating} stars"),
+                                  Text("${((rating.isNaN) ? 0 : rating).toStringAsFixed(2)} stars"),
                                 ],
                               ),
                             ),
