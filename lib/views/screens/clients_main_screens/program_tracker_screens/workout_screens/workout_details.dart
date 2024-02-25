@@ -399,13 +399,16 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                           onPressed: () async {
                             await clientProvider.addWorkoutPlan(
                               id: widget.id,
-                              workoutPlan: workoutPlan,
+                              workoutPlan: widget.clientWorkoutPlan != null
+                                  ? widget.clientWorkoutPlan!
+                                  : workoutPlan,
                             ).then((value) {
                                 Navigator.push(context,MaterialPageRoute(
                                   builder: (context) => CountdownTimerScreen(
                                     workoutPlan: workoutPlan,
                                     id: widget.id,
-                                  ))
+                                  ),
+                                )
                               );
                             });
                           },
@@ -413,7 +416,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                       ],
                     ),
                   ),
-
                 ], //Main children
               ),
             ),

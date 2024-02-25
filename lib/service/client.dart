@@ -73,19 +73,15 @@ class ClientProvider extends ChangeNotifier {
   Stream<List<List<WorkoutPlan>>>? workoutPlanListStream;
 
   Stream<List<List<WorkoutPlan>>> getWorkoutPlanList() {
-    final data = _db.collection(tWorkoutPlanPath).snapshots().map(workoutPlanFromSnapshot);
-    return data;
-  }
+    final data = _db.collection(tWorkoutPlanPath).snapshots().map((snapshots) {
+      return snapshots.docs.map((snapshot) {
+        final map = snapshot.data();
 
-  List<List<WorkoutPlan>> workoutPlanFromSnapshot(QuerySnapshot snapshot) {
-    try {
-      return snapshot.docs.map((data) {
-        final map = (data.data() as Map<String, dynamic>)["workoutPlans"];
-        return (map as List).map((data) => WorkoutPlan.fromJson(data)).toList();
+        return (map["workoutPlans"] as List).map((e) => WorkoutPlan.fromJson(e)).toList();
+
       }).toList();
-    } catch (e) {
-      return [];
-    }
+    });
+    return data;
   }
 
   void updateWorkoutPlanListStream() {

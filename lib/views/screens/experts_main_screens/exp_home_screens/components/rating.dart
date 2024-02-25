@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/exp_profile.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 
 class ExpertRatingWidget extends StatelessWidget {
@@ -16,6 +15,14 @@ class ExpertRatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double rating() {
+      if (expertModel.ratingCount == 0) {
+        return 0.0;
+      } else {
+        return expertModel.rating! / expertModel.ratingCount;
+      }
+    }
 
     return Container(
       height: 120,
@@ -79,7 +86,7 @@ class ExpertRatingWidget extends StatelessWidget {
                         size: 80,
                         color: Styles.bgColor,
                       ),
-                      Text("${expertModel.rating}",
+                      Text(rating().toStringAsFixed(2),
                         style: Styles.headline20
                             .copyWith(color: Styles.primaryColor),
                       ),

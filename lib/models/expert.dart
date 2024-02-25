@@ -76,6 +76,7 @@ class ExpertModel {
   final String userType;
   final bool verified;
   final String description;
+  final int ratingCount;
 
   ExpertModel({
     this.birthDate,
@@ -87,6 +88,7 @@ class ExpertModel {
     this.professionId = "",
     this.proofOfFieldOfStudy = "",
     this.rating = 0.0,
+    this.ratingCount = 0,
     required this.uid,
     required this.userType,
     required this.verified,
@@ -110,6 +112,7 @@ class ExpertModel {
     bool? verified,
     DateTime? dateCreation,
     String? description,
+    int? ratingCount,
   }) =>
       ExpertModel(
         birthDate: birthDate ?? this.birthDate,
@@ -126,6 +129,7 @@ class ExpertModel {
         verified: verified ?? this.verified,
         dateCreation: dateCreation ?? this.dateCreation,
         description: description ?? this.description,
+        ratingCount: ratingCount ?? this.ratingCount,
       );
 
   factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
@@ -138,11 +142,12 @@ class ExpertModel {
     profession: json["profession"],
     professionId: json["profession_id"],
     proofOfFieldOfStudy: json["proof_of_field_of_study"],
-    rating: json["rating"] ?? 0.0,
+    rating: double.parse((json["rating"]).toString()),
     uid: json["uid"],
     userType: json["user_type"],
     verified: json["verified"],
     description: json["description"],
+    ratingCount: json["ratingCount"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -162,6 +167,7 @@ class ExpertModel {
     "verified": verified,
     "date_creation": Timestamp.fromDate(dateCreation),
     "description": description,
+    "ratingCount": ratingCount,
   };
 }
 

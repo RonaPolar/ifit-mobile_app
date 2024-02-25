@@ -141,8 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: combinedWorkoutPlan.length,
             itemBuilder: (context, index) {
               final WorkoutPlan workoutPlan = combinedWorkoutPlan[index];
-
-              print(combinedWorkoutPlan.length);
+              
               return InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(

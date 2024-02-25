@@ -46,59 +46,80 @@ class WorkoutProvider extends ChangeNotifier {
     final int set = workoutPlan.exercise.sets;
     final String workoutId = workoutPlan.id;
 
-    if (skip) {
-      skippedIndex++;
-    }
-    final bool isCompleted = int.parse(workoutPlan.daysOfThePlan) > int.parse(workoutPlan.dayCountFinished.toString());
+    final path = _db
+        .collection(tClientPath)
+        .doc(id)
+        .collection(tWorkoutPlanPath)
+        .doc(workoutId);
 
-    if (exerciseList.length - 1 != workoutIndex) {
-      workoutIndex++;
-    } else {
-      if ((setFinished + 1) != set) {
-        workoutIndex = 0;
-        skippedIndex = 0;
-        setFinished++;
+    await path.get().then((value) async {
+      final map = value.data()!["workoutPlan"];
+      final WorkoutPlan clientWorkoutPlan = WorkoutPlan.fromJson(map);
 
-        Navigator.of(context)
-          ..pop()
-          ..pop();
-        Navigator.push(context, MaterialPageRoute(
-            builder: (context) => CountdownTimerScreen(
-              workoutPlan: workoutPlan,
-              id: id,
-            )));
+      if (skip) {
+        skippedIndex++;
+      }
+
+
+      if (exerciseList.length - 1 != workoutIndex) {
+        workoutIndex++;
       } else {
-        if ((exerciseList.length - skippedIndex) > skippedIndex) {
-          await updateWorkoutDay(
-            id: id,
-            workoutId: workoutId,
-          ).then((value) {
+        if ((setFinished + 1) != set) {
+          workoutIndex = 0;
+          skippedIndex = 0;
+          setFinished++;
+
+          Navigator.of(context)
+            ..pop()
+            ..pop();
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => CountdownTimerScreen(
+                workoutPlan: workoutPlan,
+                id: id,
+              )));
+        } else {
+          if ((exerciseList.length - skippedIndex) > skippedIndex) {
+            await updateWorkoutDay(
+              id: id,
+              workoutId: workoutId,
+            ).then((value) {
+
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+              setFinished = 0;
+              workoutIndex = 0;
+              skippedIndex = 0;
+
+              print(clientWorkoutPlan.dayCountFinished.toString());
+              print(clientWorkoutPlan.daysOfThePlan);
+
+              final bool isCompleted = (clientWorkoutPlan.dayCountFinished! + 1).toString() == clientWorkoutPlan.daysOfThePlan;
+
+              if (isCompleted) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FeedbackFormScreen(
+                      id: id,
+                      workoutPlan: workoutPlan,
+                    )));
+              }
+
+
+            });
+          } else {
             Navigator.of(context)
               ..pop()
               ..pop();
             setFinished = 0;
             workoutIndex = 0;
             skippedIndex = 0;
-          }).then((value) {
-            if (isCompleted) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => FeedbackFormScreen(
-                    id: id,
-                    workoutPlan: workoutPlan,
-                  )));
-            }
-          });
-        } else {
-          Navigator.of(context)
-            ..pop()
-            ..pop();
-          setFinished = 0;
-          workoutIndex = 0;
-          skippedIndex = 0;
-        }
+          }
 
+        }
       }
-    }
+    });
+
+
     isPause = false;
 
     notifyListeners();

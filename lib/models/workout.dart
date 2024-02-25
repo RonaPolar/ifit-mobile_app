@@ -96,7 +96,7 @@ class WorkoutPlan {
   final String category;
   final bool isFavorite;
   final bool isCancelled;
-  final int? dayCountFinished;
+  final int dayCountFinished;
   final bool? isDeleted;
   final int ratingCount;
 

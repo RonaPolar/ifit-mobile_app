@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:image_picker/image_picker.dart';
@@ -504,6 +505,54 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
+  double expertRating = 0;
+
+  void updateExpertRating(double value) {
+    expertRating = value;
+    notifyListeners();
+  }
+
+  Future<void> updateAddExpertRating({
+    required WorkoutPlan workoutPlan,
+  }) async {
+    final String expertId = workoutPlan.expertId;
+
+    final workoutPath = db.collection(tWorkoutPlanPath).doc(workoutPlan.expertId);
+    final expertPath = db.collection(tExpertPath).doc(expertId);
+
+    final List<WorkoutPlan> expertWorkout = await workoutPath.get().then((value) {
+      final map = value.data()!;
+
+      return (map["workoutPlans"] as List).map((e) => WorkoutPlan.fromJson(e)).toList();
+    });
+
+    final ExpertModel expertModel = await expertPath.get().then((value) {
+      final map = value.data()!;
+
+      return ExpertModel.fromJson(map);
+    });
+
+    await expertPath.set(
+      expertModel.copyWith(
+        ratingCount: expertModel.ratingCount + 1,
+        rating: expertRating + expertModel.rating!,
+      ).toJson(),
+    ).then((value) => debugPrint("Expert rating profile successfully!"))
+      .onError((error, stackTrace) => debugPrint("Error rating: $error"));
+
+    final int index = expertWorkout.indexWhere((element) => element.id == workoutPlan.id);
+    expertWorkout[index] = expertWorkout[index].copyWith(
+      ratingCount: expertWorkout[index].ratingCount + 1,
+      rating: rating,
+    );
+
+    await workoutPath.set({
+      "workoutPlans": expertWorkout.map((e) => e.toJson()).toList(),
+    }).then((value) => debugPrint("Expert rating profile successfully!"))
+        .onError((error, stackTrace) => debugPrint("Error rating: $error"));
+
+  }
+
   Future<void> updateAddRating({
     required String id,
     required WorkoutPlan workoutPlan,
@@ -525,7 +574,6 @@ class Auth extends ChangeNotifier {
       tWorkoutPlanPath: workoutPlan.copyWith(
         ratingCount: ratingCount + 1,
         rating: totalRating,
-        dayCountFinished: workoutPlan.dayCountFinished! + 1,
       ).toJson(),
     }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
       .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
@@ -556,5 +604,16 @@ class Auth extends ChangeNotifier {
 
   Future<void> changeAccount() async {
     await _auth.signOut();
+  }
+
+  void clearFeedbackForm() {
+    weight.clear();
+    height.clear();
+    rating = 0;
+    expertRating = 0;
+    fitnessGoal = null;
+    goalDifficulty = null;
+    specificBody = [];
+    notifyListeners();
   }
 }

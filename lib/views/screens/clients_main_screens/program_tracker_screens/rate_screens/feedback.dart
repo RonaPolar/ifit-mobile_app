@@ -132,6 +132,24 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                             itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange,),
                             onRatingUpdate: auth.updateRating,
                           ),
+                          const SizedBox(height: 24.0),
+
+                          Text(
+                            'Rate the Expert',
+                            style: Styles.text15bold,
+                          ),
+                          RatingBar.builder(
+                            initialRating: 0,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            glowColor: Colors.orangeAccent,
+                            // borderColor: Colors.amber.withAlpha(50),
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.orange,),
+                            onRatingUpdate: auth.updateExpertRating,
+                          ),
 
                           const Gap(30),
                           Text(
@@ -206,10 +224,12 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                       title: 'Update',
                       onPressed: () async {
                         Future.wait([
+                          auth.updateAddExpertRating(workoutPlan: widget.workoutPlan),
                           auth.updateAddRating(id: widget.id, workoutPlan: widget.workoutPlan),
                           auth.updateProfileAssessment(id: widget.id),
                         ]).then((value) {
                           Navigator.of(context).pop();
+                          auth.clearFeedbackForm();
                         });
                       },
                     ),

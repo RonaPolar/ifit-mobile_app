@@ -56,9 +56,6 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
 
     _controller.addStatusListener((status) {
 
-      print(status);
-      print(flag);
-
       if (status == AnimationStatus.dismissed && !workoutProvider.restart && !flag) {
         flag = true;
 

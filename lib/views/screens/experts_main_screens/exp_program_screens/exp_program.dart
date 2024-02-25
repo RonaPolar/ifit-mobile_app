@@ -195,13 +195,15 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                       }
                     }).toList();
                   }
+
+                  print(programList());
         
                   return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
                               ExpertCategoryScreen(
-                                combinedList: combinedList,
+                                combinedList: programList(),
                                 category: item,
                               ),
                           ),
@@ -252,126 +254,6 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
           );
         },
         child: const Icon(Icons.add, color: Colors.white, size: 28),
-      ),
-    );
-  }
-}
-
-
-//Clients Activity Chart
-class ExpClientsChart extends StatelessWidget {
-  ExpClientsChart({super.key});
-
-  // final pilateColor = Colors.blue;
-  final workoutColor = Styles.secondColor;
-  final betweenSpace = 0.2;
-
-  BarChartGroupData generateGroupData(
-    int x,
-    double total,
-  ) {
-    return BarChartGroupData(
-      x: x,
-      groupVertically: true,
-      barRods: [
-        BarChartRodData(
-          fromY: 0,
-          toY: total,
-          color: workoutColor,
-          width: 12,
-        ),
-      ],
-    );
-  }
-
-  Widget bottomTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 12);
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'JAN';
-        break;
-      case 1:
-        text = 'FEB';
-        break;
-      case 2:
-        text = 'MAR';
-        break;
-      case 3:
-        text = 'APR';
-        break;
-      case 4:
-        text = 'MAY';
-        break;
-      case 5:
-        text = 'JUN';
-        break;
-      case 6:
-        text = 'JUL';
-        break;
-      case 7:
-        text = 'AUG';
-        break;
-      case 8:
-        text = 'SEP';
-        break;
-      case 9:
-        text = 'OCT';
-        break;
-      case 10:
-        text = 'NOV';
-        break;
-      case 11:
-        text = 'DEC';
-        break;
-      default:
-        text = '';
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: Text(text, style: style),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      height: 300,
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceBetween,
-          titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(),
-            rightTitles: const AxisTitles(),
-            topTitles: const AxisTitles(),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: bottomTitles,
-                reservedSize: 25,
-              ),
-            ),
-          ),
-          barTouchData: BarTouchData(enabled: false),
-          borderData: FlBorderData(show: false),
-          gridData: const FlGridData(show: false),
-           barGroups: [
-            generateGroupData(0, 2),
-            generateGroupData(1, 2),
-            generateGroupData(2, 1.3),
-            generateGroupData(3, 3.1),
-            generateGroupData(4, 0.8),
-            generateGroupData(5, 2),
-            generateGroupData(6, 1.3),
-            generateGroupData(7, 2.3),
-            generateGroupData(8, 2),
-            generateGroupData(9, 1.2),
-            generateGroupData(10, 1),
-            generateGroupData(11, 2),
-          ],
-        ),
       ),
     );
   }
