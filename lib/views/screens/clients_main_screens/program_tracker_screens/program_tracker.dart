@@ -40,13 +40,9 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
   Widget build(BuildContext context) {
     final List<WorkoutPlan> completedWorkoutPlan = widget.workoutPlanList.where((element) {
 
-      if (element.dayCountFinished != null) {
-        final bool isCompleted = int.parse(element.daysOfThePlan) > int.parse(element.dayCountFinished.toString());
+      final bool isCompleted = int.parse(element.daysOfThePlan) > int.parse(element.dayCountFinished.toString());
 
-        return isCompleted || element.isCancelled;
-      } else {
-        return !element.isCancelled;
-      }
+      return isCompleted && !element.isCancelled;
     }).toList();
 
     return Scaffold(

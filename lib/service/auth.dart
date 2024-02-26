@@ -571,7 +571,7 @@ class Auth extends ChangeNotifier {
     final double totalRating = rating + plan.rating;
 
     await clientPath.set({
-      tWorkoutPlanPath: workoutPlan.copyWith(
+      tWorkoutPlanPath: plan.copyWith(
         ratingCount: ratingCount + 1,
         rating: totalRating,
       ).toJson(),

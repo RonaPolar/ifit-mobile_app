@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/container/big.dart';
@@ -42,6 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
       clientProvider.getBmi(client: widget.clientModel);
     });
   }
+
+  Map<String, int> goalValues = {
+    "Loss Weight": 0,
+    "Body Toning": 1,
+    "Gain Muscles": 2,
+  };
+
+  Map<String, int> difficultyValues = {
+    "Beginner": 0,
+    "Intermediate": 1,
+    "Expert": 2,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +128,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildWorkoutRecommendation(ClientProvider clientProvider) {
 
     final List<WorkoutPlan> combinedWorkoutPlan = widget.workoutPlanList.expand((element) => element).toList();
+    final ClientGoalModel clientGoal = widget.clientModel.clientGoalModel!;
+
+    combinedWorkoutPlan.sort((a,b) {
+      // goal, difficulty, body list
+
+      int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+
+      int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+      int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+
+      int totalDifferenceA = goalDifferenceA + difficultyValuesA;
+      int totalDifferenceB = goalDifferenceB + difficultyValuesB;
+
+      return totalDifferenceA.compareTo(totalDifferenceB);
+    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -138,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: combinedWorkoutPlan.length,
+            itemCount: combinedWorkoutPlan.length > 5 ? 5 : combinedWorkoutPlan.length,
             itemBuilder: (context, index) {
               final WorkoutPlan workoutPlan = combinedWorkoutPlan[index];
               
@@ -168,6 +197,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMealRecommendation(ClientProvider clientProvider) {
     final List<WorkoutMeal> combinedWorkoutMeal = widget.workoutMealList.expand((element) => element).toList();
+    final ClientGoalModel clientGoal = widget.clientModel.clientGoalModel!;
+
+    combinedWorkoutMeal.sort((a,b) {
+      // goal, difficulty, body list
+
+      int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+
+      // int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+      // int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+
+      return goalDifferenceA.compareTo(goalDifferenceB);
+    });
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -194,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: combinedWorkoutMeal.length,
+            itemCount: combinedWorkoutMeal.length > 5 ? 5 : combinedWorkoutMeal.length,
             itemBuilder: (context, index) {
               final WorkoutMeal mObj = combinedWorkoutMeal[index];
               return InkWell(

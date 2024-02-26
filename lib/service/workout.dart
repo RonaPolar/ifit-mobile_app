@@ -91,10 +91,7 @@ class WorkoutProvider extends ChangeNotifier {
               workoutIndex = 0;
               skippedIndex = 0;
 
-              print(clientWorkoutPlan.dayCountFinished.toString());
-              print(clientWorkoutPlan.daysOfThePlan);
-
-              final bool isCompleted = (clientWorkoutPlan.dayCountFinished! + 1).toString() == clientWorkoutPlan.daysOfThePlan;
+              final bool isCompleted = (clientWorkoutPlan.dayCountFinished + 1).toString() == clientWorkoutPlan.daysOfThePlan;
 
               if (isCompleted) {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -150,9 +147,7 @@ class WorkoutProvider extends ChangeNotifier {
     await path
         .set({
           "workoutPlan": {
-            "dayCountFinished": workoutPlan.dayCountFinished != null
-                ? workoutPlan.dayCountFinished! + 1
-                : 1,
+            "dayCountFinished": workoutPlan.dayCountFinished + 1,
           }
         }, SetOptions(merge: true))
         .then((value) => debugPrint("Day Count Finished Updated!"))
