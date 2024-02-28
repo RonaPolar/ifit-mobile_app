@@ -142,7 +142,7 @@ class ExpertModel {
     profession: json["profession"],
     professionId: json["profession_id"],
     proofOfFieldOfStudy: json["proof_of_field_of_study"],
-    rating: double.parse((json["rating"]).toString()),
+    rating: double.tryParse((json["rating"]).toString()),
     uid: json["uid"],
     userType: json["user_type"],
     verified: json["verified"],

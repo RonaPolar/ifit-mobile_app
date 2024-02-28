@@ -345,6 +345,8 @@ class Auth extends ChangeNotifier {
         "phone_number": phone.text,
         "profession": profession.text,
         "description": description.text,
+        "rating": 0,
+        "ratingCount": 0.0,
       });
     });
   }
