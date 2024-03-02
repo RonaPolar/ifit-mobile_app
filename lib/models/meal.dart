@@ -72,24 +72,24 @@ class Meal {
 }
 
 class WorkoutMeal {
-  final String expertId;
-  final DateTime dateCreated;
-  final String id;
-  final String foodCategory;
-  final String purpose;
-  final String foodPlanName;
-  final String description;
-  final String foodPhoto;
   final String calories;
-  final String fats;
-  final String sugar;
-  final String protein;
+  final DateTime dateCreated;
+  final String description;
   final String expertName;
+  final String expertId;
+  final String fats;
+  final String foodCategory;
+  final String foodPhoto;
+  final String foodPlanName;
+  final String id;
   final List<String> ingredients;
-  final List<String> stepPrep;
-  final double rating;
-  final bool isFavorite;
   final bool? isDeleted;
+  final bool isFavorite;
+  final String protein;
+  final String purpose;
+  final num? rating;
+  final List<String> stepPrep;
+  final String sugar;
 
   WorkoutMeal({
     required this.expertId,
@@ -107,7 +107,7 @@ class WorkoutMeal {
     required this.expertName,
     required this.ingredients,
     required this.stepPrep,
-    required this.rating,
+    this.rating = 0.0,
     this.isFavorite = false,
     this.isDeleted = false,
   });
@@ -128,7 +128,7 @@ class WorkoutMeal {
     String? expertName,
     List<String>? ingredients,
     List<String>? stepPrep,
-    double? rating,
+    num? rating,
     bool? isFavorite,
     bool? isDeleted,
   }) =>
@@ -169,7 +169,7 @@ class WorkoutMeal {
     expertName: json["expertName"],
     ingredients: List<String>.from(json["ingredients"].map((x) => x)),
     stepPrep: List<String>.from(json["stepPrep"].map((x) => x)),
-    rating: double.parse(json["rating"].toString()),
+    rating: json["rating"] as num,
     isFavorite: json["isFavorite"],
     isDeleted: json["isDeleted"],
   );

@@ -41,8 +41,8 @@ class _ExpDiscoverScreenState extends State<ExpDiscoverScreen> {
     newArrivalMeal.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
     newArrivalPlan.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
-    popularMeal.sort((a, b) => a.rating.compareTo(b.rating));
-    popularPlan.sort((a, b) => a.rating.compareTo(b.rating));
+    popularMeal.sort((a, b) => a.rating!.compareTo(b.rating!));
+    popularPlan.sort((a, b) => a.rating!.compareTo(b.rating!));
 
     // newArrivalCombination =  [...newArrivalMeal, ...newArrivalPlan];
 

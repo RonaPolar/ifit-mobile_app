@@ -71,12 +71,12 @@ class ExpertModel {
   final String profession;
   final String professionId;
   final String proofOfFieldOfStudy;
-  final double? rating;
+  final num? rating;
   final String uid;
   final String userType;
   final bool verified;
   final String description;
-  final int ratingCount;
+  final num ratingCount;
 
   ExpertModel({
     this.birthDate,
@@ -106,13 +106,13 @@ class ExpertModel {
     String? profession,
     String? professionId,
     String? proofOfFieldOfStudy,
-    double? rating,
+    num? rating,
     String? uid,
     String? userType,
     bool? verified,
     DateTime? dateCreation,
     String? description,
-    int? ratingCount,
+    num? ratingCount,
   }) =>
       ExpertModel(
         birthDate: birthDate ?? this.birthDate,
@@ -142,12 +142,12 @@ class ExpertModel {
     profession: json["profession"],
     professionId: json["profession_id"],
     proofOfFieldOfStudy: json["proof_of_field_of_study"],
-    rating: double.tryParse((json["rating"]).toString()),
+    rating: json["rating"] as num,
     uid: json["uid"],
     userType: json["user_type"],
     verified: json["verified"],
     description: json["description"],
-    ratingCount: json["ratingCount"],
+    ratingCount: json["ratingCount"] as num,
   );
 
   Map<String, dynamic> toJson() => {

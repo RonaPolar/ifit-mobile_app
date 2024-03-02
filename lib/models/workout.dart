@@ -78,27 +78,27 @@ class Workout {
 }
 
 class WorkoutPlan {
-  final String expertId;
-  final DateTime dateCreated;
-  final String expertName;
-  final String purpose;
-  final String minutes;
-  final double rating;
-  final String description;
-  final WorkoutPlanExercise exercise;
-  final String planName;
   final String calories;
-  final String workoutPicture;
+  final String category;
+  final DateTime dateCreated;
+  final num dayCountFinished;
   final String daysOfThePlan;
+  final String description;
   final String difficulty;
   final List<String> equipments;
+  final WorkoutPlanExercise exercise;
+  final String expertName;
+  final String expertId;
   final String id;
-  final String category;
-  final bool isFavorite;
   final bool isCancelled;
-  final int dayCountFinished;
   final bool? isDeleted;
-  final int ratingCount;
+  final bool isFavorite;
+  final String minutes;
+  final String planName;
+  final String purpose;
+  final num? rating;
+  final num ratingCount;
+  final String workoutPicture;
 
   WorkoutPlan({
     required this.expertId,
@@ -106,7 +106,7 @@ class WorkoutPlan {
     required this.expertName,
     required this.purpose,
     required this.minutes,
-    required this.rating,
+    this.rating = 0.0,
     required this.description,
     required this.exercise,
     required this.planName,
@@ -131,7 +131,7 @@ class WorkoutPlan {
     String? expertName,
     String? purpose,
     String? minutes,
-    double? rating,
+    num? rating,
     String? description,
     WorkoutPlanExercise? exercise,
     String? planName,
@@ -143,9 +143,9 @@ class WorkoutPlan {
     String? id,
     String? category,
     bool? isFavorite,
-    int? dayCountFinished,
+    num? dayCountFinished,
     bool? isDeleted,
-    int? ratingCount,
+    num? ratingCount,
   }) =>
       WorkoutPlan(
         expertId: expertId ?? this.expertId,
@@ -178,7 +178,7 @@ class WorkoutPlan {
     expertName: json["expertName"],
     purpose: json["purpose"],
     minutes: json["minutes"],
-    rating: double.parse(json["rating"].toString()),
+    rating: json["rating"] as num,
     description: json["description"],
     exercise: WorkoutPlanExercise.fromJson(json["exercise"]),
     planName: json["planName"],
@@ -222,7 +222,7 @@ class WorkoutPlan {
 
 class WorkoutPlanExercise {
   final List<ExerciseElement> exercises;
-  final int sets;
+  final num sets;
 
   WorkoutPlanExercise({
     required this.exercises,
@@ -231,7 +231,7 @@ class WorkoutPlanExercise {
 
   WorkoutPlanExercise copyWith({
     List<ExerciseElement>? exercises,
-    int? sets,
+    num? sets,
   }) =>
       WorkoutPlanExercise(
         exercises: exercises ?? this.exercises,
@@ -250,10 +250,10 @@ class WorkoutPlanExercise {
 }
 
 class ExerciseElement {
-  final ExerciseDuration exerciseDuration;
   final String description;
-  final String title;
+  final ExerciseDuration exerciseDuration;
   final List<String> steps;
+  final String title;
   final String url;
 
   ExerciseElement({

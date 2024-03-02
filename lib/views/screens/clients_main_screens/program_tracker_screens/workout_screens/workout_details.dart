@@ -53,7 +53,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
-    final double rating = (workoutPlan.rating / workoutPlan.ratingCount);
+    final double rating = (workoutPlan.rating! / workoutPlan.ratingCount);
 
     return Container(
       color: Colors.red,

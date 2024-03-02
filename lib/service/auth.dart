@@ -569,8 +569,8 @@ class Auth extends ChangeNotifier {
       return WorkoutPlan.fromJson(map[tWorkoutPlanPath]);
     });
 
-    final int ratingCount = plan.ratingCount;
-    final double totalRating = rating + plan.rating;
+    final num ratingCount = plan.ratingCount;
+    final double totalRating = rating + plan.rating!;
 
     await clientPath.set({
       tWorkoutPlanPath: plan.copyWith(
