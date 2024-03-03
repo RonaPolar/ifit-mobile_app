@@ -10,7 +10,7 @@ import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart
 
 //What To Eat and Train Next - Category
 class What2Container extends StatefulWidget {
-  final Function(Map obj) onPressed;
+  final Function() onPressed;
   final String fitnessGoal;
   final List<WorkoutPlan> categoryList;
   final String imageList;
@@ -67,7 +67,7 @@ class _What2ContainerState extends State<What2Container> {
                       child: MainButton(
                         title: "View More",
                         buttonColor: Styles.primaryColor,
-                        onPressed: () {},
+                        onPressed: widget.onPressed,
                       textStyle: Styles.seeMore.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,

@@ -1,7 +1,6 @@
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
-import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/notification.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/views/widgets/body/stream.dart';
@@ -11,10 +10,12 @@ import 'package:provider/provider.dart';
 class ExpNotifications extends StatefulWidget {
   const ExpNotifications({
     required this.id,
+    this.title = "Notification",
     super.key,
   });
 
   final String id;
+  final String? title;
 
   @override
   State<ExpNotifications> createState() => _ExpNotificationsState();
@@ -61,7 +62,7 @@ class _ExpNotificationsState extends State<ExpNotifications> {
             ),
           ),
         ),
-        title: Text('Notification',
+        title: Text(widget.title!,
         style: Styles.headline20,
         ),
       ),

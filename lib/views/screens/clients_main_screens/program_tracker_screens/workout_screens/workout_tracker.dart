@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/auth.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/client_category.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:provider/provider.dart';
@@ -151,17 +152,22 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                     shrinkWrap: true,
                     itemCount: auth.fitnessGoalList.length,
                     itemBuilder: (context, index) {
+
+                      final String item = auth.fitnessGoalList[index];
                       final List<WorkoutPlan> categoryList = widget.workoutPlanList.where((element) {
                         return element.purpose == auth.fitnessGoalList[index];
                       }).toList();
 
                       return What2Container(
-                        onPressed: (obj) {
-                            // Navigator.push( //there will be major changes
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => WorkoutCategory(wObj: what2TrainObj)),
-                            // );
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                ClientCategoryScreen(
+                                  workoutPlanList: categoryList,
+                                  category: item,
+                                ),
+                              ),
+                            );
                           },
                         fitnessGoal: auth.fitnessGoalList[index],
                         categoryList: categoryList,

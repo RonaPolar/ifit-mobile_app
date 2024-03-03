@@ -6,6 +6,7 @@ import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/Expert.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_home_screens/exp_notifications.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
@@ -14,7 +15,6 @@ import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_home_screens/exp_activity.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/settings.dart';
 import 'package:provider/provider.dart';
@@ -146,7 +146,6 @@ class ExpProfileScreen extends StatelessWidget {
                     ),
                     const Gap(15),
                     Container(
-                      height: 140,
                       padding: const EdgeInsets.symmetric(
                           vertical: 15, horizontal: 15),
                       decoration: BoxDecoration(
@@ -160,26 +159,27 @@ class ExpProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Account", style: Styles.title),
-                          const Gap(1),
                           NextNavigation(
                             iconData:
                                 FluentSystemIcons.ic_fluent_history_regular,
                             title: 'Activity History',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ExpActivityHistory()));
+                                  builder: (context) => ExpNotifications(
+                                    id: expertModel.uid,
+                                    title: "History",
+                                  )));
                             },
                           ),
-                          NextNavigation(
-                            iconData:
-                                FluentSystemIcons.ic_fluent_activity_regular,
-                            title: 'Program Progress',
-                            onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => const ExpProgramScreen()));
-                            },
-                          ),
+                          // NextNavigation(
+                          //   iconData:
+                          //       FluentSystemIcons.ic_fluent_activity_regular,
+                          //   title: 'Program Progress',
+                          //   onTap: () {
+                          //     // Navigator.of(context).push(MaterialPageRoute(
+                          //     //     builder: (context) => const ExpProgramScreen()));
+                          //   },
+                          // ),
                         ],
                       ),
                     ),

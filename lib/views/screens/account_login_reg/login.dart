@@ -7,8 +7,6 @@ import 'package:ifit/service/package.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
-import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +24,7 @@ class _LogInState extends State<LogIn> {
 
   final bool _isInvalidCredentials = false;
   final GlobalKey<FormState> formKey = GlobalKey();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +33,7 @@ class _LogInState extends State<LogIn> {
     final Auth auth = Provider.of<Auth>(context);
 
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: Styles.bgColor,
       body: Form(
@@ -127,17 +127,7 @@ class _LogInState extends State<LogIn> {
 
     void loginUser() async {
       if (formKey.currentState!.validate()) {
-        await auth.login().then((_) {
-          bool isExpert = auth.userType == "Expert";
-
-          Navigator.push(context,
-            MaterialPageRoute(
-              builder: (context) => isExpert
-                ? const ExpBottomBar()
-                : const MainBottomBar(),
-            ),
-          );
-        });
+        await auth.login(scaffoldKey.currentContext!);
       }
     }
 

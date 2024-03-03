@@ -4,11 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/functions/dialog.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Auth extends ChangeNotifier {
@@ -55,7 +58,7 @@ class Auth extends ChangeNotifier {
     showHUD(true);
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email.text,
+          email: email.text.toLowerCase(),
           password: password.text
       );
 
@@ -65,7 +68,7 @@ class Auth extends ChangeNotifier {
         'date_creation': FieldValue.serverTimestamp(),
         'uid': uid,
         'name': firstName.text,
-        'email': email.text,
+        'email': email.text.toLowerCase(),
         'user_type': registerUserType,
         'verified': false,
       }).then((value) => debugPrint("Added successfully!"));
@@ -244,7 +247,7 @@ class Auth extends ChangeNotifier {
 
   String userType = "";
 
-  Future<void> login() async {
+  Future<void> login(context) async {
     debugPrint("Signing in...");
     showHUD(true);
 
@@ -256,7 +259,7 @@ class Auth extends ChangeNotifier {
         if (user.user != null) {
           await FirebaseFirestore.instance
               .collection(tExpertPath)
-              .where('email', isEqualTo: email.text)
+              .where('email', isEqualTo: email.text.toLowerCase())
               .get()
               .then((QuerySnapshot querySnapshot) {
             if (querySnapshot.docs.isEmpty) {
@@ -269,7 +272,7 @@ class Auth extends ChangeNotifier {
 
           await FirebaseFirestore.instance
               .collection(tClientPath)
-              .where('email', isEqualTo: email.text)
+              .where('email', isEqualTo: email.text.toLowerCase())
               .get()
               .then((QuerySnapshot querySnapshot) {
             if (querySnapshot.docs.isEmpty) {
@@ -286,8 +289,20 @@ class Auth extends ChangeNotifier {
           notifyListeners();
 
         }
+
+
+        bool isExpert = userType == "Expert";
+
+        Navigator.push(context,
+          MaterialPageRoute(
+            builder: (context) => isExpert
+                ? const ExpBottomBar()
+                : const MainBottomBar(),
+          ),
+        );
       });
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
       showHUD(false);
     }
 
@@ -618,4 +633,5 @@ class Auth extends ChangeNotifier {
     specificBody = [];
     notifyListeners();
   }
+
 }

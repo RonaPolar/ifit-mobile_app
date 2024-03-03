@@ -69,6 +69,7 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
       ),
       ProfileScreen(
         clientModel: clientModel,
+        clientWorkoutPlan: clientWorkoutPlan,
       ),
     ];
   }

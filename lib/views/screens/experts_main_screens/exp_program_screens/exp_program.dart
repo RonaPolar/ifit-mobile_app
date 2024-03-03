@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -45,9 +44,16 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
     final DialogService dialog = DialogService();
     final Auth auth = Provider.of<Auth>(context);
 
-    final List combinedList = [...widget.workoutMealList, ...widget.workoutPlanList];
 
+    final List<WorkoutPlan> createdWorkoutPlan = widget.workoutPlanList.where((element) {
+      return !element.isDeleted!;
+    }).toList();
 
+    final List<WorkoutMeal> createdWorkoutMeal = widget.workoutMealList.where((element) {
+      return !element.isDeleted!;
+    }).toList();
+
+    final List combinedList = [...createdWorkoutMeal, ...createdWorkoutPlan];
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -114,9 +120,9 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: widget.workoutPlanList.length,
+                itemCount: createdWorkoutPlan.length,
                 itemBuilder: (context, index) {
-                  var item = widget.workoutPlanList[index];
+                  var item = createdWorkoutPlan[index];
         
                   return InkWell(
                     onTap: () {
@@ -146,9 +152,9 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: widget.workoutMealList.length,
+                itemCount: createdWorkoutMeal.length,
                 itemBuilder: (context, index) {
-                  var item = widget.workoutMealList[index];
+                  var item = createdWorkoutMeal[index];
         
                   return InkWell(
                       onTap: () {
@@ -167,6 +173,7 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                   );
                 },
               ),
+              const Gap(20),
               Text(
                 "Category",
                 style: Styles.title,
@@ -196,45 +203,43 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                     }).toList();
                   }
 
-                  print(programList());
-        
                   return InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) =>
-                              ExpertCategoryScreen(
-                                combinedList: programList(),
-                                category: item,
-                              ),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                          ExpertCategoryScreen(
+                            combinedList: programList(),
+                            category: item,
                           ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        margin: const EdgeInsets.symmetric(vertical: 4.0),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        child: ListTile(
-                          title: Text(item,
-                            style: Styles.title,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      margin: const EdgeInsets.symmetric(vertical: 4.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: ListTile(
+                        title: Text(item,
+                          style: Styles.title,
+                        ),
+                        subtitle: Text("${programList().length} programs",
+                          style: Styles.normal.copyWith(
+                            color: Colors.white,
                           ),
-                          subtitle: Text("${programList().length} programs",
-                            style: Styles.normal.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                          trailing: CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.white,
-                            child: Image.asset(
-                              imageList[index],
-                              fit: BoxFit.cover,
-                            ),
+                        ),
+                        trailing: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.white,
+                          child: Image.asset(
+                            imageList[index],
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
+                    ),
                   );
                 },
               ),

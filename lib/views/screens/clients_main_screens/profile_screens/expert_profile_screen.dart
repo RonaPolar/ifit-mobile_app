@@ -177,9 +177,9 @@ class _ExpertProfileState extends State<ExpertProfile> {
                                           child: MainButton(title: buttonText,
                                               textStyle: Styles.seeMore.copyWith(color: Colors.white),
                                               onPressed: (){
-                                                // setState(() {
-                                                //     isFollowing = !isFollowing;
-                                                //   });
+                                                setState(() {
+                                                  isFollowing = !isFollowing;
+                                                });
                                               }),
                                         ),
                                       ],

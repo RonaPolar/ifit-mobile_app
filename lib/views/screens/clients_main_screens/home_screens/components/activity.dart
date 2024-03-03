@@ -134,8 +134,7 @@ class ActivityTodayWidget extends StatelessWidget {
                     CrossAxisAlignment.start,
                     children: [
                       //waterArry
-                      Text(
-                        wObj.title.toString(),
+                      Text(wObj.title.toString(),
                         style: Styles.normal.copyWith(
                           fontSize: 12,
                           color: Styles.fadeTextColor,

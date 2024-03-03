@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/service/client.dart';
+import 'package:ifit/views/screens/clients_main_screens/home_screens/notifications.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/settings/settings.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 import 'package:ifit/views/widgets/dialog/confirmation_dialog.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/toggle_switch.dart';
-import 'package:ifit/views/screens/account_login_reg/login.dart';
-import 'package:ifit/views/screens/clients_main_screens/home_screens/activity_tracker.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +21,12 @@ import 'package:provider/provider.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     required this.clientModel,
+    required this.clientWorkoutPlan,
     super.key,
   });
 
   final ClientModel clientModel;
+  final List<WorkoutPlan> clientWorkoutPlan;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -48,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final ClientModel clientModel = widget.clientModel;
     final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+    final Auth auth = Provider.of<Auth>(context);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -169,8 +174,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: 'Activity History',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ActivityTracker()));
+                                  builder: (context) => NotificationScreen(id: widget.clientModel.uid,
+                                    title: "History",
+                                  )));
                             },
                           ),
                           NextNavigation(
@@ -178,10 +184,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 FluentSystemIcons.ic_fluent_activity_regular,
                             title: 'Workout Progress',
                             onTap: () {
-                              // Navigator.push(context, MaterialPageRoute(
-                              //     builder: (context) => WorkoutTrackerScreen(
-                              //       workoutPlanList: widget.workoutPlanList,
-                              //     )));
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => WorkoutTrackerScreen(
+                                    workoutPlanList: widget.clientWorkoutPlan,
+                                  )));
                             },
                           ),
                         ],
@@ -287,9 +293,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return ConfirmationDialog(
-                                    onYesPressed: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                    onYesPressed: () async {
+                                      await auth.changeAccount().then((value) {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).popUntil((route) => route.isFirst);
+                                      });
                                     },
                                 );
                               });

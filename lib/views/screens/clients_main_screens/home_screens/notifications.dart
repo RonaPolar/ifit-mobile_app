@@ -11,24 +11,18 @@ import 'package:provider/provider.dart';
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({
     required this.id,
+    this.title = "Notification",
     super.key,
   });
 
   final String id;
+  final String? title;
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List notificationArr = [
-    {"image": "assets/images/meal/nigiri.png", "title": "Hey, it’s time for lunch", "time": "About 1 minutes ago"},
-    {"image": "assets/icons/Lower-Weights.png", "title": "Don’t miss your Lowerbody Weights", "time": "About 3 hours ago"},
-    {"image": "assets/images/meal/salad.png", "title": "Hey, let’s add some meals for your dinner", "time": "About 3 hours ago"},
-    {"image": "assets/icons/workout-pic.png", "title": "Congratulations, You have finished Full Bo...", "time": "29 May"},
-    {"image": "assets/images/meal/pancake.png", "title": "Hey, it’s time for snack", "time": "8 April"},
-    {"image": "assets/icons/Ab-workout.png", "title": "Ups, You have missed your Ab Workout", "time": "8 April"},
-  ];
 
   @override
   void initState() {
@@ -38,7 +32,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         clientProvider.updateNotifStream(uid: widget.id);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +62,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             ),
           ),
-          title: Text('Notification',
+          title: Text(widget.title!,
           style: Styles.headline20,
         ),
         // actions: const [
