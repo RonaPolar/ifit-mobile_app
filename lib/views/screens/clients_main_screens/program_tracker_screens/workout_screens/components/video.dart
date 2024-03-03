@@ -5,7 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 
 class ExerciseVideoWidget extends StatefulWidget {
-  ExerciseVideoWidget({
+  const ExerciseVideoWidget({
     required this.urlVideo,
     super.key,
   });
@@ -17,6 +17,8 @@ class ExerciseVideoWidget extends StatefulWidget {
 }
 
 class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
+
+  String currentUrl = "";
 
   final GlobalKey webViewKey = GlobalKey();
   late InAppWebViewController controller;
@@ -54,6 +56,7 @@ class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
         }
       }
     );
+    currentUrl = widget.urlVideo;
   }
 
   @override
@@ -77,7 +80,7 @@ class _ExerciseVideoWidgetState extends State<ExerciseVideoWidget> {
         child: InAppWebView(
           key: webViewKey,
           initialUrlRequest: URLRequest(
-            url: Uri.parse(widget.urlVideo),
+            url: Uri.parse(currentUrl),
           ),
           initialOptions: options,
           pullToRefreshController: pullToRefreshController,

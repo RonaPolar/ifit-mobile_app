@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
+import 'package:provider/provider.dart';
 
 class WorkoutTrackerScreen extends StatefulWidget {
 
@@ -20,79 +22,17 @@ class WorkoutTrackerScreen extends StatefulWidget {
 }
 
 class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
-
-  List what2TrainArr = [
-    {
-      "name": "Full Body",
-      "image": "assets/icons/workout-pic.png",
-      "workoutNumber": "130",
-    },
-    {
-      "name": "Upper Body",
-      "image": "assets/icons/Upper-Weights.png",
-      "workoutNumber": "130",
-    },
-    {
-      "name": "Abdominal",
-      "image": "assets/icons/Ab-workout.png",
-      "workoutNumber": "130",
-    },
-    {
-      "name": "Lower Body",
-      "image": "assets/icons/Lower-Weights.png",
-      "workoutNumber": "130",
-    },
-  ];
-
-  List upcomingWorkoutArr = [
-    {
-      "name": "Full Body Exercises",
-      "image": "assets/icons/workout-pic.png",
-      "rate": "4.7",
-      "schedule": "Monday",
-      "categories": "Full Body",
-      "time": "9:00am",
-      "kcal": "320",
-      "exercise": "10",
-      "duration": "30",
-      "days": "21",
-    },
-    {
-      "name": "Upper Body Weights",
-      "image": "assets/icons/Lower-Weights.png",
-      "rate": "4.3",
-      "schedule": "Monday",
-      "categories": "Upper Body",
-      "time": "10:00am",
-      "kcal": "210",
-      "exercise": "10",
-      "duration": "30",
-      "days": "15",
-    },
-    {
-      "name": "Ab Exercises",
-      "image": "assets/icons/Ab-workout.png",
-      "rate": "4.5",
-      "schedule": "Monday",
-      "categories": "Abdominal",
-      "time": "4:00pm",
-      "kcal": "260",
-      "exercise": "10",
-      "duration": "30",
-      "days": "14",
-    },
-  ];
-
-  
-@override
+  @override
   Widget build(BuildContext context) {
 
-  double totalCalories = 0;
+    final Auth auth = Provider.of<Auth>(context);
+
+    num totalCalories = 0;
 
   for (var data in widget.workoutPlanList) {
 
     if (data.dayCountFinished != null) {
-      final perDayCalories = double.parse(data.dayCountFinished!.toString()) * double.parse(data.calories);
+      final perDayCalories = data.dayCountFinished * double.parse(data.calories);
       totalCalories += perDayCalories;
     }
   }
@@ -175,55 +115,65 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                       )
                     ],
                   ),
-                  ListView.builder( //WorkoutRowContainer Content
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: upcomingWorkoutArr.length,
-                      itemBuilder: (context, index) {
-                        var wObj = upcomingWorkoutArr[index];
-                        return InkWell(
-                          onTap: () {
-                            // Navigator.push(context, MaterialPageRoute(
-                            //   builder: (context) => WorkoutDetails(
-                            //        dObj: wObj,
-                            //         id: ,
-                            //      ),
-                            //   ),
-                            // );
-                          },
-                          child: ProgramRow(image: wObj["image"],
-                          title: wObj["name"], 
-                          bottomText: "${wObj["schedule"]} | ${wObj["time"]}", 
-                          showToggleSwitch: true,));
-                      }),
-            
-                  const Gap(20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "What Do You Want to Train Next?",
-                        style: Styles.title
-                      ),
-                    ],
-                  ),
+                  // ListView.builder( //WorkoutRowContainer Content
+                  //     padding: EdgeInsets.zero,
+                  //     physics: const NeverScrollableScrollPhysics(),
+                  //     shrinkWrap: true,
+                  //     itemCount: upcomingWorkoutArr.length,
+                  //     itemBuilder: (context, index) {
+                  //       var wObj = upcomingWorkoutArr[index];
+                  //       return InkWell(
+                  //         onTap: () {
+                  //           // Navigator.push(context, MaterialPageRoute(
+                  //           //   builder: (context) => WorkoutDetails(
+                  //           //        dObj: wObj,
+                  //           //         id: ,
+                  //           //      ),
+                  //           //   ),
+                  //           // );
+                  //         },
+                  //         child: ProgramRow(image: wObj["image"],
+                  //         title: wObj["name"],
+                  //         bottomText: "${wObj["schedule"]} | ${wObj["time"]}",
+                  //         showToggleSwitch: true,));
+                  //     }),
+                  //
+                  // const Gap(20),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text(
+                  //       "What Do You Want to Train Next?",
+                  //       style: Styles.title
+                  //     ),
+                  //   ],
+                  // ),
                   ListView.builder( //WorkoutRowContainer Content
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: what2TrainArr.length,
+                    itemCount: auth.fitnessGoalList.length,
                     itemBuilder: (context, index) {
-                      var what2TrainObj = what2TrainArr[index];
-                      return What2Container(wObj: what2TrainObj,
-                        onPressed: (obj) {  //wObj
+                      final List<WorkoutPlan> categoryList = widget.workoutPlanList.where((element) {
+                        return element.purpose == auth.fitnessGoalList[index];
+                      }).toList();
+
+                      return What2Container(
+                        onPressed: (obj) {
                             // Navigator.push( //there will be major changes
                             //   context,
                             //   MaterialPageRoute(
                             //     builder: (context) => WorkoutCategory(wObj: what2TrainObj)),
                             // );
                           },
-                        );
+                        fitnessGoal: auth.fitnessGoalList[index],
+                        categoryList: categoryList,
+                        imageList: [
+                          "assets/icons/workout-pic.png",
+                          "assets/icons/Ab-workout.png",
+                          "assets/icons/Upper-Weights.png",
+                        ][index],
+                      );
                     },
                   ),
                 ],  //Main children

@@ -29,6 +29,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
   late AnimationController _controller;
   late Animation<int> _animation;
   bool flag = false;
+  String currentUrl = "";
 
   @override
   void initState() {
@@ -39,6 +40,8 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     final exerciseDuration = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].exerciseDuration;
     final time = exerciseDuration.time;
     final isCounting = exerciseDuration.type;
+
+    currentUrl = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].url;
 
     _controller = AnimationController(
       duration: Duration(seconds: int.parse(time)),
@@ -158,7 +161,8 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                 _buildTimer(workoutProvider),
                 const Gap(30),
                 ExerciseVideoWidget(
-                  urlVideo: exercises[index].url,
+                  urlVideo: currentUrl,
+                  key: GlobalKey(),
                 ),
                 const Gap(20),
                 Padding(
@@ -274,6 +278,9 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                       setState(() {
                         flag = true;
                       });
+                      setState(() {
+                        currentUrl = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].url;
+                      });
                       _controller.reset();
                       _controller.reverse(from: double.parse(time));
                     });
@@ -299,9 +306,15 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         setState(() {
                           flag = true;
                         });
+
+                        setState(() {
+                          currentUrl = widget.workoutPlan.exercise.exercises[workoutProvider.workoutIndex].url;
+                        });
                         _controller.reset();
                         _controller.reverse(from: double.parse(time));
                       });
+
+
                     },
                   ),
                 ),

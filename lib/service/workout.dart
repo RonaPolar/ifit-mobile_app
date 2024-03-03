@@ -42,6 +42,7 @@ class WorkoutProvider extends ChangeNotifier {
     required String id,
     required bool skip,
   }) async {
+
     final List<ExerciseElement> exerciseList = workoutPlan.exercise.exercises;
     final num set = workoutPlan.exercise.sets;
     final String workoutId = workoutPlan.id;

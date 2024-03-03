@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
@@ -192,6 +193,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                       hintText: 'Minutes it Takes to Do',
                       icon: FluentSystemIcons.ic_fluent_timer_regular,
                       obscureText: false,
+                      keyboardType: TextInputType.number,
                     ),
                     const Gap(10),
                     TextFieldContainer(
@@ -199,6 +201,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
                       hintText: 'Calories',
                       imagePath: "assets/icons/calories.png",
                       obscureText: false,
+                      keyboardType: TextInputType.number,
                     ),
                     const Gap(20),
                   ],

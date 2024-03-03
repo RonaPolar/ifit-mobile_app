@@ -2,6 +2,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/toggle_switch.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
@@ -9,22 +10,31 @@ import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart
 
 //What To Eat and Train Next - Category
 class What2Container extends StatefulWidget {
-final Map wObj;
-final Function(Map obj) onPressed;
+  final Function(Map obj) onPressed;
+  final String fitnessGoal;
+  final List<WorkoutPlan> categoryList;
+  final String imageList;
 
-
-const What2Container({super.key, required this.wObj, required this.onPressed});
+  const What2Container({
+    super.key,
+    required this.onPressed,
+    required this.fitnessGoal,
+    required this.categoryList,
+    required this.imageList,
+  });
 
   @override
   State<What2Container> createState() => _What2ContainerState();
 }
 
 class _What2ContainerState extends State<What2Container> {
+
+
+
   @override
   Widget build(BuildContext context) {
-    final String name = widget.wObj["name"].toString();
-    final String foodNumber = widget.wObj["foodNumber"]?.toString() ?? '';
-    final String workoutNumber = widget.wObj["workoutNumber"]?.toString() ?? '';
+    final String name = widget.fitnessGoal;
+    final int workoutNumber = widget.categoryList.length;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
@@ -44,21 +54,12 @@ class _What2ContainerState extends State<What2Container> {
                   name,
                   style: Styles.text15bold
                 ),
-                if (foodNumber.isEmpty) // Display kcal and categories if available
                 Text(
                   "$workoutNumber Programs",
                   style: Styles.normal.copyWith(
                     fontSize: 12,
                   ),
                 ),
-                if (foodNumber.isNotEmpty) // Display kcal and categories if available
-                Text(
-                  "$foodNumber Programs",
-                  style: Styles.normal.copyWith(
-                    fontSize: 12,
-                  ),
-                ),
-                
                 const Gap(10),
                 SizedBox(
                     width: 110,
@@ -66,7 +67,7 @@ class _What2ContainerState extends State<What2Container> {
                       child: MainButton(
                         title: "View More",
                         buttonColor: Styles.primaryColor,
-                        onPressed: () => widget.onPressed(widget.wObj),
+                        onPressed: () {},
                       textStyle: Styles.seeMore.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -78,22 +79,11 @@ class _What2ContainerState extends State<What2Container> {
           Stack(
             alignment: Alignment.center,
             children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),   
-                  borderRadius: BorderRadius.circular(40),
-                ),
+              Image.asset(widget.imageList,
+                width: 80,
+                height: 100,
+                fit: BoxFit.contain,
               ),
-                ClipRRect(
-                  child: Image.asset(
-                    widget.wObj["image"].toString(),
-                    width: 80,
-                    height: 100,
-                    fit: BoxFit.contain,
-                  ),
-                ),
             ],
           ),
         ],
