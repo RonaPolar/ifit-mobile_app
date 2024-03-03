@@ -6,7 +6,6 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutTrackerScreen extends StatefulWidget {
@@ -31,10 +30,8 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
 
   for (var data in widget.workoutPlanList) {
 
-    if (data.dayCountFinished != null) {
-      final perDayCalories = data.dayCountFinished * double.parse(data.calories);
-      totalCalories += perDayCalories;
-    }
+    final perDayCalories = data.dayCountFinished * double.parse(data.calories);
+    totalCalories += perDayCalories;
   }
 
     return Scaffold(

@@ -107,7 +107,6 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
     final List<ExerciseElement> exercises = widget.workoutPlan.exercise.exercises;
     final int index = workoutProvider.workoutIndex;
-    final exerciseDuration = exercises[index].exerciseDuration;
 
     return Scaffold(
       key: scaffoldKey,
@@ -184,7 +183,7 @@ class _StartWorkoutState extends State<StartWorkout> with SingleTickerProviderSt
                         itemBuilder: (context, aIndex) {
                           final String step = exercises[index].steps[aIndex];
                           return ExerStepsDottedLine(
-                            index: index,
+                            index: aIndex,
                             step: step,
                             isLast: step == exercises[index].steps.last,
                           );
