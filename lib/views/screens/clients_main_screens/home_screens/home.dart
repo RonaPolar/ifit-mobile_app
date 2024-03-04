@@ -44,17 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Map<String, int> goalValues = {
-    "Loss Weight": 0,
-    "Body Toning": 1,
-    "Gain Muscles": 2,
-  };
 
-  Map<String, int> difficultyValues = {
-    "Beginner": 0,
-    "Intermediate": 1,
-    "Expert": 2,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -130,20 +120,37 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<WorkoutPlan> combinedWorkoutPlan = widget.workoutPlanList.expand((element) => element).toList();
     final ClientGoalModel clientGoal = widget.clientModel.clientGoalModel!;
 
+    Map<String, int> goalValues = {
+      "Loss Weight": 0,
+      "Body Toning": 1,
+      "Gain Muscles": 2,
+    };
+
+    Map<String, int> difficultyValues = {
+      "Beginner": 0,
+      "Intermediate": 1,
+      "Expert": 2,
+    };
+
     combinedWorkoutPlan.sort((a,b) {
       // goal, difficulty, body list
 
-      int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
-      int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceA = (goalValues[a.purpose] ?? 0 - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceB = (goalValues[b.purpose]?? 0 - goalValues[clientGoal.fitnessGoals]!).abs();
 
-      int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
-      int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+      int difficultyValuesA = (difficultyValues[a.difficulty] ?? 0 - difficultyValues[clientGoal.level]!).abs();
+      int difficultyValuesB = (difficultyValues[b.difficulty] ?? 0 - difficultyValues[clientGoal.level]!).abs();
 
       int totalDifferenceA = goalDifferenceA + difficultyValuesA;
       int totalDifferenceB = goalDifferenceB + difficultyValuesB;
 
       return totalDifferenceA.compareTo(totalDifferenceB);
     });
+
+    final List<WorkoutPlan> notDeleted = combinedWorkoutPlan.where((element) {
+      return !element.isDeleted!;
+    }).toList();
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -167,9 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: combinedWorkoutPlan.length > 5 ? 5 : combinedWorkoutPlan.length,
+            itemCount: notDeleted.length > 5 ? 5 : notDeleted.length,
             itemBuilder: (context, index) {
-              final WorkoutPlan workoutPlan = combinedWorkoutPlan[index];
+              final WorkoutPlan workoutPlan = notDeleted[index];
               
               return InkWell(
                 onTap: () {
@@ -177,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => WorkoutDetails(
                       dObj: workoutPlan,
                       id: widget.clientModel.uid,
-                      clientWorkoutPlan: combinedWorkoutPlan[index],
+                      clientWorkoutPlan: notDeleted[index],
                     ),
                   ));
                 },
@@ -199,18 +206,31 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<WorkoutMeal> combinedWorkoutMeal = widget.workoutMealList.expand((element) => element).toList();
     final ClientGoalModel clientGoal = widget.clientModel.clientGoalModel!;
 
-    combinedWorkoutMeal.sort((a,b) {
-      // goal, difficulty, body list
+    Map<String, int> goalValues = {
+      "Loss Weight": 0,
+      "Body Toning": 1,
+      "Gain Muscles": 2,
+    };
 
-      int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
-      int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+    Map<String, int> difficultyValues = {
+      "Beginner": 0,
+      "Intermediate": 1,
+      "Expert": 2,
+    };
 
-      // int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
-      // int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+    if (combinedWorkoutMeal.length != 1) {
+      combinedWorkoutMeal.sort((a,b) {
+        // goal, difficulty, body list
 
-      return goalDifferenceA.compareTo(goalDifferenceB);
-    });
+        int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+        int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
 
+        // int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+        // int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+
+        return goalDifferenceA.compareTo(goalDifferenceB);
+      });
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

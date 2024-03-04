@@ -11,10 +11,12 @@ class CancelledProgramScreen extends StatefulWidget {
     super.key,
     required this.workoutPlanList,
     required this.id,
+    required this.scaffoldKey,
   });
 
   final List<WorkoutPlan> workoutPlanList;
   final String id;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   State<CancelledProgramScreen> createState() => _CancelledProgramScreenState();
@@ -65,9 +67,10 @@ class _CancelledProgramScreenState extends State<CancelledProgramScreen> {
                             id: widget.id,
                             workoutPlan: item,
                           ).then((value) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            Navigator.of(widget.scaffoldKey.currentContext!).pop();
+                            ScaffoldMessenger.of(widget.scaffoldKey.currentContext!).showSnackBar(SnackBar(
                                 content: Text("Restored: ${item.planName}")));
-                            Navigator.of(context).pop();
+
                           });
                         },
                     ),

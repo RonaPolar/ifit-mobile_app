@@ -12,7 +12,7 @@ import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart
 class What2Container extends StatefulWidget {
   final Function() onPressed;
   final String fitnessGoal;
-  final List<WorkoutPlan> categoryList;
+  final List<dynamic> categoryList;
   final String imageList;
 
   const What2Container({

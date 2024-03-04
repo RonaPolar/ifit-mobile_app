@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/meal.dart';
+import 'package:ifit/service/auth.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/components/meal_piechart.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/client_meal_category.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/client_plan_category.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_category.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
+import 'package:provider/provider.dart';
 
 class MealTrackerScreen extends StatefulWidget {
 
@@ -27,6 +31,8 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
   
 @override
   Widget build(BuildContext context) {
+  final Auth auth = Provider.of<Auth>(context);
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -88,6 +94,39 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                       ),
                     )
                   ],
+                ),
+                ListView.builder( //WorkoutRowContainer Content
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: auth.fitnessGoalList.length,
+                  itemBuilder: (context, index) {
+
+                    final String item = auth.fitnessGoalList[index];
+                    final List<WorkoutMeal> categoryList = widget.workoutMealList.where((element) {
+                      return element.purpose == auth.fitnessGoalList[index];
+                    }).toList();
+
+                    return What2Container(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              ClientMealCategoryScreen(
+                                workoutMealList: categoryList,
+                                category: item,
+                              ),
+                        ),
+                        );
+                      },
+                      fitnessGoal: auth.fitnessGoalList[index],
+                      categoryList: categoryList,
+                      imageList: [
+                        "assets/icons/workout-pic.png",
+                        "assets/icons/Ab-workout.png",
+                        "assets/icons/Upper-Weights.png",
+                      ][index],
+                    );
+                  },
                 ),
                 // ListView.builder( //Meal Content
                 //   padding: EdgeInsets.zero,

@@ -383,6 +383,7 @@ class _MealDetailsState extends State<MealDetails> {
                                  MaterialPageRoute(
                                    builder: (context) => ExpertProfile(
                                      expertId: widget.workoutMeal.expertId,
+                                     clientId: widget.id,
                                    ),
                                  ),
                               );

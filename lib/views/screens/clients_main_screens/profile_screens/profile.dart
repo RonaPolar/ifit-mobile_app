@@ -17,6 +17,7 @@ import 'package:ifit/views/widgets/toggle_switch.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/about.dart';
 import 'package:ifit/views/screens/clients_main_screens/profile_screens/privacy_policy.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -259,9 +260,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_mail_regular,
                             title: 'Contact Us',
-                            onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //   builder: (context) => const ContactUs()));
+                            onTap: () async {
+                              const String url = "mailto:admin@mail.com";
+                              final Uri uri = Uri.parse(url);
+
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              } else {
+                                throw "Cant open email app";
+                              }
                             },
                           ),
                           NextNavigation(

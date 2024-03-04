@@ -10,8 +10,6 @@ import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/my_rate.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 
-enum ProgramStatus {ongoing, favorites, finished}
-
 class ProgramStatusWidget extends StatelessWidget {
   const ProgramStatusWidget({
     required this.workoutMealList,
@@ -32,7 +30,7 @@ class ProgramStatusWidget extends StatelessWidget {
     List<dynamic> combinedList = [...workoutPlanList, ...workoutMealList];
 
     final List<WorkoutPlan> ongoingWorkoutPlan = workoutPlanList.where((element) {
-      final bool isCompleted = (int.parse(element.daysOfThePlan) == element.dayCountFinished);
+      final bool isCompleted = (int.parse(element.daysOfThePlan) <= element.dayCountFinished);
 
       return !element.isCancelled && !isCompleted;
     }).toList();
@@ -76,6 +74,7 @@ class ProgramStatusWidget extends StatelessWidget {
                   builder: (context) => OngoingProgramScreen(
                     workoutPlanList: ongoingWorkoutPlan,
                     id: clientModel.uid,
+                    scaffoldKey: scaffoldKey,
                 )));
                 // Navigator.of(context).push(MaterialPageRoute(
                 //     builder: (context) => StatusProgramScreen(
@@ -115,6 +114,7 @@ class ProgramStatusWidget extends StatelessWidget {
                     builder: (context) => CancelledProgramScreen(
                       workoutPlanList: cancelledWorkoutPlan,
                       id: clientModel.uid,
+                      scaffoldKey: scaffoldKey,
                     )));
                 // Navigator.of(context).push(MaterialPageRoute(
                 //     builder: (context) => StatusProgramScreen(

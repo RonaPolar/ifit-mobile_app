@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/expert.dart';
 import 'package:ifit/service/Expert.dart';
+import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
 import 'package:ifit/views/widgets/body/stream.dart';
@@ -21,10 +22,12 @@ import 'package:url_launcher/url_launcher.dart';
 class ExpertProfile extends StatefulWidget {
   const ExpertProfile({
     required this.expertId,
+    this.clientId,
     super.key,
   });
 
   final String expertId;
+  final String? clientId;
 
   @override
   State<ExpertProfile> createState() => _ExpertProfileState();
@@ -49,6 +52,7 @@ class _ExpertProfileState extends State<ExpertProfile> {
     final ExpertProvider expertProvider = Provider.of<ExpertProvider>(context);
     List<dynamic> combinedList = [];
     String buttonText = isFollowing ? 'Following' : 'Follow';
+    final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
 
     return Scaffold(
       body: StreamWrapper<ExpertModel>(
@@ -180,6 +184,15 @@ class _ExpertProfileState extends State<ExpertProfile> {
                                                 setState(() {
                                                   isFollowing = !isFollowing;
                                                 });
+
+
+                                                if (widget.clientId != null) {
+                                                  workoutProvider.followExpert(
+                                                    expertId: widget.expertId,
+                                                    clientId: widget.clientId!,
+                                                    expertModel: expertModel,
+                                                  );
+                                                }
                                               }),
                                         ),
                                       ],

@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/auth.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/client_category.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/client_plan_category.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:provider/provider.dart';
@@ -113,39 +113,6 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                       )
                     ],
                   ),
-                  // ListView.builder( //WorkoutRowContainer Content
-                  //     padding: EdgeInsets.zero,
-                  //     physics: const NeverScrollableScrollPhysics(),
-                  //     shrinkWrap: true,
-                  //     itemCount: upcomingWorkoutArr.length,
-                  //     itemBuilder: (context, index) {
-                  //       var wObj = upcomingWorkoutArr[index];
-                  //       return InkWell(
-                  //         onTap: () {
-                  //           // Navigator.push(context, MaterialPageRoute(
-                  //           //   builder: (context) => WorkoutDetails(
-                  //           //        dObj: wObj,
-                  //           //         id: ,
-                  //           //      ),
-                  //           //   ),
-                  //           // );
-                  //         },
-                  //         child: ProgramRow(image: wObj["image"],
-                  //         title: wObj["name"],
-                  //         bottomText: "${wObj["schedule"]} | ${wObj["time"]}",
-                  //         showToggleSwitch: true,));
-                  //     }),
-                  //
-                  // const Gap(20),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       "What Do You Want to Train Next?",
-                  //       style: Styles.title
-                  //     ),
-                  //   ],
-                  // ),
                   ListView.builder( //WorkoutRowContainer Content
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
@@ -162,7 +129,7 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
-                                ClientCategoryScreen(
+                                ClientPlanCategoryScreen(
                                   workoutPlanList: categoryList,
                                   category: item,
                                 ),

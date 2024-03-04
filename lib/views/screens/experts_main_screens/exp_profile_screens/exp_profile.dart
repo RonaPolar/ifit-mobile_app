@@ -18,6 +18,7 @@ import 'package:ifit/views/screens/clients_main_screens/profile_screens/profile.
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
 import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/settings.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExpProfileScreen extends StatelessWidget {
   const ExpProfileScreen({
@@ -248,9 +249,15 @@ class ExpProfileScreen extends StatelessWidget {
                           NextNavigation(
                             iconData: FluentSystemIcons.ic_fluent_mail_regular,
                             title: 'Contact Us',
-                            onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //   builder: (context) => const ContactUs()));
+                            onTap: () async {
+                              const String url = "mailto:admin@mail.com";
+                              final Uri uri = Uri.parse(url);
+
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
+                                } else {
+                                throw "Cant open email app";
+                              }
                             },
                           ),
                           NextNavigation(

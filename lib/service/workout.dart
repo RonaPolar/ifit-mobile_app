@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ifit/common/constant/string.dart';
+import 'package:ifit/models/expert.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/rate_screens/feedback.dart';
@@ -203,7 +204,10 @@ class WorkoutProvider extends ChangeNotifier {
 
     await path
         .set({
-          tWorkoutPlanPath: {"isCancelled": !workoutPlan.isCancelled}
+          tWorkoutPlanPath: {
+            "isCancelled": !workoutPlan.isCancelled,
+            "dayCountFinished": 0,
+          }
         }, SetOptions(merge: true))
         .then((value) => debugPrint("Update cancel status!"))
         .onError((error, stackTrace) => debugPrint("Failed to update! $error"));
@@ -277,5 +281,20 @@ class WorkoutProvider extends ChangeNotifier {
 
       });
     }
+  }
+
+  Future<void> followExpert({
+    required String expertId,
+    required String clientId,
+    required ExpertModel expertModel,
+  }) async {
+
+    final List<String>? followers = expertModel.followers;
+
+    followers!.add(clientId);
+
+    _db.collection(tExpertPath).doc(expertId).set({
+      "followers": followers,
+    }, SetOptions(merge: true));
   }
 }

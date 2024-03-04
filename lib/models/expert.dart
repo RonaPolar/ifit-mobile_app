@@ -77,6 +77,7 @@ class ExpertModel {
   final bool verified;
   final String description;
   final num ratingCount;
+  final List<String>? followers;
 
   ExpertModel({
     this.birthDate,
@@ -94,6 +95,7 @@ class ExpertModel {
     required this.verified,
     required this.dateCreation,
     this.description = "n/a",
+    this.followers,
   });
 
   ExpertModel copyWith({
@@ -113,6 +115,7 @@ class ExpertModel {
     DateTime? dateCreation,
     String? description,
     num? ratingCount,
+    List<String>? followers,
   }) =>
       ExpertModel(
         birthDate: birthDate ?? this.birthDate,
@@ -130,6 +133,7 @@ class ExpertModel {
         dateCreation: dateCreation ?? this.dateCreation,
         description: description ?? this.description,
         ratingCount: ratingCount ?? this.ratingCount,
+        followers: followers ?? this.followers,
       );
 
   factory ExpertModel.fromJson(Map<String, dynamic> json) => ExpertModel(
@@ -148,6 +152,9 @@ class ExpertModel {
     verified: json["verified"],
     description: json["description"],
     ratingCount: json["ratingCount"] as num,
+    followers: json["followers"] == null
+        ? []
+        : List<String>.from(json["followers"].map((e) => e)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -168,6 +175,7 @@ class ExpertModel {
     "date_creation": Timestamp.fromDate(dateCreation),
     "description": description,
     "ratingCount": ratingCount,
+    "followers": followers ?? List<dynamic>.from(followers!.map((e) => e))
   };
 }
 

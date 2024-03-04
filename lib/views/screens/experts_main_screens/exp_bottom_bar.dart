@@ -18,6 +18,7 @@ class _ExpBottomBarState extends State<ExpBottomBar> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
       child: Scaffold(
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),

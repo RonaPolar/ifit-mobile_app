@@ -35,9 +35,10 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-
   @override
   Widget build(BuildContext context) {
+
+
     final List<WorkoutPlan> completedWorkoutPlan = widget.workoutPlanList.where((element) {
 
       final bool isCompleted = int.parse(element.daysOfThePlan) > int.parse(element.dayCountFinished.toString());
@@ -104,7 +105,6 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
               scaffoldKey: scaffoldKey,
             ),
 
-
             const Gap(10),
             Container(
               padding: const EdgeInsets.all(15),
@@ -150,10 +150,8 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                             image: wObj.workoutPicture,
                             title: wObj.planName,
                             bottomText: "${wObj.minutes} minutes | ${wObj.calories} Calories",
-                            progress: wObj.dayCountFinished == null
-                                ? 0
-                                : 1 - ((int.parse(wObj.daysOfThePlan)
-                                - wObj.dayCountFinished!) / double.parse(wObj.daysOfThePlan)),
+                            progress: 1 - ((int.parse(wObj.daysOfThePlan)
+                                - wObj.dayCountFinished) / double.parse(wObj.daysOfThePlan)),
                             progressText: wObj.daysOfThePlan,
                             showToggleSwitch: false,
                         ),

@@ -151,6 +151,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                                 MaterialPageRoute(
                                                   builder: (context) => ExpertProfile(
                                                     expertId: widget.dObj.expertId,
+                                                    clientId: widget.id,
                                                   ),
                                                 ),
                                              );
@@ -169,7 +170,14 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                                 await workoutProvider.updateAddToFavorite(
                                   id: widget.id,
                                   workoutPlan: widget.dObj,
-                                );
+                                ).then((value) {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("${widget.dObj.isFavorite
+                                      ? "Removed from favorites!"
+                                      : "Added to favorites" } "),
+                                  ));
+                                });
                               },
                               favorite: widget.clientWorkoutPlan == null
                                 ? widget.dObj.isFavorite

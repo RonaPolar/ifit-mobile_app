@@ -7,14 +7,15 @@ import 'package:ifit/models/expert.dart';
 class ExpertListWidget extends StatelessWidget {
   const ExpertListWidget({
     required this.discoverExperts,
+    required this.id,
     super.key,
   });
 
   final List<ExpertModel> discoverExperts;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,6 +41,7 @@ class ExpertListWidget extends StatelessWidget {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) => ExpertProfile(
                     expertId: exObj.uid,
+                    clientId: id,
                   )),
                 );
               },

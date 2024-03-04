@@ -3,8 +3,8 @@ import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/experts_main_screens/exp_discover_screens/components/workout_details.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 
-class ClientCategoryScreen extends StatelessWidget {
-  const ClientCategoryScreen({
+class ClientPlanCategoryScreen extends StatelessWidget {
+  const ClientPlanCategoryScreen({
     required this.workoutPlanList,
     required this.category,
     super.key,

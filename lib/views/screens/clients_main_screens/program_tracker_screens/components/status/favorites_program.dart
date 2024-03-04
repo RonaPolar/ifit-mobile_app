@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/client.dart';
 import 'package:ifit/service/functions/dialog.dart';
 import 'package:ifit/service/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_details.dart';
+import 'package:ifit/views/widgets/body/stream.dart';
 import 'package:ifit/views/widgets/button/ongoing_row.dart';
 import 'package:provider/provider.dart';
 
-class FavoriteProgramScreen extends StatelessWidget {
+class FavoriteProgramScreen extends StatefulWidget {
   const FavoriteProgramScreen({
     required this.combinedList,
     required this.id,
@@ -21,16 +23,33 @@ class FavoriteProgramScreen extends StatelessWidget {
   final String id;
 
   @override
+  State<FavoriteProgramScreen> createState() => _FavoriteProgramScreenState();
+}
+
+class _FavoriteProgramScreenState extends State<FavoriteProgramScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final ClientProvider clientProvider = Provider.of<ClientProvider>(context, listen: false);
+      clientProvider.updateClientWorkoutPlanListStream(uid: widget.id);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
+
 
     return Scaffold(
-        backgroundColor: Styles.bgColor,
-        appBar: AppBar(
-          title: Text("Favorite Programs"),
-          centerTitle: true,
-        ),
-        body: Column(
+      backgroundColor: Styles.bgColor,
+      appBar: AppBar(
+        title: Text("Favorite Programs"),
+        centerTitle: true,
+      ),
+      body: Column(
           children: [
             /// TODO: REVERT SEARCH TEXTFIELD
             // Padding(
@@ -45,13 +64,13 @@ class FavoriteProgramScreen extends StatelessWidget {
             //     child: SearchContainer(controller: txtSearch, hintText: "Search")
             //   ),
             // ),
-            combinedList.isEmpty
-              ? _buildEmptyData()
-              : _buildFavoriteData(workoutProvider),
-          ],
-        )
-    );
-  }
+            widget.combinedList.isEmpty
+            ? _buildEmptyData()
+                : _buildFavoriteData(workoutProvider),
+            ],
+          ),
+      );
+    }
 
   Widget _buildEmptyData() {
     return const Center(
@@ -69,9 +88,9 @@ class FavoriteProgramScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: combinedList.length,
+          itemCount: widget.combinedList.length,
           itemBuilder: (context, index) {
-            final dynamic item = combinedList[index];
+            final dynamic item = widget.combinedList[index];
 
             if (item is WorkoutPlan) {
               return InkWell(
@@ -80,7 +99,7 @@ class FavoriteProgramScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => WorkoutDetails(
                           dObj: item,
-                          id: id,
+                          id: widget.id,
                         )
                     ),
                   );
@@ -96,16 +115,16 @@ class FavoriteProgramScreen extends StatelessWidget {
                     dialog.confirmationDialog(context,
                         onPressed: () {
                           workoutProvider.cancelWorkout(
-                            id: id,
+                            id: widget.id,
                             workoutPlan: item,
                           );
                         }
                     );
                   },
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 25,
                     backgroundColor: Colors.red,
-                    child: const Icon(Icons.favorite,
+                    child: Icon(Icons.favorite,
                       color: Colors.white,
                     ),
                   ),
@@ -120,7 +139,7 @@ class FavoriteProgramScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => MealDetails(
                         workoutMeal: meal,
-                        id: id,
+                        id: widget.id,
                       ),
                     ),
                   );
@@ -141,6 +160,4 @@ class FavoriteProgramScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }
