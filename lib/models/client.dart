@@ -15,6 +15,7 @@ class ClientModel {
   final String userType;
   final String weight;
   final List<WorkoutPlan> workoutPlanList;
+  final List<String> followingExperts;
 
   ClientModel({
     this.birthDate,
@@ -30,6 +31,7 @@ class ClientModel {
     required this.dateCreation,
     this.clientGoalModel,
     required this.workoutPlanList,
+    this.followingExperts = const [],
   });
 
   ClientModel copyWith({
@@ -46,6 +48,7 @@ class ClientModel {
     DateTime? dateCreation,
     ClientGoalModel? clientGoalModel,
     List<WorkoutPlan>? workoutPlanList,
+    List<String>? followingExperts,
   }) =>
       ClientModel(
         birthDate: birthDate ?? this.birthDate,
@@ -61,6 +64,7 @@ class ClientModel {
         dateCreation: dateCreation ?? this.dateCreation,
         clientGoalModel: clientGoalModel ?? this.clientGoalModel,
         workoutPlanList: workoutPlanList ?? this.workoutPlanList,
+        followingExperts: followingExperts ?? this.followingExperts,
       );
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
@@ -79,6 +83,7 @@ class ClientModel {
     workoutPlanList: json["workoutPlans"] != null
         ? List<WorkoutPlan>.from(json["workoutPlans"].map((x) => x))
         : [],
+    followingExperts: List<String>.from(json["followingExperts"].map((x) => x))
   );
 
   Map<String, dynamic> toJson() => {
@@ -97,6 +102,7 @@ class ClientModel {
     "date_creation": Timestamp.fromDate(dateCreation),
     "goal": clientGoalModel?.toJson(),
     "workoutPlans": List<dynamic>.from(workoutPlanList.map((x) => x)),
+    "followingExperts": List<dynamic>.from(followingExperts.map((x) => x)),
   };
 }
 

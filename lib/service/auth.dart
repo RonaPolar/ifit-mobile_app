@@ -226,6 +226,7 @@ class Auth extends ChangeNotifier {
       "birth_date": dateOfBirth,
       "weight": weight.text,
       "height": height.text,
+      "followingExperts": [],
     }).then((value) => debugPrint("Update successfully! $id"));
   }
 
@@ -362,6 +363,7 @@ class Auth extends ChangeNotifier {
         "description": description.text,
         "rating": 0,
         "ratingCount": 0.0,
+        "followers": [],
       });
     });
   }

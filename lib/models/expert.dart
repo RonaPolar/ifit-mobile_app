@@ -1,65 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Expert {
-  final String name;
-  final String image;
-  final String profession;
-  final String rate;
-  final String mealCreated;
-  final String workoutCreated;
-  final String descriptions;
-
-  Expert({
-    required this.name,
-    required this.image,
-    required this.profession,
-    required this.rate,
-    required this.mealCreated,
-    required this.workoutCreated,
-    required this.descriptions,
-  });
-
-  Expert copyWith({
-    String? name,
-    String? image,
-    String? profession,
-    String? rate,
-    String? mealCreated,
-    String? workoutCreated,
-    String? descriptions,
-  }) =>
-      Expert(
-        name: name ?? this.name,
-        image: image ?? this.image,
-        profession: profession ?? this.profession,
-        rate: rate ?? this.rate,
-        mealCreated: mealCreated ?? this.mealCreated,
-        workoutCreated: workoutCreated ?? this.workoutCreated,
-        descriptions: descriptions ?? this.descriptions,
-      );
-
-  factory Expert.fromJson(Map<String, dynamic> json) => Expert(
-    name: json["name"],
-    image: json["image"],
-    profession: json["profession"],
-    rate: json["rate"],
-    mealCreated: json["mealCreated"],
-    workoutCreated: json["workoutCreated"],
-    descriptions: json["descriptions"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "image": image,
-    "profession": profession,
-    "rate": rate,
-    "mealCreated": mealCreated,
-    "workoutCreated": workoutCreated,
-    "descriptions": descriptions,
-  };
-}
-
-
 ///
 class ExpertModel {
   final DateTime? birthDate;
@@ -77,7 +17,7 @@ class ExpertModel {
   final bool verified;
   final String description;
   final num ratingCount;
-  final List<String>? followers;
+  final List<String> followers;
 
   ExpertModel({
     this.birthDate,
@@ -95,7 +35,7 @@ class ExpertModel {
     required this.verified,
     required this.dateCreation,
     this.description = "n/a",
-    this.followers,
+    this.followers = const [],
   });
 
   ExpertModel copyWith({
@@ -152,9 +92,7 @@ class ExpertModel {
     verified: json["verified"],
     description: json["description"],
     ratingCount: json["ratingCount"] as num,
-    followers: json["followers"] == null
-        ? []
-        : List<String>.from(json["followers"].map((e) => e)),
+    followers: List<String>.from(json["followers"].map((e) => e)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -175,7 +113,7 @@ class ExpertModel {
     "date_creation": Timestamp.fromDate(dateCreation),
     "description": description,
     "ratingCount": ratingCount,
-    "followers": followers ?? List<dynamic>.from(followers!.map((e) => e))
+    "followers": List<dynamic>.from(followers.map((x) => x)),
   };
 }
 

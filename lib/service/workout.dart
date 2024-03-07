@@ -289,12 +289,43 @@ class WorkoutProvider extends ChangeNotifier {
     required ExpertModel expertModel,
   }) async {
 
-    final List<String>? followers = expertModel.followers;
+    final List<String> expertFollowers = expertModel.followers;
 
-    followers!.add(clientId);
+    if (expertFollowers.contains(clientId)) {
+      expertFollowers.remove(clientId);
+    } else {
+      expertFollowers.add(clientId);
+    }
 
-    _db.collection(tExpertPath).doc(expertId).set({
-      "followers": followers,
-    }, SetOptions(merge: true));
+    final List<String> followingExperts = await _db.collection(tClientPath).doc(clientId).get().then((value) {
+      final map = value.data()!;
+
+      List<dynamic> followingExpertsDynamic = map["followingExperts"];
+      return followingExpertsDynamic.map((e) => e.toString()).toList();
+    });
+
+    if (followingExperts.contains(expertId)) {
+      followingExperts.remove(expertId);
+    } else {
+      followingExperts.add(expertId);
+    }
+
+
+    // add experts in client follower list
+    await _db.collection(tClientPath).doc(clientId).set({
+      "followingExperts": followingExperts,
+    }, SetOptions(merge: true))
+      .then((value) => debugPrint("Update follow/unfollow expert: ${expertModel.uid}!"))
+      .onError((error, stackTrace) => debugPrint("Error: $error"));
+
+
+    // add client in expert followers list
+    await _db.collection(tExpertPath).doc(expertId).set({
+      "followers": expertFollowers,
+    }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update follow/unfollow expert: ${clientId}!"))
+        .onError((error, stackTrace) => debugPrint("Error: $error"));
+
+    notifyListeners();
   }
 }
