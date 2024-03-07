@@ -105,7 +105,7 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                         return Center(
                           child: CircleAvatar(
                             radius: MediaQuery.of(context).size.width * 0.3,
-                            child: Text("${widget.clientList.length} total clients",
+                            child: Text("${widget.expertModel.followers.length} total clients",
                               style: Styles.headline25,
                             ),
                           ),

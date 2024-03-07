@@ -103,7 +103,7 @@ class _ExpProgramScreenState extends State<ExpProgramScreen> {
                   Center(
                     child: CircleAvatar(
                       radius: MediaQuery.of(context).size.width * 0.25,
-                      child: Text("${widget.clientList.length} total clients",
+                      child: Text("${widget.expertModel.followers.length} total clients",
                         style: Styles.headline25,
                       ),
                     ),
