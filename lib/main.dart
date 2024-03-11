@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -9,8 +10,10 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
 import 'package:ifit/service/Expert.dart';
 import 'package:ifit/service/client.dart';
+import 'package:ifit/service/notification.dart';
 import 'package:ifit/service/package.dart';
 import 'package:ifit/service/workout.dart';
+import 'package:ifit/views/home.dart';
 import 'package:ifit/views/screens/account_login_reg/login.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
 import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
@@ -25,19 +28,25 @@ import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/crea
 import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ifit/views/screens/welcome/onboarding_screen.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
 late PackageInfo packageInfo;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final WidgetsBinding widgetsBinding = WidgetsBinding.instance; // Define and initialize widgetsBinding
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FirebaseNotif.init();
 
   SharedPreferences prefs = await SharedPreferences.getInstance(); //dependency to check if just installed
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
@@ -56,7 +65,10 @@ void main() async {
   }
   await GetStorage.init();
 
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // await FirebaseNotif().initNotifications();
 
   runApp(
     MyApp(
@@ -87,13 +99,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
 
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProvider<ClientProvider>(create: (_) => ClientProvider()),
         ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
         ChangeNotifierProvider<IFitPackage>(create: (_) => IFitPackage(info: packageInfo)),
+        ChangeNotifierProvider<FirebaseNotif>(create: (context) => FirebaseNotif()),
         ChangeNotifierProvider<WorkoutProvider>(create: (context) => WorkoutProvider()),
       ],
       child: MaterialApp(
@@ -101,8 +113,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primaryColor: primary,
         ),
+        navigatorKey: navigatorKey,
         title: 'I-Fit',
-        // home: const CreateWorkout(), //for testing
         home: widget.homeScreen //either Onboarding or Register Screen
       ),
     );

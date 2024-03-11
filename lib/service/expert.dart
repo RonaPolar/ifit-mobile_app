@@ -182,7 +182,7 @@ class ExpertProvider extends ChangeNotifier {
   String? workoutPurpose;
 
   List<String> workoutPurposeList = [
-    "Lose Weight",
+    "Loss Weight",
     "Gain Muscles",
     "Body Toning",
   ];

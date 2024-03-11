@@ -328,4 +328,17 @@ class WorkoutProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Stream<List<String>>? finishedPlanStream;
+
+  Stream<List<String>> getFinishedPlanStream(String id) {
+    return _db.collection("finished").doc(id).snapshots().map((snap) {
+      return (snap.data() as List).map((e) => e.toString()).toList();
+    });
+  }
+
+  void updateFinishedPlanStream(String id) {
+    finishedPlanStream = getFinishedPlanStream(id);
+    notifyListeners();
+  }
 }

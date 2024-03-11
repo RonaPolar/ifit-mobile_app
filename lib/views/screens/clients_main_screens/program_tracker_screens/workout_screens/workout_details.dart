@@ -320,7 +320,9 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AddSchedule(),
+                            builder: (context) => AddSchedule(
+                              workoutThing: workoutPlan,
+                            ),
                           ),
                         );
                       },

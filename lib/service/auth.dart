@@ -596,6 +596,12 @@ class Auth extends ChangeNotifier {
       ).toJson(),
     }, SetOptions(merge: true)).then((value) => debugPrint("Added rating successfully!"))
       .onError((error, stackTrace) => debugPrint("Error add rating: $error"));
+
+    await db.collection("finished").doc(id).set({
+      "id": workoutPlan.id,
+    });
+
+    await clientPath.delete();
   }
 
   Future<void> updateProfileAssessment({

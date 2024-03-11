@@ -101,16 +101,16 @@ class _WorkoutTrackerScreenState extends State<WorkoutTrackerScreen> {
                       "Upcoming Workout Schedule",
                       style: Styles.title
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                          builder: (context) => const WorkoutSched()));
-                      },
-                      child: Text(
-                        "See More",
-                        style: Styles.seeMore),
-                      )
+                    // TextButton(
+                    //   onPressed: () {
+                    //     Navigator.of(context).push(
+                    //       MaterialPageRoute(
+                    //       builder: (context) => const WorkoutSched()));
+                    //   },
+                    //   child: Text(
+                    //     "See More",
+                    //     style: Styles.seeMore),
+                    //   )
                     ],
                   ),
                   ListView.builder( //WorkoutRowContainer Content

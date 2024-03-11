@@ -1,25 +1,51 @@
+import 'dart:math';
+
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/common/utils/common_utils.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/notification.dart';
+import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
 import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 
 class AddSchedule extends StatefulWidget {
-  const AddSchedule({super.key});
+  const AddSchedule({
+    required this.workoutThing,
+    super.key,
+  });
+
+  final dynamic workoutThing;
 
   @override
   State<AddSchedule> createState() => _AddScheduleState();
 }
 
 class _AddScheduleState extends State<AddSchedule> {
+
+  String programName() {
+    if (widget.workoutThing is WorkoutPlan) {
+      final item = widget.workoutThing as WorkoutPlan;
+      return item.planName;
+    } else if (widget.workoutThing is WorkoutMeal) {
+      final item = widget.workoutThing as WorkoutMeal;
+      return item.foodPlanName;
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final DateTime now = DateTime.now();
+    final FirebaseNotif firebaseNotif = Provider.of<FirebaseNotif>(context);
 
     return Scaffold(
       backgroundColor: Styles.bgColor,
@@ -81,40 +107,49 @@ class _AddScheduleState extends State<AddSchedule> {
                    
             
                   const Gap(30),
-                  Text(
-                    'Time',
-                    style: Styles.title
+                  // Text(
+                  //   'Time',
+                  //   style: Styles.title
+                  // ),
+                  // SizedBox(
+                  //   height: 85,
+                  //   child: CupertinoDatePicker(
+                  //     onDateTimeChanged: (newDate) {},
+                  //     initialDateTime: DateTime.now(),
+                  //     use24hFormat: false,
+                  //     minuteInterval: 1,
+                  //     mode: CupertinoDatePickerMode.time,
+                  //   ),
+                  // ),
+                  RegisterDropDown(
+                    hintText: 'Schedule',
+                    icon: FluentSystemIcons.ic_fluent_access_time_filled,
+                    items: ["Daily", "Every Minute", "Every Hour", "Weekly"].map((data) {
+                      return  DropdownMenuItem<String>(
+                        value: data,
+                        child: Text(data),
+                      );
+                    }).toList(),
+                    onChanged: firebaseNotif.updateSchedule,
+                    selectedValue: firebaseNotif.schedule,
                   ),
-                  SizedBox(
-                    height: 85,
-                    child: CupertinoDatePicker(
-                      onDateTimeChanged: (newDate) {},
-                      initialDateTime: DateTime.now(),
-                      use24hFormat: false,
-                      minuteInterval: 1,
-                      mode: CupertinoDatePickerMode.time,
-                    ),
-                  ),
-
                   const Gap(15),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: NextNavigation(
-                      title: "Select Days",
-                      iconData: Icons.calendar_today_outlined,
-                      onTap: () {
-                        
-                      }),
-                  ),
-            
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       vertical: 15, horizontal: 20),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.grey.withOpacity(0.2),
+                  //     borderRadius: BorderRadius.circular(15),
+                  //   ),
+                  //   child: NextNavigation(
+                  //     title: "Select Days",
+                  //     iconData: Icons.calendar_today_outlined,
+                  //     onTap: () {
+                  //
+                  //     }),
+                  // ),
                   const Gap(30),
-                  Text(
-                    'Program Details',
+                  Text('Program Details',
                     style: Styles.title
                   ),
                   const Gap(15),
@@ -125,68 +160,37 @@ class _AddScheduleState extends State<AddSchedule> {
                       color: Colors.grey.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: NextNavigation(
-                      title: "Choose Workout",
-                      iconData: Icons.fitness_center_outlined,
-                      onTap: () {
-                        
-                      }),
-                  ),
-                  const Gap(5),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: Styles.textColor,
-                        ),
-                      ),
-                      Text(
-                        ' Or ',
-                        style: Styles.text18,
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: Styles.textColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Gap(5),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.work),
+                        const SizedBox(width: 4.0),
+                        Text(programName()),
+                      ],
                     ),
-                    child: NextNavigation(
-                      title: "Choose Meal",
-                      iconData: Icons.fastfood_outlined,
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const WorkoutSchedule(),
-                        //   ),
-                        // );
-                      }),
                   ),
                  ],
                 ),
               ),
               MainButton(
-                title: 'Save', 
-                onPressed: (){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MealSched(),
-                    ),
+                title: 'Cancel Notification',
+                onPressed: () {
+                  FirebaseNotif.cancelAll();
+                  Navigator.of(context).pop();
+                  firebaseNotif.clearSchedule();
+                },
+              ),
+              const Gap(20.0),
+              MainButton(
+                title: 'Save',
+                onPressed: () {
+                  firebaseNotif.showPeriodicNotifications(
+                    title: programName(),
+                    body: "Let's workout!", payload: programName(),
                   );
-              }),
-            
+                  Navigator.of(context).pop();
+                  firebaseNotif.clearSchedule();
+                },
+              ),
             ], //main Children
           ),
         ),

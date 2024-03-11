@@ -83,16 +83,16 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                     Text("Upcoming Meal Schedule",
                     style: Styles.title
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => const MealSched()));
-                    },
-                    child: Text("See More",
-                      style: Styles.seeMore
-                      ),
-                    )
+                  // TextButton(
+                  //   onPressed: () {
+                  //     Navigator.of(context).push(
+                  //       MaterialPageRoute(
+                  //       builder: (context) => const MealSched()));
+                  //   },
+                  //   child: Text("See More",
+                  //     style: Styles.seeMore
+                  //     ),
+                  //   )
                   ],
                 ),
                 ListView.builder( //WorkoutRowContainer Content

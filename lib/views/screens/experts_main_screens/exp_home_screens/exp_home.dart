@@ -81,8 +81,8 @@ class _ExpHomeScreenState extends State<ExpHomeScreen> {
                 const Gap(20),
                 ProgramCreatedWidget(
                   expertModel: expert,
-                  workoutMealList: widget.workoutMealList,
-                  workoutPlanList: widget.workoutPlanList,
+                  workoutMealList: widget.workoutMealList.where((element) => !element.isDeleted!).toList(),
+                  workoutPlanList: widget.workoutPlanList.where((element) => !element.isDeleted!).toList(),
                 ),
                 const Gap(20),
                 Column(

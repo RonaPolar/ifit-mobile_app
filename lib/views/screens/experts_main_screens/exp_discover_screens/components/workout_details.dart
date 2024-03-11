@@ -281,25 +281,25 @@ class _ExpertWorkoutDetailsState extends State<ExpertWorkoutDetails> {
                     ],
                   ),
                   const Gap(30),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Styles.secondColor.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: NextNavigation(
-                      title: 'Schedule Workout',
-                      iconData: FluentSystemIcons.ic_fluent_calendar_regular,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddSchedule(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  //   decoration: BoxDecoration(
+                  //     color: Styles.secondColor.withOpacity(0.3),
+                  //     borderRadius: BorderRadius.circular(15),
+                  //   ),
+                  //   child: NextNavigation(
+                  //     title: 'Schedule Workout',
+                  //     iconData: FluentSystemIcons.ic_fluent_calendar_regular,
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const AddSchedule(),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   const Gap(30),
                   Column(
                     children: [

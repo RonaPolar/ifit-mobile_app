@@ -184,26 +184,26 @@ class _ExpertMealDetailsState extends State<ExpertMealDetails> {
 
                   
                   const Gap(30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:15),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Styles.secondColor.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: NextNavigation(
-                          title: 'Schedule Meal',
-                          iconData: FluentSystemIcons.ic_fluent_calendar_regular,
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => const AddSchedule()),
-                            );
-                          },
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal:15),
+                  //   child: Container(
+                  //     padding: const EdgeInsets.symmetric(
+                  //         vertical: 15, horizontal: 20),
+                  //     decoration: BoxDecoration(
+                  //       color: Styles.secondColor.withOpacity(0.3),
+                  //       borderRadius: BorderRadius.circular(15),
+                  //     ),
+                  //     child: NextNavigation(
+                  //         title: 'Schedule Meal',
+                  //         iconData: FluentSystemIcons.ic_fluent_calendar_regular,
+                  //         onTap: () {
+                  //           Navigator.push(context, MaterialPageRoute(
+                  //             builder: (context) => const AddSchedule()),
+                  //           );
+                  //         },
+                  //     ),
+                  //   ),
+                  // ),
 
 
                   const Gap(30),

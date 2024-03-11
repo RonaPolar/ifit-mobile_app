@@ -34,18 +34,18 @@ class ActivityTodayWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NextNavigation(
-                  title: 'Schedule',
-                  nextIconColor: Styles.fadeTextColor,
-                  titleTextStyle: Styles.text15bold.copyWith(
-                    color: Styles.fadeTextColor,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MealSched(),
-                    ));
-                  },
-                ),
+                // NextNavigation(
+                //   title: 'Schedule',
+                //   nextIconColor: Styles.fadeTextColor,
+                //   titleTextStyle: Styles.text15bold.copyWith(
+                //     color: Styles.fadeTextColor,
+                //   ),
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (context) => const MealSched(),
+                //     ));
+                //   },
+                // ),
                 Text(
                   "Monday",
                   style: Styles.seeMore.copyWith(

@@ -76,23 +76,23 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                     Text('Daily Schedule',
                       style: Styles.text15bold
                     ),
-                    SizedBox(
-                      width: 80,
-                      height: 30,
-                        child: MainButton(
-                          title: "Check",
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MealSched()),
-                            );
-                          },
-                          textStyle: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    // SizedBox(
+                    //   width: 80,
+                    //   height: 30,
+                    //     child: MainButton(
+                    //       title: "Check",
+                    //       onPressed: () {
+                    //         Navigator.of(context).push(MaterialPageRoute(
+                    //           builder: (context) => const MealSched()),
+                    //         );
+                    //       },
+                    //       textStyle: const TextStyle(
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.bold,
+                    //         color: Colors.white,
+                    //       ),
+                    //     ),
+                    //   ),
                     ],
                   ),
               ),

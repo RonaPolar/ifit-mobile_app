@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/models/client.dart';
 import 'package:ifit/views/widgets/container/big.dart';
@@ -43,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
       clientProvider.getBmi(client: widget.clientModel);
     });
   }
-
 
 
   @override
@@ -135,11 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
     combinedWorkoutPlan.sort((a,b) {
       // goal, difficulty, body list
 
-      int goalDifferenceA = (goalValues[a.purpose] ?? 0 - goalValues[clientGoal.fitnessGoals]!).abs();
-      int goalDifferenceB = (goalValues[b.purpose]?? 0 - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceA = (goalValues[a.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
+      int goalDifferenceB = (goalValues[b.purpose]! - goalValues[clientGoal.fitnessGoals]!).abs();
 
-      int difficultyValuesA = (difficultyValues[a.difficulty] ?? 0 - difficultyValues[clientGoal.level]!).abs();
-      int difficultyValuesB = (difficultyValues[b.difficulty] ?? 0 - difficultyValues[clientGoal.level]!).abs();
+      int difficultyValuesA = (difficultyValues[a.difficulty]! - difficultyValues[clientGoal.level]!).abs();
+      int difficultyValuesB = (difficultyValues[b.difficulty]! - difficultyValues[clientGoal.level]!).abs();
 
       int totalDifferenceA = goalDifferenceA + difficultyValuesA;
       int totalDifferenceB = goalDifferenceB + difficultyValuesB;
