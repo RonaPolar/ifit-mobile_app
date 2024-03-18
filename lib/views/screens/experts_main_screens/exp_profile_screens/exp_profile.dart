@@ -38,6 +38,14 @@ class ExpProfileScreen extends StatelessWidget {
 
     final ExpertProvider expert = Provider.of<ExpertProvider>(context);
 
+    double rating() {
+      if (expertModel.ratingCount == 0) {
+        return 0.0;
+      } else {
+        return expertModel.rating! / expertModel.ratingCount;
+      }
+    }
+
     return Scaffold(
       backgroundColor: Styles.bgColor,
       appBar: AppBar(
@@ -125,7 +133,7 @@ class ExpProfileScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ProfileCell(
-                            value: "${expertModel.rating}",
+                            value: "${rating()}",
                             title: 'Star Rate',
                           ),
                         ),

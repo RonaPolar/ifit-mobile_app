@@ -600,8 +600,6 @@ class Auth extends ChangeNotifier {
     await db.collection("finished").doc(id).set({
       "id": workoutPlan.id,
     });
-
-    await clientPath.delete();
   }
 
   Future<void> updateProfileAssessment({

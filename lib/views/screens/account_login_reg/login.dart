@@ -10,7 +10,6 @@ import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 
 class LogIn extends StatefulWidget {
@@ -25,7 +24,6 @@ class _LogInState extends State<LogIn> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final bool _isInvalidCredentials = false;
   final GlobalKey<FormState> formKey = GlobalKey();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -141,7 +139,6 @@ class _LogInState extends State<LogIn> {
   Widget _buildBottom(IFitPackage package) {
 
     final Auth auth = Provider.of<Auth>(context);
-    final FirebaseNotif notif = Provider.of<FirebaseNotif>(context);
 
     void loginUser() async {
       if (formKey.currentState!.validate()) {
@@ -158,77 +155,77 @@ class _LogInState extends State<LogIn> {
             loginUser();
           },
         ),
-
-        MainButton(
-          title: 'Simple Notif',
-          onPressed: () {
-            // notif.notifNow(
-            //   title: "Sarah Abs",
-            //   body: "Hey! Dads",
-            //   payload: "sarah.abs",
-            // );
-            FirebaseNotif.showSimpleNotification(
-              title: "Simple NOtification",
-              body: "This is simple notifiactions",
-              payload: "This is simple data",
-            );
-
-            final snackbar = SnackBar(content: Text("Scheduled in 5 seconds!"));
-
-            ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(snackbar);
-          },
-        ),
-
-        MainButton(
-          title: 'Periodic Notif',
-          onPressed: () {
-            // notif.notifNow(
-            //   title: "Sarah Abs",
-            //   body: "Hey! Dads",
-            //   payload: "sarah.abs",
-            // );
-            // FirebaseNotif().showPeriodicNotifications(
-            //   title: "Periodic Notification",
-            //   body: "This is periodic notifications",
-            //   payload: "This is periodic data",
-            // );
-          },
-        ),
-
-        MainButton(
-          title: 'Schedule Notif',
-          onPressed: () {
-            FirebaseNotif.showScheduleNotifications(
-              title: "Schedule Notification",
-              body: "This is schedule notification",
-              payload: "This is schedule data",
-            );
-          },
-        ),
-
-        MainButton(
-          title: 'Cancel Notif',
-          onPressed: () {
-            // notif.notifNow(
-            //   title: "Sarah Abs",
-            //   body: "Hey! Dads",
-            //   payload: "sarah.abs",
-            // );
-            FirebaseNotif.cancel(1);
-          },
-        ),
-
-        MainButton(
-          title: 'Cancel All Notif',
-          onPressed: () {
-            // notif.notifNow(
-            //   title: "Sarah Abs",
-            //   body: "Hey! Dads",
-            //   payload: "sarah.abs",
-            // );
-            FirebaseNotif.cancelAll();
-          },
-        ),
+        //
+        // MainButton(
+        //   title: 'Simple Notif',
+        //   onPressed: () {
+        //     // notif.notifNow(
+        //     //   title: "Sarah Abs",
+        //     //   body: "Hey! Dads",
+        //     //   payload: "sarah.abs",
+        //     // );
+        //     FirebaseNotif.showSimpleNotification(
+        //       title: "Simple NOtification",
+        //       body: "This is simple notifiactions",
+        //       payload: "This is simple data",
+        //     );
+        //
+        //     final snackbar = SnackBar(content: Text("Scheduled in 5 seconds!"));
+        //
+        //     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(snackbar);
+        //   },
+        // ),
+        //
+        // MainButton(
+        //   title: 'Periodic Notif',
+        //   onPressed: () {
+        //     // notif.notifNow(
+        //     //   title: "Sarah Abs",
+        //     //   body: "Hey! Dads",
+        //     //   payload: "sarah.abs",
+        //     // );
+        //     // FirebaseNotif().showPeriodicNotifications(
+        //     //   title: "Periodic Notification",
+        //     //   body: "This is periodic notifications",
+        //     //   payload: "This is periodic data",
+        //     // );
+        //   },
+        // ),
+        //
+        // MainButton(
+        //   title: 'Schedule Notif',
+        //   onPressed: () {
+        //     FirebaseNotif.showScheduleNotifications(
+        //       title: "Schedule Notification",
+        //       body: "This is schedule notification",
+        //       payload: "This is schedule data",
+        //     );
+        //   },
+        // ),
+        //
+        // MainButton(
+        //   title: 'Cancel Notif',
+        //   onPressed: () {
+        //     // notif.notifNow(
+        //     //   title: "Sarah Abs",
+        //     //   body: "Hey! Dads",
+        //     //   payload: "sarah.abs",
+        //     // );
+        //     FirebaseNotif.cancel(1);
+        //   },
+        // ),
+        //
+        // MainButton(
+        //   title: 'Cancel All Notif',
+        //   onPressed: () {
+        //     // notif.notifNow(
+        //     //   title: "Sarah Abs",
+        //     //   body: "Hey! Dads",
+        //     //   payload: "sarah.abs",
+        //     // );
+        //     FirebaseNotif.cancelAll();
+        //   },
+        // ),
         const Gap(10),
         Row(
           children: [
