@@ -94,6 +94,8 @@ class _MyAppState extends State<MyApp> {
     // whenever initialization is completed, remove the splash screen:
     Future.delayed(const Duration(seconds: 2))
         .then((value) => {FlutterNativeSplash.remove()});
+
+
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,11 +9,8 @@ import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/service/notification.dart';
 import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part2.dart';
-import 'package:ifit/views/widgets/icon_text_icon.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 
 class AddSchedule extends StatefulWidget {
@@ -41,6 +37,33 @@ class _AddScheduleState extends State<AddSchedule> {
     }
     return "";
   }
+
+  num dateFinished() {
+    if (widget.workoutThing is WorkoutPlan) {
+      final item = widget.workoutThing as WorkoutPlan;
+      return item.dayCountFinished;
+    }
+    return 0;
+  }
+
+  num daysOfThePlan() {
+    if (widget.workoutThing is WorkoutPlan) {
+      final item = widget.workoutThing as WorkoutPlan;
+      return num.parse(item.daysOfThePlan);
+    }
+    return 0;
+  }
+
+  final List<String> scheduleList = [
+    "Daily",
+    "Every Monday",
+    "Every Tuesday",
+    "Every Wednesday",
+    "Every Thursday",
+    "Every Friday",
+    "Every Saturday",
+    "Every Sunday",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +147,7 @@ class _AddScheduleState extends State<AddSchedule> {
                   RegisterDropDown(
                     hintText: 'Schedule',
                     icon: FluentSystemIcons.ic_fluent_access_time_filled,
-                    items: ["Daily", "Every Minute", "Every Hour", "Weekly"].map((data) {
+                    items: scheduleList.map((data) {
                       return  DropdownMenuItem<String>(
                         value: data,
                         child: Text(data),
@@ -183,9 +206,12 @@ class _AddScheduleState extends State<AddSchedule> {
               MainButton(
                 title: 'Save',
                 onPressed: () {
-                  firebaseNotif.showPeriodicNotifications(
+                  firebaseNotif.showScheduledNotification(
                     title: programName(),
                     body: "Let's workout!", payload: programName(),
+                    dateFinished: dateFinished().toInt(),
+                    daysOfThePlan: daysOfThePlan().toInt(),
+                    day: scheduleList.indexOf(firebaseNotif.schedule!),
                   );
                   Navigator.of(context).pop();
                   firebaseNotif.clearSchedule();

@@ -5,6 +5,7 @@ import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/service/auth.dart';
 import 'package:ifit/service/notification.dart';
 import 'package:ifit/service/package.dart';
+import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
 import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:ifit/views/screens/account_login_reg/register/register.dart';
@@ -36,7 +37,7 @@ class _LogInState extends State<LogIn> {
   listenToNotifications() {
     print("Listening to notifications");
     FirebaseNotif.onClickNotification.stream.listen((event) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainBottomBar()));
     });
   }
 

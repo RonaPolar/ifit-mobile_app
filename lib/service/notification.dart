@@ -244,13 +244,35 @@ class FirebaseNotif extends ChangeNotifier {
     );
   }
 
+  tz.TZDateTime _nextInstanceOfNineAM(int dateFinished, int daysOfThePlan, int day) {
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate = now;
+
+    while (scheduledDate.weekday != day) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    if (dateFinished > daysOfThePlan) {
+      scheduledDate = scheduledDate.add(const Duration(days: 7));
+    }
+
+    scheduledDate = tz.TZDateTime.local(
+      now.year,
+      now.month,
+      now.day,
+      9,
+      0,
+    );
+    return scheduledDate;
+  }
 
   Future<void> showScheduledNotification({
-    int id = 0,
     required String title,
     required String body,
     required String payload,
-    required DateTime scheduledDate,
+    required int dateFinished,
+    required int daysOfThePlan,
+    required int day,
   }) async {
     await checkNotificationPermission();
 
@@ -258,10 +280,14 @@ class FirebaseNotif extends ChangeNotifier {
       tz.initializeTimeZones();
       print("${tz.getLocation("Asia/Manila")}");
       await FlutterLocalNotificationsPlugin().zonedSchedule(
-        id,
+        3,
         title,
         body,
-        tz.TZDateTime.from(scheduledDate, tz.getLocation("Asia/Manila")),
+        _nextInstanceOfNineAM(
+          dateFinished,
+          daysOfThePlan,
+          day,
+        ),
         notificationDetails(),
         payload: payload,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
@@ -332,18 +358,6 @@ class FirebaseNotif extends ChangeNotifier {
       channelDescription: "Channel Description"
     );
     return const NotificationDetails(android: androidPlatformChannelSpecifics);
-  }
-
-  static tz.TZDateTime _scheduledDaily(tz.TZDateTime time) {
-    final now = tz.TZDateTime.now(tz.local);
-    final scheduledDate = tz.TZDateTime(
-      tz.local, now.year, now.month, now.day,
-      time.hour, time.minute, time.second
-    );
-
-    return scheduledDate.isBefore(now)
-        ? scheduledDate.add(const Duration(days: 1))
-        : scheduledDate;
   }
 
   Future initLocalNotifications() async {
