@@ -130,20 +130,21 @@ class _AddScheduleState extends State<AddSchedule> {
                    
             
                   const Gap(30),
-                  // Text(
-                  //   'Time',
-                  //   style: Styles.title
-                  // ),
-                  // SizedBox(
-                  //   height: 85,
-                  //   child: CupertinoDatePicker(
-                  //     onDateTimeChanged: (newDate) {},
-                  //     initialDateTime: DateTime.now(),
-                  //     use24hFormat: false,
-                  //     minuteInterval: 1,
-                  //     mode: CupertinoDatePickerMode.time,
-                  //   ),
-                  // ),
+                  Text(
+                    'Time',
+                    style: Styles.title
+                  ),
+                  SizedBox(
+                    height: 85,
+                    child: CupertinoDatePicker(
+                      onDateTimeChanged: firebaseNotif.updateTime,
+                      initialDateTime: DateTime.now(),
+                      use24hFormat: true,
+                      minuteInterval: 1,
+                      mode: CupertinoDatePickerMode.time,
+                    ),
+                  ),
+                  const SizedBox(height: 30.0),
                   RegisterDropDown(
                     hintText: 'Schedule',
                     icon: FluentSystemIcons.ic_fluent_access_time_filled,

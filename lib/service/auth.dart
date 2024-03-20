@@ -291,7 +291,6 @@ class Auth extends ChangeNotifier {
 
         }
 
-
         bool isExpert = userType == "Expert";
 
         Navigator.push(context,

@@ -5,11 +5,9 @@ import 'package:ifit/models/client.dart';
 import 'package:ifit/models/meal.dart';
 import 'package:ifit/models/workout.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/components/status.dart';
-import 'package:ifit/views/widgets/button/main_button.dart';
 import 'package:ifit/views/widgets/program_widgets.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_details.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
-import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
 import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
 
 import 'workout_screens/workout_details.dart';
@@ -19,12 +17,17 @@ class ProgramTrackerScreen extends StatefulWidget {
     required this.clientModel,
     required this.workoutPlanList,
     required this.workoutMealList,
+    required this.workoutPlanListList,
+    required this.workoutMealListList,
+
     super.key,
   });
 
   final ClientModel clientModel;
   final List<WorkoutPlan> workoutPlanList;
   final List<WorkoutMeal> workoutMealList;
+  final List<List<WorkoutPlan>> workoutPlanListList;
+  final List<List<WorkoutMeal>> workoutMealListList;
 
 
   @override
@@ -45,6 +48,10 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
 
       return isCompleted && !element.isCancelled;
     }).toList();
+
+    final List<WorkoutPlan> combinedWorkoutPlan = widget.workoutPlanListList.expand((element) => element).toList();
+    final List<WorkoutMeal> combinedWorkoutMeal = widget.workoutMealListList.expand((element) => element).toList();
+
 
     return Scaffold(
       key: scaffoldKey,
@@ -120,7 +127,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => WorkoutTrackerScreen(
-                            workoutPlanList: widget.workoutPlanList,
+                            workoutPlanList: combinedWorkoutPlan,
                           )));
                       },
                       child: Text("See More",
@@ -205,7 +212,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => MealTrackerScreen(
-                            workoutMealList: widget.workoutMealList,
+                            workoutMealList: combinedWorkoutMeal,
                           )));
                       },
                       child: Text("See More",

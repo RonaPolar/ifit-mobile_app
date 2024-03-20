@@ -66,6 +66,8 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
         clientModel: clientModel,
         workoutMealList: clientWorkoutMeal,
         workoutPlanList: clientWorkoutPlan,
+        workoutMealListList: workoutMeal,
+        workoutPlanListList: workoutPlan,
       ),
       ProfileScreen(
         clientModel: clientModel,

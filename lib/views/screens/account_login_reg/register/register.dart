@@ -14,6 +14,7 @@ import 'package:ifit/views/screens/account_login_reg/register/Expert_registratio
 import 'package:ifit/views/screens/account_login_reg/register/popup_privacy_terms.dart';
 import 'package:ifit/views/widgets/text_field/text_field_container.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ifit/views/widgets/verification_text_box.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
@@ -322,34 +323,39 @@ class _RegisterState extends State<Register> {
                           title: 'Register',
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
-                              // if (await validateAndSendEmail()) {
-
-                              // ignore: use_build_context_synchronously
-                              // Navigator.push(context, MaterialPageRoute(
-                              //     builder: (context) => VerificationCodeScreen(onConfirmPressed: () {
-                              //       // check if all fields are filled and valid
-                              //
-                              //     }),
-                              //   ),
-                              // );
-                              if (auth.registerUserType == "Client") {
-                                await auth.createUser().then((String? id) {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(
-                                      builder: (context) => RegisterPart2(id: id!)),
-                                  );
-                                });
-
-                              } else if (auth.registerUserType == "Expert") {
-                                await auth.createUser().then((value) {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(
-                                      builder: (context) =>
-                                      const ExpertRegistration1()),
-                                  );
-                                });
-                                // });
+                              if (await validateAndSendEmail()) {
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) =>
+                                    VerificationCodeScreen(
+                                      onConfirmPressed: () async {
+                                        if (auth.registerUserType ==
+                                            "Client") {
+                                          await auth.createUser().then((
+                                              String? id) {
+                                            Navigator.pushReplacement(
+                                              context, MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterPart2(id: id!)),
+                                            );
+                                          });
+                                        } else if (auth.registerUserType ==
+                                            "Expert") {
+                                          await auth.createUser().then((
+                                              value) {
+                                            Navigator.pushReplacement(
+                                              context, MaterialPageRoute(
+                                                builder: (context) =>
+                                                const ExpertRegistration1()),
+                                            );
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
                               }
                             }
-                            // },
                           }
                         ),
                         const Gap(10),

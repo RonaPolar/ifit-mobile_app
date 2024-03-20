@@ -74,6 +74,13 @@ class FirebaseNotif extends ChangeNotifier {
     notifyListeners();
   }
 
+  DateTime time = DateTime.now();
+
+  void updateTime(DateTime value) {
+    time = value;
+    notifyListeners();
+  }
+
   void clearSchedule() {
     schedule = null;
     notifyListeners();
@@ -260,8 +267,8 @@ class FirebaseNotif extends ChangeNotifier {
       now.year,
       now.month,
       now.day,
-      9,
-      0,
+      time.hour,
+      time.minute,
     );
     return scheduledDate;
   }
