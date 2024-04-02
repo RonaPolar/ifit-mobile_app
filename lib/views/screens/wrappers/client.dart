@@ -55,6 +55,7 @@ class _ClientAuthWrapperState extends State<ClientAuthWrapper> {
         workoutPlanList: workoutPlan,
         workoutMealList: workoutMeal,
         clientWorkoutPlan: clientWorkoutPlan,
+        clientWorkoutMeal: clientWorkoutMeal,
       ),
       DiscoverScreen(
         clientModel: clientModel,

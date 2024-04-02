@@ -128,6 +128,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => WorkoutTrackerScreen(
                             workoutPlanList: combinedWorkoutPlan,
+                            clientWorkoutPlan: widget.workoutPlanList,
                           )));
                       },
                       child: Text("See More",
@@ -213,6 +214,7 @@ class _ProgramTrackerScreenState extends State<ProgramTrackerScreen> {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => MealTrackerScreen(
                             workoutMealList: combinedWorkoutMeal,
+                            clientWorkoutMeal: widget.workoutMealList,
                           )));
                       },
                       child: Text("See More",

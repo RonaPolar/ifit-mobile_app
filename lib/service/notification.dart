@@ -67,10 +67,22 @@ class FirebaseNotif extends ChangeNotifier {
     );
   }
 
-  String? schedule;
+  final List<String> scheduleList = [
+    "Daily",
+    "Every Monday",
+    "Every Tuesday",
+    "Every Wednesday",
+    "Every Thursday",
+    "Every Friday",
+    "Every Saturday",
+    "Every Sunday",
+  ];
 
-  void updateSchedule(value) {
+  int schedule = 0;
+
+  void updateSchedule(int value) {
     schedule = value;
+    print(schedule);
     notifyListeners();
   }
 
@@ -82,7 +94,7 @@ class FirebaseNotif extends ChangeNotifier {
   }
 
   void clearSchedule() {
-    schedule = null;
+    schedule = 0;
     notifyListeners();
   }
 
@@ -143,37 +155,40 @@ class FirebaseNotif extends ChangeNotifier {
     );
   }
 
-  static Future showScheduleNotifications({
-    required String title,
-    required String body,
-    required String payload,
-  }) async {
-    tz.initializeTimeZones();
-    var localTime = tz.local;
+  // static Future showScheduleNotifications({
+  //   required String title,
+  //   required String body,
+  //   required String payload,
+  //   required DateTime time,
+  // }) async {
+  //   tz.initializeTimeZones();
+  //   var localTime = tz.local;
+  //
+  //   const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+  //     "channel 3", "your channel name",
+  //     channelDescription: "your channel description",
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //     ticker: "ticker",
+  //   );
+  //
+  //   const NotificationDetails notificationDetails = NotificationDetails(
+  //     android: androidNotificationDetails,
+  //   );
+  //
+  //   await _flutterLocalNotificationsPlugin.zonedSchedule(
+  //     2,
+  //     title,
+  //     body,
+  //     payload: payload,
+  //     _scheduleDaily(time),
+  //     notificationDetails,
+  //     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  //     uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+  //     matchDateTimeComponents: DateTimeComponents.time,
+  //   );
+  // }
 
-    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-      "channel 3", "your channel name",
-      channelDescription: "your channel description",
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: "ticker",
-    );
-
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-    );
-
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-      2,
-      title,
-      body,
-      payload: payload,
-      tz.TZDateTime.now(localTime).add(const Duration(seconds: 5)),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
 
   static Future cancel(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
@@ -251,27 +266,27 @@ class FirebaseNotif extends ChangeNotifier {
     );
   }
 
-  tz.TZDateTime _nextInstanceOfNineAM(int dateFinished, int daysOfThePlan, int day) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = now;
-
-    while (scheduledDate.weekday != day) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-
-    if (dateFinished > daysOfThePlan) {
-      scheduledDate = scheduledDate.add(const Duration(days: 7));
-    }
-
-    scheduledDate = tz.TZDateTime.local(
-      now.year,
-      now.month,
-      now.day,
-      time.hour,
-      time.minute,
-    );
-    return scheduledDate;
-  }
+  // tz.TZDateTime _nextInstanceOfNineAM(int dateFinished, int daysOfThePlan, int day) {
+  //   final now = tz.TZDateTime.now(tz.local);
+  //   var scheduledDate = now;
+  //
+  //   while (scheduledDate.weekday != day) {
+  //     scheduledDate = scheduledDate.add(const Duration(days: 1));
+  //   }
+  //
+  //   if (dateFinished > daysOfThePlan) {
+  //     scheduledDate = scheduledDate.add(const Duration(days: 7));
+  //   }
+  //
+  //   scheduledDate = tz.TZDateTime.local(
+  //     now.year,
+  //     now.month,
+  //     now.day,
+  //     time.hour,
+  //     time.minute,
+  //   );
+  //   return scheduledDate;
+  // }
 
   Future<void> showScheduledNotification({
     required String title,
@@ -285,19 +300,17 @@ class FirebaseNotif extends ChangeNotifier {
 
     try {
       tz.initializeTimeZones();
-      print("${tz.getLocation("Asia/Manila")}");
       await FlutterLocalNotificationsPlugin().zonedSchedule(
         3,
         title,
         body,
-        _nextInstanceOfNineAM(
-          dateFinished,
-          daysOfThePlan,
-          day,
-        ),
+        schedule == 0 ? _scheduleDaily(time) : _scheduleWeekly(time, days: [
+          schedule - 1,
+        ]),
         notificationDetails(),
         payload: payload,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: schedule == 0 ? DateTimeComponents.time : DateTimeComponents.dayOfWeekAndTime,
       );
       print("Notification scheduled successfully");
       notifyListeners(); // Notify listeners after scheduling the notification
@@ -305,6 +318,25 @@ class FirebaseNotif extends ChangeNotifier {
       print("Error scheduling notification: $e");
     }
   }
+
+  static tz.TZDateTime _scheduleDaily(DateTime time) {
+    final now = tz.TZDateTime.now(tz.getLocation("Asia/Manila"));
+    final scheduledDate = tz.TZDateTime(tz.getLocation("Asia/Manila"), now.year, now.month, now.day, time.hour, time.minute);
+
+    return scheduledDate.isBefore(now) ? scheduledDate.add(const Duration(days: 1)) : scheduledDate;
+  }
+
+  static tz.TZDateTime _scheduleWeekly(DateTime time, {
+    required List<int> days
+  }) {
+    tz.TZDateTime scheduledDate = _scheduleDaily(time);
+
+    while(!days.contains(scheduledDate.weekday)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
 
   Future<void> checkNotificationPermission() async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

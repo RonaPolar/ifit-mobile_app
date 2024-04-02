@@ -17,10 +17,12 @@ class MealTrackerScreen extends StatefulWidget {
 
   const MealTrackerScreen({
     required this.workoutMealList,
+    required this.clientWorkoutMeal,
     super.key,
   });
 
   final List<WorkoutMeal> workoutMealList;
+  final List<WorkoutMeal> clientWorkoutMeal;
 
   @override
   State<MealTrackerScreen> createState() => _MealTrackerScreenState();
@@ -73,7 +75,7 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                   height: 230,
                   width: double.maxFinite,
                   child: MealPieChart(
-                    workoutMealList: widget.workoutMealList,
+                    workoutMealList: widget.clientWorkoutMeal,
                   ),
                 ),
                 const Gap(20),

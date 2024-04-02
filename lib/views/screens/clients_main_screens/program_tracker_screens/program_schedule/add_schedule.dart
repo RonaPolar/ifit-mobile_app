@@ -54,16 +54,6 @@ class _AddScheduleState extends State<AddSchedule> {
     return 0;
   }
 
-  final List<String> scheduleList = [
-    "Daily",
-    "Every Monday",
-    "Every Tuesday",
-    "Every Wednesday",
-    "Every Thursday",
-    "Every Friday",
-    "Every Saturday",
-    "Every Sunday",
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -148,14 +138,14 @@ class _AddScheduleState extends State<AddSchedule> {
                   RegisterDropDown(
                     hintText: 'Schedule',
                     icon: FluentSystemIcons.ic_fluent_access_time_filled,
-                    items: scheduleList.map((data) {
-                      return  DropdownMenuItem<String>(
+                    items: firebaseNotif.scheduleList.map((data) {
+                      return DropdownMenuItem<String>(
                         value: data,
                         child: Text(data),
                       );
                     }).toList(),
-                    onChanged: firebaseNotif.updateSchedule,
-                    selectedValue: firebaseNotif.schedule,
+                    onChanged: (val) => firebaseNotif.updateSchedule,
+                    selectedValue: firebaseNotif.scheduleList[firebaseNotif.schedule],
                   ),
                   const Gap(15),
                   // Container(
@@ -195,14 +185,14 @@ class _AddScheduleState extends State<AddSchedule> {
                  ],
                 ),
               ),
-              MainButton(
-                title: 'Cancel Notification',
-                onPressed: () {
-                  FirebaseNotif.cancelAll();
-                  Navigator.of(context).pop();
-                  firebaseNotif.clearSchedule();
-                },
-              ),
+              // MainButton(
+              //   title: 'Cancel Notification',
+              //   onPressed: () {
+              //     FirebaseNotif.cancelAll();
+              //     Navigator.of(context).pop();
+              //     firebaseNotif.clearSchedule();
+              //   },
+              // ),
               const Gap(20.0),
               MainButton(
                 title: 'Save',
@@ -212,7 +202,7 @@ class _AddScheduleState extends State<AddSchedule> {
                     body: "Let's workout!", payload: programName(),
                     dateFinished: dateFinished().toInt(),
                     daysOfThePlan: daysOfThePlan().toInt(),
-                    day: scheduleList.indexOf(firebaseNotif.schedule!),
+                    day: firebaseNotif.schedule,
                   );
                   Navigator.of(context).pop();
                   firebaseNotif.clearSchedule();

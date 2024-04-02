@@ -188,6 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.push(context, MaterialPageRoute(
                                   builder: (context) => WorkoutTrackerScreen(
                                     workoutPlanList: widget.clientWorkoutPlan,
+                                    clientWorkoutPlan: widget.clientWorkoutPlan,
                                   )));
                             },
                           ),

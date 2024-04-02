@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
     required this.workoutPlanList,
     required this.workoutMealList,
     required this.clientWorkoutPlan,
+    required this.clientWorkoutMeal,
     super.key,
   });
 
@@ -27,6 +28,7 @@ class HomeScreen extends StatefulWidget {
   final List<List<WorkoutPlan>> workoutPlanList;
   final List<List<WorkoutMeal>> workoutMealList;
   final List<WorkoutPlan> clientWorkoutPlan;
+  final List<WorkoutMeal> clientWorkoutMeal;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -161,7 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => WorkoutTrackerScreen(
-                      workoutPlanList: widget.clientWorkoutPlan,
+                      workoutPlanList: combinedWorkoutPlan,
+                      clientWorkoutPlan: widget.clientWorkoutPlan,
                     )));
               },
               child: Text("See More", style: Styles.seeMore),
@@ -244,6 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                     builder: (context) => MealTrackerScreen(
                       workoutMealList: combinedWorkoutMeal,
+                      clientWorkoutMeal: widget.clientWorkoutMeal,
                     )),
                 );
               },
