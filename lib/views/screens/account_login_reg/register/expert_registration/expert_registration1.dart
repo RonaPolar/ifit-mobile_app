@@ -24,7 +24,6 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
   final user = FirebaseAuth.instance.currentUser;
   final GlobalKey<FormState> formKey = GlobalKey();
 
-
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -48,9 +47,11 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await auth.next(uid: user!.uid).then((value) {
-                          Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) =>
-                            const ExpertSuccessRegistration()),
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ExpertSuccessRegistration()),
                           );
                         });
                       }
@@ -70,10 +71,12 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
       padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
       child: Column(
         children: [
-          Text('Let\'s complete your profile',
+          Text(
+            'Let\'s complete your profile',
             style: Styles.headline25,
           ),
-          Text('It will help us to the verification about you',
+          Text(
+            'It will help us to the verification about you',
             style: Styles.text15normal,
           ),
           const Gap(30),
@@ -137,7 +140,8 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
           const Gap(15),
           Row(
             children: [
-              Text('Profession ID',
+              Text(
+                'Profession ID',
                 style: Styles.title,
               ),
               const Gap(10),
@@ -158,26 +162,27 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
 
           auth.professionId != null
               ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.file(
-                //to show image, you type like this.
-                File(auth.professionId!.path),
-                fit: BoxFit.cover,
-                width: 100,
-                height: 100,
-              ),
-            ),
-          )
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      //to show image, you type like this.
+                      File(auth.professionId!.path),
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                )
               : const Text(
-            "No Image",
-            style: TextStyle(fontSize: 20),
-          ),
+                  "No Image",
+                  style: TextStyle(fontSize: 20),
+                ),
           const Gap(15),
           Row(
             children: [
-              Text('Proof of Field of Study',
+              Text(
+                'Proof of Field of Study',
                 style: Styles.title,
               ),
               const Gap(10),
@@ -210,9 +215,9 @@ class _ExpertRegistration1State extends State<ExpertRegistration1> {
                   ),
                 )
               : const Text(
-            "No Image",
-            style: TextStyle(fontSize: 20),
-          ),
+                  "No Image",
+                  style: TextStyle(fontSize: 20),
+                ),
           const Gap(10),
           // Align(
           //   // make a condition that make if any of it wasnt filled it will display "Enter _____"

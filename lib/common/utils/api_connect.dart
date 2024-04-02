@@ -21,11 +21,13 @@ class ApiConnect extends GetConnect {
     return res;
   }
 
-  Future<Response> sendEmailToUser(Map<String, dynamic> data) {
-    var res = post(
+  Future<Response> sendEmailToUser(Map<String, dynamic> data) async {
+    Response res = await post(
       'https://ifit-api.onrender.com/users/emailauser',
       jsonEncode(data),
     );
+
+    print(res.body);
 
     return res;
   }

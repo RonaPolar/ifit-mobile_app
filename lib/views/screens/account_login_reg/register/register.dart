@@ -61,67 +61,62 @@ class _RegisterState extends State<Register> {
     }
 
     // returns true if all fields are filled and valid
-    Future<bool> validateAndSendEmail() async {
-      // check if all fields are filled
-      if (Auth.email.text == "" ||
-          Auth.password.text == "" ||
-          Auth.firstName.text == "" ||
-          Auth.lastName.text == "" ||
-          selectedValue == null
-      ) {
-        debugPrint("on register user");
+    Future<void> validateAndSendEmail() async {
+      // // check if all fields are filled
+      // if (Auth.email.text == "" ||
+      //     Auth.password.text == "" ||
+      //     Auth.firstName.text == "" ||
+      //     Auth.lastName.text == "" ||
+      //     selectedValue == null
+      // ) {
+      //   debugPrint("on register user");
+      //   setState(() {
+      //     validatorError = "Please fill all the fields";
+      //   });
+      //   ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: Text(validatorError)));
+      //   return false;
+
+      //   // check if email is valid
+      // } else if (isValidEmail(Auth.email.text) == false) {
+      //   debugPrint("Invalid email");
+      //   setState(() {
+      //     validatorError = "Please enter a valid email";
+      //   });
+      //   ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: Text(validatorError)));
+
+      //   return false;
+
+      //   // else send email to user
+      // } else if (!_isCheck) {
+      //   setState(() {
+      //     validatorError = "Please accept our terms and conditions";
+      //   });
+      //   ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: Text(validatorError)));
+      //   return false;
+      // } else {
+      //   print("Sending email to user");
+      //   var userEmail = {
+      //     'email': Auth.email.text,
+      //   };
+
+      var res = await apiConnect.sendEmailToUser({
+        "email": Auth.email.text,
+      });
+
+      if (res.statusCode != 200) {
         setState(() {
-          validatorError = "Please fill all the fields";
+          validatorError = "Invalid email, please try again";
         });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(validatorError)));
-        return false;
-
-        // check if email is valid
-      } else if (isValidEmail(Auth.email.text) == false) {
-        debugPrint("Invalid email");
-        setState(() {
-          validatorError = "Please enter a valid email";
-        });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(validatorError)));
-
-        return false;
-
-        // else send email to user
-      } else if (!_isCheck) {
-        setState(() {
-          validatorError = "Please accept our terms and conditions";
-        });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(validatorError)));
-        return false;
-      } else {
-        print("Sending email to user");
-        var userEmail = {
-          'email': Auth.email.text,
-        };
-
-        var res = await apiConnect.sendEmailToUser(userEmail);
-
-        if (res.statusCode != 200) {
-          setState(() {
-            validatorError = "Invalid email, please try again";
-          });
-          return false;
-        }
-
-        box.write('Remail', Auth.email.text);
-        box.write('Rpassword', Auth.password.text);
-        box.write('Rfirst_name', Auth.firstName.text);
-        box.write('Rlast_name', Auth.lastName.text);
-
-        return true;
       }
+
+      box.write('Remail', Auth.email.text);
+      box.write('Rpassword', Auth.password.text);
+      box.write('Rfirst_name', Auth.firstName.text);
+      box.write('Rlast_name', Auth.lastName.text);
     }
-
-    final ClientProvider clientProvider = Provider.of<ClientProvider>(context);
-
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -138,10 +133,12 @@ class _RegisterState extends State<Register> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        Text('Hey there,',
+                        Text(
+                          'Hey there,',
                           style: Styles.text18,
                         ),
-                        Text('Create an Account',
+                        Text(
+                          'Create an Account',
                           style: Styles.headline25,
                         ),
                         const Gap(30),
@@ -320,44 +317,66 @@ class _RegisterState extends State<Register> {
                     child: Column(
                       children: [
                         MainButton(
-                          title: 'Register',
-                          onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              if (await validateAndSendEmail()) {
+                            title: 'Register',
+                            onPressed: () async {
+                              if (formKey.currentState!.validate()) {
+                                // await validateAndSendEmail().then((value) {
+                                if (auth.registerUserType == "Client") {
+                                  await auth.createUser().then((String? id) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterPart2(id: id!)),
+                                    );
+                                  });
+                                } else if (auth.registerUserType == "Expert") {
+                                  await auth.createUser().then((value) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ExpertRegistration1()),
+                                    );
+                                  });
+                                }
+
+                                // }
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) =>
+                                //         VerificationCodeScreen(
+                                //       onConfirmPressed: () async {
+                                //         if (auth.registerUserType == "Client") {
+                                //           await auth
+                                //               .createUser()
+                                //               .then((String? id) {
+                                //             Navigator.pushReplacement(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                   builder: (context) =>
+                                //                       RegisterPart2(id: id!)),
+                                //             );
+                                //           });
+                                //         } else if (auth.registerUserType ==
+                                //             "Expert") {
+                                //           await auth.createUser().then((value) {
+                                //             Navigator.pushReplacement(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                   builder: (context) =>
+                                //                       const ExpertRegistration1()),
+                                //             );
+                                //           });
+                                //         }
+                                //       },
+                                //     ),
+                                //   ),
+                                // );
                                 // ignore: use_build_context_synchronously
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) =>
-                                    VerificationCodeScreen(
-                                      onConfirmPressed: () async {
-                                        if (auth.registerUserType ==
-                                            "Client") {
-                                          await auth.createUser().then((
-                                              String? id) {
-                                            Navigator.pushReplacement(
-                                              context, MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterPart2(id: id!)),
-                                            );
-                                          });
-                                        } else if (auth.registerUserType ==
-                                            "Expert") {
-                                          await auth.createUser().then((
-                                              value) {
-                                            Navigator.pushReplacement(
-                                              context, MaterialPageRoute(
-                                                builder: (context) =>
-                                                const ExpertRegistration1()),
-                                            );
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                );
                               }
-                            }
-                          }
-                        ),
+                            }),
                         const Gap(10),
                         Row(
                           children: [
