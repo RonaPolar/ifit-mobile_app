@@ -321,26 +321,38 @@ class _RegisterState extends State<Register> {
                             onPressed: () async {
                               if (formKey.currentState!.validate()) {
                                 // await validateAndSendEmail().then((value) {
-                                if (auth.registerUserType == "Client") {
-                                  await auth.createUser().then((String? id) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterPart2(id: id!)),
-                                    );
-                                  });
-                                } else if (auth.registerUserType == "Expert") {
-                                  await auth.createUser().then((value) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ExpertRegistration1()),
-                                    );
-                                  });
-                                }
-
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        VerificationCodeScreen(
+                                      onConfirmPressed: () async {
+                                        if (auth.registerUserType == "Client") {
+                                          await auth
+                                              .createUser()
+                                              .then((String? id) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterPart2(id: id!)),
+                                            );
+                                          });
+                                        } else if (auth.registerUserType ==
+                                            "Expert") {
+                                          await auth.createUser().then((value) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ExpertRegistration1()),
+                                            );
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
                                 // }
                                 // Navigator.push(
                                 //   context,
