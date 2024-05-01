@@ -190,9 +190,7 @@ class _RegisterState extends State<Register> {
                           obscureText: !_isPasswordVisible,
                           maxLines: _isPasswordVisible ? null : 1,
                           rightIcon: IconButton(
-                            icon: _isPasswordVisible
-                                ? const Icon(Icons.visibility)
-                                : const Icon(Icons.visibility_off),
+                            icon: _isPasswordVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                             onPressed: () {
                               setState(() {
                                 _isPasswordVisible = !_isPasswordVisible;
@@ -266,10 +264,8 @@ class _RegisterState extends State<Register> {
                                 });
                               },
                               icon: _isCheck
-                                  ? const Icon(FluentSystemIcons
-                                      .ic_fluent_checkbox_checked_regular)
-                                  : const Icon(FluentSystemIcons
-                                      .ic_fluent_checkbox_unchecked_regular),
+                                  ? const Icon(FluentSystemIcons.ic_fluent_checkbox_checked_regular)
+                                  : const Icon(FluentSystemIcons.ic_fluent_checkbox_unchecked_regular),
                               color: Styles.fadeTextColor,
                             ),
                             Expanded(
@@ -312,47 +308,39 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(
-                        right: 20, left: 20, bottom: 5, top: 20),
+                    padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5, top: 20),
                     child: Column(
                       children: [
                         MainButton(
                             title: 'Register',
                             onPressed: () async {
                               if (formKey.currentState!.validate()) {
-                                // await validateAndSendEmail().then((value) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        VerificationCodeScreen(
-                                      onConfirmPressed: () async {
-                                        if (auth.registerUserType == "Client") {
-                                          await auth
-                                              .createUser()
-                                              .then((String? id) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RegisterPart2(id: id!)),
-                                            );
-                                          });
-                                        } else if (auth.registerUserType ==
-                                            "Expert") {
-                                          await auth.createUser().then((value) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ExpertRegistration1()),
-                                            );
-                                          });
-                                        }
-                                      },
+                                await validateAndSendEmail().then((value) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VerificationCodeScreen(
+                                        onConfirmPressed: () async {
+                                          if (auth.registerUserType == "Client") {
+                                            await auth.createUser().then((String? id) {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => RegisterPart2(id: id!)),
+                                              );
+                                            });
+                                          } else if (auth.registerUserType == "Expert") {
+                                            await auth.createUser().then((value) {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const ExpertRegistration1()),
+                                              );
+                                            });
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                });
                                 // }
                                 // Navigator.push(
                                 //   context,
