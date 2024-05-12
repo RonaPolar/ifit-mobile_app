@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/views/screens/account_login_reg/login.dart';
+import 'package:ifit/views/widgets/button/main_button.dart';
+
+class ExpertSuccessRegistration extends StatefulWidget {
+  const ExpertSuccessRegistration({super.key});
+
+  @override
+  State<ExpertSuccessRegistration> createState() => _ExpertSuccessRegistrationState();
+}
+
+class _ExpertSuccessRegistrationState extends State<ExpertSuccessRegistration> {
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
+      backgroundColor: Styles.bgColor,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/registration_success.png'),
+                            const Gap(30),
+                            Text(
+                              'Welcome!',
+                               style: Styles.headline25,
+                               textAlign: TextAlign.center,
+                              ),
+                            Text(
+                              'You are all set now, let’s create programs together with us',
+                               style: Styles.text18,
+                               textAlign: TextAlign.center,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    MainButton(
+                      title: 'Go to Login',
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const LogIn()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

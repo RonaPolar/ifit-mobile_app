@@ -1,54 +1,84 @@
 // ignore_for_file: unused_import
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:ifit/common/utils/api_connect.dart';
 import 'package:ifit/common/utils/app_styles.dart';
 import 'package:ifit/firebase_options.dart';
-import 'package:ifit/screens/account-login&reg/register/client_registration/register_part2.dart';
-import 'package:ifit/screens/account-login&reg/register/client_registration/register_part3.dart';
-import 'package:ifit/screens/account-login&reg/register/expert_registration/expert_registration1.dart';
-import 'package:ifit/screens/clients_main_screens/home_screens/home.dart';
-import 'package:ifit/screens/clients_main_screens/main_bottom_bar.dart';
-import 'package:ifit/screens/clients_main_screens/program_tracker_screens/feedback_screens/feedback.dart';
-import 'package:ifit/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
-import 'package:ifit/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
-import 'package:ifit/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
-import 'package:ifit/screens/experts_main_screens/exp_bottom_bar.dart';
-import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
-import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
-import 'package:ifit/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
+import 'package:ifit/service/Expert.dart';
+import 'package:ifit/service/client.dart';
+import 'package:ifit/service/notification.dart';
+import 'package:ifit/service/package.dart';
+import 'package:ifit/service/workout.dart';
+import 'package:ifit/views/home.dart';
+import 'package:ifit/views/screens/account_login_reg/login.dart';
+import 'package:ifit/views/screens/account_login_reg/register/client_registration/register_part3.dart';
+import 'package:ifit/views/screens/account_login_reg/register/expert_registration/expert_registration1.dart';
+import 'package:ifit/views/screens/clients_main_screens/home_screens/home.dart';
+import 'package:ifit/views/screens/clients_main_screens/main_bottom_bar.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/meal_screens/meal_tracker.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/program_schedule/program_schedule.dart';
+import 'package:ifit/views/screens/clients_main_screens/program_tracker_screens/workout_screens/workout_tracker.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_bottom_bar.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_meal.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_program_screens/create_program_screens/create_work_next.dart';
+import 'package:ifit/service/auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ifit/screens/welcome/onboarding_screen.dart';
-import 'package:ifit/screens/account-login&reg/register/register.dart';
+import 'package:ifit/views/screens/welcome/onboarding_screen.dart';
+import 'package:ifit/views/screens/account_login_reg/register/register.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+late PackageInfo packageInfo;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final WidgetsBinding widgetsBinding =
-      WidgetsBinding.instance; // Define and initialize widgetsBinding
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  SharedPreferences prefs = await SharedPreferences
-      .getInstance(); //dependency to check if just installed
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final WidgetsBinding widgetsBinding = WidgetsBinding.instance; // Define and initialize widgetsBinding
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FirebaseNotif.init();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance(); //dependency to check if just installed
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
   Widget homeScreen;
   Get.put(ApiConnect());
+
+  packageInfo = await PackageInfo.fromPlatform();
+
 
   if (isFirstTime) {
     //condition to when the OnboardingScreen shows
     homeScreen = const OnboardingScreen();
     await prefs.setBool('isFirstTime', false);
   } else {
-    homeScreen = const Register(); //Registration
+    homeScreen = const LogIn(); //Registration
   }
   await GetStorage.init();
 
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(MyApp(homeScreen: homeScreen));
+  // await FirebaseNotif().initNotifications();
+
+  runApp(
+    MyApp(
+      homeScreen: homeScreen,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -68,19 +98,31 @@ class _MyAppState extends State<MyApp> {
     // whenever initialization is completed, remove the splash screen:
     Future.delayed(const Duration(seconds: 2))
         .then((value) => {FlutterNativeSplash.remove()});
+
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primary,
-      ),
-      title: 'I-Fit',
 
-      // home: const FeedbackForm(), //for testing
-      home: widget.homeScreen, //either Onboarding or Register Screen
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProvider<ClientProvider>(create: (_) => ClientProvider()),
+        ChangeNotifierProvider<ExpertProvider>(create: (_) => ExpertProvider()),
+        ChangeNotifierProvider<IFitPackage>(create: (_) => IFitPackage(info: packageInfo)),
+        ChangeNotifierProvider<FirebaseNotif>(create: (context) => FirebaseNotif()),
+        ChangeNotifierProvider<WorkoutProvider>(create: (context) => WorkoutProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: primary,
+        ),
+        navigatorKey: navigatorKey,
+        title: 'I-Fit',
+        home: widget.homeScreen //either Onboarding or Register Screen
+      ),
     );
   }
 }

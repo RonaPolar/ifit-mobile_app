@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -72,10 +69,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDPr7bOslGJJO4ahbb1-ELMXQ1jX7tmyXA',
-    appId: '1:223829894602:ios:cff82b6f7c2673c4051b33',
+    appId: '1:223829894602:ios:c203a0586d94f506051b33',
     messagingSenderId: '223829894602',
     projectId: 'ifit-api',
     storageBucket: 'ifit-api.appspot.com',
-    iosBundleId: 'com.example.ifit.RunnerTests',
+    iosBundleId: 'com.example.ifit',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBq0uUn8pX8D0FVjiu5h482UwP7AGplQv0',
+    appId: '1:223829894602:web:a72ab6a9a1bdd829051b33',
+    messagingSenderId: '223829894602',
+    projectId: 'ifit-api',
+    authDomain: 'ifit-api.firebaseapp.com',
+    storageBucket: 'ifit-api.appspot.com',
+    measurementId: 'G-V1C3JXXFEG',
+  );
+
 }

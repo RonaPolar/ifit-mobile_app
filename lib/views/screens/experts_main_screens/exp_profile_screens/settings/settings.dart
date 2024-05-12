@@ -1,0 +1,144 @@
+import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:ifit/common/utils/app_styles.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/views/screens/Experts_main_screens/exp_profile_screens/settings/edit_profile.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/change_email.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/change_pass.dart';
+import 'package:ifit/views/screens/experts_main_screens/exp_profile_screens/settings/delete_account.dart';
+import 'package:ifit/views/widgets/icon_text_icon.dart';
+
+class Settings extends StatefulWidget {
+  const Settings({
+    required this.id,
+    required this.expertModel,
+    super.key,
+  });
+
+  final String id;
+  final ExpertModel expertModel;
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Styles.bgColor,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            margin: const EdgeInsets.all(12),
+              height: 30,
+              width: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10)),
+            child: const Icon(
+              FluentSystemIcons.ic_fluent_chevron_left_filled,
+              size: 20,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        title: Text('Settings',
+        style: Styles.headline20,),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    const Gap(15),
+                    Container(
+                      height: 240,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 15),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black26, blurRadius: 2)
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Account",
+                            style: Styles.title
+                          ),
+                          const Gap(1),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_person_accounts_regular,
+                            title: 'Edit Profile Details',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EditProfile(
+                                  expertModel: widget.expertModel,
+                                )));
+                            },
+                          ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_lock_regular,
+                            title: 'Change Email',
+                            onTap: () {
+                              Navigator.of(context).push( MaterialPageRoute(
+                                builder: (context) => ExpertChangeEmail(
+                                  id: widget.id,
+                                )));
+                            },
+                          ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_lock_regular,
+                            title: 'revert',
+                            onTap: () {
+                              Navigator.of(context).popUntil((route) => route.isFirst);
+                            },
+                          ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_lock_regular,
+                            title: 'Change Password',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ExpertChangePass(
+                                  id: widget.id,
+                                )));
+                            },
+                          ),
+                          NextNavigation(
+                            iconData: FluentSystemIcons.ic_fluent_lock_regular,
+                            title: 'Delete Account',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const ExpertDeleteAccount()));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+        ],
+      ),
+    );
+  }
+}

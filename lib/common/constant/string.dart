@@ -1,0 +1,11 @@
+class JsonFile {
+  static String workout = "assets/json/workout.json";
+  static String meal = "assets/json/meal.json";
+  static String expert = "assets/json/expert.json";
+}
+
+const String tExpertPath = "experts";
+const String tClientPath = "clients";
+const String tWorkoutPlanPath = "workoutPlan";
+const String tWorkoutMealPath = "workoutMeal";
+const String tNotification = "notification";

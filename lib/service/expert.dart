@@ -1,0 +1,715 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:ifit/common/constant/string.dart';
+import 'package:ifit/models/client.dart';
+import 'package:ifit/models/expert.dart';
+import 'package:ifit/models/meal.dart';
+import 'package:ifit/models/notification.dart';
+import 'package:ifit/models/workout.dart';
+import 'package:ifit/service/functions/dialog.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+
+class ExpertProvider extends ChangeNotifier {
+
+  bool isLoading = false;
+
+  void showHUD(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  Stream<List<ExpertModel>>? expertListStream;
+
+  Stream<List<ExpertModel>> getExpertList() {
+    return _db.collection("experts").snapshots().map((event) {
+      return event.docs.map((doc) {
+        final data = doc.data();
+        return ExpertModel.fromJson(data);
+      }).toList();
+    });
+  }
+
+  void updateExpertListStream() {
+    expertListStream = getExpertList();
+
+    notifyListeners();
+  }
+
+  Stream<ExpertModel>? expertStream;
+  Stream<ExpertModel>? otherExpertStream;
+
+  Stream<ExpertModel> getExpert(String uid) {
+    return _db.collection(tExpertPath).doc(uid).snapshots().map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+
+      return ExpertModel.fromJson(data);
+    });
+  }
+
+  void updateExpertStream({
+    required String uid,
+  }) {
+    expertStream = getExpert(uid);
+    notifyListeners();
+  }
+
+  void updateOtherExpertStream({
+    required String uid,
+  }) {
+    otherExpertStream = getExpert(uid);
+    notifyListeners();
+  }
+
+  Stream<List<WorkoutPlan>>? workoutPlanListStream;
+  Stream<List<WorkoutPlan>>? otherWorkoutPlanListStream;
+
+  Stream<List<WorkoutPlan>> getWorkoutPlanListStream(String uid) {
+
+    return _db.collection(tWorkoutPlanPath).doc(uid).snapshots().map((doc) {
+      final data = doc.data();
+
+      if (data != null) {
+        final map = data["workoutPlans"];
+
+        return (map as List).map((e) => WorkoutPlan.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    });
+  }
+
+  void updateWorkoutPlanListStream({
+    required String uid,
+  }) {
+    workoutPlanListStream = getWorkoutPlanListStream(uid);
+    notifyListeners();
+  }
+
+  void updateOtherWorkoutPlanListStream({
+    required String uid,
+  }) {
+    otherWorkoutPlanListStream = getWorkoutPlanListStream(uid);
+    notifyListeners();
+  }
+
+  Stream<List<WorkoutMeal>>? workoutMealListStream;
+  Stream<List<WorkoutMeal>>? otherWorkoutMealListStream;
+
+  Stream<List<WorkoutMeal>> getWorkoutMealListStream(String uid) {
+
+    return _db.collection(tWorkoutMealPath).doc(uid).snapshots().map((doc) {
+
+      final data = doc.data();
+
+      if (data != null) {
+        final map = data["workoutMeals"];
+        return (map as List).map((e) => WorkoutMeal.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+
+    });
+  }
+
+  void updateWorkoutMealListStream({
+    required String uid,
+  }) {
+    workoutMealListStream = getWorkoutMealListStream(uid);
+    notifyListeners();
+  }
+
+  void updateOtherWorkoutMealListStream({
+    required String uid,
+  }) {
+    otherWorkoutMealListStream = getWorkoutMealListStream(uid);
+    notifyListeners();
+  }
+
+  Stream<List<ClientModel>>? clientListStream;
+
+  Stream<List<ClientModel>> getClientListStream() {
+
+    return _db.collection(tClientPath).snapshots().map((event) {
+      return event.docs.map((data) {
+        final map = data.data();
+
+        return ClientModel.fromJson(map);
+      }).toList();
+    });
+  }
+
+  void updateClientListStream() {
+    clientListStream = getClientListStream();
+    notifyListeners();
+  }
+
+  String? workoutCategory;
+
+  List<String> workoutCategoryList = [
+    "Upper Body",
+    "Shoulders",
+    "Arms",
+    "Biceps",
+    "Triceps",
+    "Forearms",
+    "Chest",
+    "Upper Back",
+    "Lower Back",
+    "Abdominals",
+    "Lower Body",
+    "Glutes",
+    "Legs",
+    "Quadriceps",
+    "Hamstrings",
+    "Calves",
+    "Full Body"
+  ];
+
+
+  void updateWorkoutCategory(String value) {
+    workoutCategory = value;
+    notifyListeners();
+  }
+
+  String? workoutPurpose;
+
+  List<String> workoutPurposeList = [
+    "Loss Weight",
+    "Gain Muscles",
+    "Body Toning",
+  ];
+
+  void updateWorkoutPurpose(String? value) {
+    workoutPurpose = value;
+    notifyListeners();
+  }
+
+  String? workoutDifficulty;
+
+  List<String> workoutDifficultyList = [
+    "Beginner",
+    "Intermediate",
+    "Expert",
+  ];
+
+  void updateWorkoutDifficulty(String value) {
+    workoutDifficulty = value;
+    notifyListeners();
+  }
+
+  static TextEditingController planName = TextEditingController();
+  static TextEditingController workoutDescription = TextEditingController();
+  static TextEditingController daysOfThePlan = TextEditingController();
+  static TextEditingController minutes = TextEditingController();
+  static TextEditingController calories = TextEditingController();
+
+  XFile? workoutPicture;
+
+  Future<void> uploadWorkoutPicture(BuildContext context) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        workoutPicture = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  List<TextEditingController> equipmentsText = [];
+
+  void updateEquipmentsText(bool add) {
+    if (add) {
+      equipmentsText.add(TextEditingController());
+    } else if(equipmentsText.isNotEmpty) {
+      equipmentsText.removeAt(equipmentsText.length - 1);
+    }
+    notifyListeners();
+  }
+
+  int sets = 1;
+
+  void updateSets(bool add) {
+    if (add) {
+      sets++;
+    } else if (sets > 1) {
+      sets--;
+    }
+    notifyListeners();
+  }
+
+  static TextEditingController exerciseTitle = TextEditingController();
+  static TextEditingController exerciseVideo = TextEditingController();
+  static TextEditingController exerciseDescription = TextEditingController();
+  static TextEditingController exerciseTime = TextEditingController();
+  bool isCounting = true;
+
+  void updateIsCounting() {
+    isCounting = !isCounting;
+    notifyListeners();
+  }
+
+  List<TextEditingController> steps = [];
+
+  void updateSteps(bool add) {
+    if (add) {
+      steps.add(TextEditingController());
+    } else if (steps.isNotEmpty) {
+      steps.removeAt(steps.length - 1);
+    }
+    notifyListeners();
+  }
+
+  List<ExerciseElement> exerciseList = [];
+
+  void updateExercise({
+    required bool isEdit,
+    int? index,
+  }) {
+
+    final ExerciseElement exercise = ExerciseElement(
+      url: exerciseVideo.text,
+      title: exerciseTitle.text,
+      description: exerciseDescription.text,
+      steps: steps.map((e) => e.text).toList(),
+      exerciseDuration: ExerciseDuration(
+        time: exerciseTime.text,
+        type: isCounting,
+      ),
+    );
+
+    if (isEdit) {
+      exerciseList[index!] = exercise;
+    } else {
+      exerciseList.add(exercise);
+    }
+    clearExerciseForm();
+
+    notifyListeners();
+  }
+
+  void clearExerciseForm() {
+    exerciseTitle.clear();
+    exerciseVideo.clear();
+    exerciseDescription.clear();
+    steps = [];
+    exerciseTime.clear();
+    notifyListeners();
+  }
+
+  void removeExercise() {
+    exerciseList.removeAt(exerciseList.length - 1);
+    notifyListeners();
+  }
+
+
+  Future<void> addWorkoutPlan({
+    required String id,
+  }) async {
+
+    showHUD(true);
+
+    try {
+      final data = await _db.collection(tWorkoutPlanPath).doc(id).get();
+      final auth = await _db.collection(tExpertPath).doc(id).get();
+      final String expertName = auth.get("name");
+
+
+      await uploadWorkoutPhoto(id).then((value) async {
+
+        final WorkoutPlan workoutPlan = WorkoutPlan(
+          expertId: id,
+          dateCreated: DateTime.now(),
+          id: const Uuid().v1(),
+          category: workoutCategory ?? "",
+          purpose: workoutPurpose ?? "",
+          difficulty: workoutDifficulty ?? "",
+          planName: planName.text,
+          description: workoutDescription.text,
+          workoutPicture: workoutPhotoUrl!,
+          daysOfThePlan: daysOfThePlan.text,
+          minutes: minutes.text,
+          calories: calories.text,
+          equipments: equipmentsText.map((e) => e.text).toList(),
+          exercise: WorkoutPlanExercise(
+            sets: sets,
+            exercises: exerciseList,
+          ),
+          rating: 0,
+          expertName: expertName,
+          isFavorite: false,
+          isCancelled: false,
+        );
+
+        final Map? hasWorkoutPlans = data.data();
+
+        if (hasWorkoutPlans == null ) {
+          await _db.collection(tWorkoutPlanPath).doc(id).set({
+            "workoutPlans": [
+              workoutPlan.toJson(),
+            ],
+          })
+              .then((value) => debugPrint("Workout plan added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        } else {
+          final List objects = data["workoutPlans"];
+
+          objects.add(workoutPlan.toJson());
+          await _db.collection(tWorkoutPlanPath).doc(id).set({
+            "workoutPlans": objects,
+          })
+              .then((value) => debugPrint("Workout plan added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        }
+
+        final String uid = const Uuid().v1();
+
+        final NotifModel notifModel = NotifModel(
+          id: uid,
+          photoUrl: workoutPlan.workoutPicture,
+          title: workoutPlan.planName,
+          dateCreated: DateTime.now(),
+          planId: workoutPlan.id,
+        );
+
+        await _db.collection(tExpertPath).doc(id).collection(tNotification).doc(uid).set({
+          tNotification: notifModel.toJson(),
+        }).then((value) => debugPrint("Notif added successfully!"))
+            .onError((error, stackTrace) => debugPrint("Error notif: $error"));
+
+
+        showHUD(false);
+      });
+    } catch (e) {
+      showHUD(false);
+    }
+
+
+    notifyListeners();
+  }
+
+  String? workoutPhotoUrl;
+
+  Future<void> uploadWorkoutPhoto(String id) async {
+    final file = File(workoutPicture!.path);
+    final ref = FirebaseStorage.instance.ref()
+      .child(tWorkoutPlanPath)
+      .child(id)
+      .child(workoutPicture!.name);
+    await ref.putFile(file);
+
+    workoutPhotoUrl = await ref.getDownloadURL();
+    notifyListeners();
+  }
+
+  void clearWorkoutPlanForm() {
+    workoutCategory = null;
+    workoutPurpose = null;
+    workoutDifficulty = null;
+    planName.clear();
+    workoutDescription.clear();
+    workoutPicture = null;
+    daysOfThePlan.clear();
+    minutes.clear();
+    calories.clear();
+    equipmentsText = [];
+    exerciseList = [];
+    sets = 1;
+    workoutPhotoUrl = null;
+    notifyListeners();
+  }
+
+  String? foodCategory;
+
+  final List<String> foodCategoryList = [
+    "Breakfast",
+    "Lunch",
+    "Dinner",
+    "Snacks",
+    "Drinks"
+  ];
+
+  void updateFoodCategory(String? value) {
+    foodCategory = value;
+    notifyListeners();
+  }
+
+  static TextEditingController foodPlanName = TextEditingController();
+  static TextEditingController foodDescription = TextEditingController();
+
+  XFile? workoutMeal;
+
+  Future<void> uploadWorkoutMeal(BuildContext context) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        workoutMeal = img;
+        notifyListeners();
+      },
+    );
+  }
+
+  static TextEditingController mealCalories = TextEditingController();
+  static TextEditingController mealFats = TextEditingController();
+  static TextEditingController mealSugar = TextEditingController();
+  static TextEditingController mealProtein = TextEditingController();
+
+  List<TextEditingController> ingredientsList = [];
+
+  void updateIngredientsList(bool add) {
+    if (add) {
+      ingredientsList.add(TextEditingController());
+    } else if (ingredientsList.isNotEmpty) {
+      ingredientsList.removeAt(ingredientsList.length - 1);
+    }
+    notifyListeners();
+  }
+
+  List<TextEditingController> mealPreparationsList = [];
+
+  void updateMealPreparationsList(bool add) {
+    if (add) {
+      mealPreparationsList.add(TextEditingController());
+    } else if (mealPreparationsList.isNotEmpty) {
+      mealPreparationsList.removeAt(mealPreparationsList.length - 1);
+    }
+    notifyListeners();
+  }
+
+  String? workoutMealPhoto;
+
+  Future<void> uploadWorkoutMealPhoto(String id) async {
+    final file = File(workoutMeal!.path);
+    final ref = FirebaseStorage.instance.ref()
+        .child(tWorkoutMealPath)
+        .child(id)
+        .child(workoutMeal!.name);
+    await ref.putFile(file);
+
+    workoutMealPhoto = await ref.getDownloadURL();
+    notifyListeners();
+  }
+
+  Future<void> addWorkoutMeal({
+    required String id,
+  }) async {
+
+    showHUD(true);
+
+    try {
+
+      final data = await _db.collection(tWorkoutMealPath).doc(id).get();
+      final auth = await _db.collection(tExpertPath).doc(id).get();
+      final String expertName = auth.get("name");
+
+      await uploadWorkoutMealPhoto(id).then((value) async {
+
+        final WorkoutMeal workoutMeal = WorkoutMeal(
+          expertId: id,
+          dateCreated: DateTime.now(),
+          id: const Uuid().v1(),
+          foodCategory: foodCategory ?? "",
+          purpose: workoutPurpose ?? "",
+          foodPlanName: foodPlanName.text,
+          description: foodDescription.text,
+          foodPhoto: workoutMealPhoto!,
+          calories: mealCalories.text,
+          fats: mealFats.text,
+          sugar: mealSugar.text,
+          protein: mealSugar.text,
+          rating: 0,
+          expertName: expertName,
+          ingredients: ingredientsList.map((e) => e.text).toList(),
+          stepPrep: mealPreparationsList.map((e) => e.text).toList(),
+        );
+
+        final Map<String, dynamic>? hasWorkoutMeals = data.data();
+
+        if (hasWorkoutMeals == null) {
+          await _db.collection(tWorkoutMealPath).doc(id).set({
+            "workoutMeals": [
+              workoutMeal.toJson(),
+            ],
+          })
+              .then((value) => debugPrint("Workout meal added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        } else {
+          final List objects = data["workoutMeals"];
+
+          objects.add(workoutMeal.toJson());
+          await _db.collection(tWorkoutMealPath).doc(id).set({
+            "workoutMeals": objects,
+          })
+              .then((value) => debugPrint("Workout meal added successfully!"))
+              .onError((error, stackTrace) => "Failed: $error");
+        }
+
+        final String uid = const Uuid().v1();
+
+        final NotifModel notifModel = NotifModel(
+          id: uid,
+          photoUrl: workoutMeal.foodPhoto,
+          title: workoutMeal.foodPlanName,
+          dateCreated: DateTime.now(),
+          planId: workoutMeal.id,
+        );
+        
+        await _db.collection(tExpertPath).doc(id).collection(tNotification).doc(uid).set({
+          tNotification: notifModel.toJson()
+        }).then((value) => debugPrint("Notif added successfully!"))
+          .onError((error, stackTrace) => debugPrint("Error notif: $error"));
+
+        showHUD(false);
+      });
+    } catch (e) {
+      showHUD(false);
+    }
+
+
+
+    notifyListeners();
+  }
+
+  void clearWorkoutMealForm() {
+    foodCategory = null;
+    workoutPurpose = null;
+    foodPlanName.clear();
+    foodDescription.clear();
+    workoutMeal = null;
+    workoutMealPhoto = null;
+    mealCalories.clear();
+    mealFats.clear();
+    mealSugar.clear();
+    mealProtein.clear();
+    ingredientsList = [];
+    mealPreparationsList = [];
+    notifyListeners();
+  }
+
+
+
+  XFile? photoProfile;
+  String? photoUrl;
+
+  Future<void> uploadPhotoProfile(BuildContext context, {
+    required String id,
+  }) async {
+    DialogService().showUploadImage(context,
+      onPressed: () async {
+        final img = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+
+        if (img != null) {
+          photoProfile = img;
+          await storePhotoProfile(id);
+        }
+
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> storePhotoProfile(String id) async {
+    // store professionId to storage
+    final file = File(photoProfile!.path);
+    final ref = FirebaseStorage.instance.ref()
+        .child(tExpertPath)
+        .child(photoProfile!.name);
+    await ref.putFile(file);
+
+    // store professionId to firestore
+    photoUrl = await ref.getDownloadURL();
+
+    _db.collection(tExpertPath).doc(id).set({
+      "profession_id": photoUrl!,
+    }, SetOptions(merge: true))
+        .then((value) => debugPrint("Update photo successful!"))
+        .onError((error, stackTrace) => debugPrint("Failed uploading photo successful!"));
+    notifyListeners();
+  }
+
+  Stream<int> getClientPlanStream({
+    required String id,
+  }) {
+
+    StreamController<int> controller = StreamController<int>();
+    int totalClient = 0;
+    final clientQuery = _db.collection(tClientPath).snapshots();
+
+    clientQuery.listen((event) {
+
+      for (QueryDocumentSnapshot mainDocument in event.docs) {
+        final workoutPlan = mainDocument.reference.collection(tWorkoutPlanPath).snapshots();
+        final workoutMeal = mainDocument.reference.collection(tWorkoutMealPath).snapshots();
+
+        workoutPlan.listen((event) {
+          for (QueryDocumentSnapshot subDocument in event.docs) {
+            if (id == subDocument.id) {
+              totalClient++;
+            }
+          }
+
+          controller.add(totalClient);
+        });
+
+        workoutMeal.listen((event) {
+          for (QueryDocumentSnapshot subDocument in event.docs) {
+            if (id == subDocument.id) {
+              totalClient++;
+            }
+          }
+
+          controller.add(totalClient);
+        });
+
+      }
+    });
+
+    return controller.stream;
+  }
+
+  Stream<List<NotifModel>>? notifStream;
+
+  Stream<List<NotifModel>> getNotifStream(String uid) {
+    return _db.collection(tExpertPath)
+        .doc(uid).collection(tNotification)
+        .snapshots().map((doc) {
+
+      return doc.docs.map((data) {
+        final map = data.data();
+        return NotifModel.fromJson(map[tNotification]);
+      }).toList();
+    });
+  }
+
+  void updateNotifStream({
+    required String uid,
+  }) {
+    notifStream = getNotifStream(uid);
+    notifyListeners();
+  }
+
+  Future<void> deleteNotif({
+    required String id,
+    required String notifId,
+  }) async {
+    await _db.collection(tExpertPath)
+        .doc(id).collection(tNotification)
+        .doc(notifId).delete()
+        .then((value) => debugPrint("Deleted notif successfully!"))
+        .onError((error, stackTrace) => debugPrint("Deleted notif failed!"));
+  }
+
+
+}
