@@ -4,11 +4,7 @@
 ## Getting Started
 
 This project is a fitness application for a Thesis.
-
-A few resources to get you started with Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Made with Flutter
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
