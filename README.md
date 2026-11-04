@@ -3,7 +3,7 @@
 
 ## Getting Started
 
-This project is a fitness application for a Thesis.
+This project is a fitness application with adaptive fitness plans that improve based on client interactions and feedback, supporting both fitness experts and clients.
 Made with Flutter
 
 For help getting started with Flutter development, view the
